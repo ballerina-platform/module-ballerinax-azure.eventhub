@@ -1,0 +1,9 @@
+org_name = "azure"
+version = "0.1.0"
+lockfile_version = "1.0.0"
+ballerina_version = "1.1.4"
+
+[[imports."azure/samples:0.1.0"]]
+org_name = "azure"
+name = "eventhub"
+version = "0.1.0"
