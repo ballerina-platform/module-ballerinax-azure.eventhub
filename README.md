@@ -2,9 +2,7 @@
 
 Azure Event Hubs is a highly scalable data ingress service that ingests millions of events per second so that you can process and analyze the massive amounts of data produced by your connected devices and applications. Once data is collected into an Event Hub, it can be transformed and stored using any real-time analytics provider or batching/storage adapters.
 
-The connector will only be focusing on sending events to the event hub.
-Available Rest APIs,
-The event hub connector will invoke the REST APIs exposed via the azure event hub https://docs.microsoft.com/en-us/rest/api/eventhub/. 
+The connector will only be focusing on sending events to the event hub. The event hub connector will invoke the REST APIs exposed via the Azure Event Hub. https://docs.microsoft.com/en-us/rest/api/eventhub/. 
 
 The REST APIs fall into the following categories:
 
