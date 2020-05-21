@@ -1,9 +1,9 @@
-org_name = "azure"
+org_name = "ballerinax"
 version = "0.1.0"
 lockfile_version = "1.0.0"
-ballerina_version = "1.1.4"
+ballerina_version = "1.2.2"
 
-[[imports."azure/samples:0.1.0"]]
-org_name = "azure"
-name = "eventhub"
+[[imports."ballerinax/samples:0.1.0"]]
+org_name = "ballerinax"
+name = "azure.eventhub"
 version = "0.1.0"

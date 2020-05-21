@@ -1,14 +1,22 @@
-import eventhub;
+Azure Eventhub connector
+[//]: # (above is the module summary)
+
+# Module Overview
+## Sample
+
+```ballerina
+import ballerinax/azure.eventhub as eventhub;
 import ballerina/io;
 
 public function main() {
+
     eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: "dev",
-        sasKey: "aaaaa",
+        sasKeyName: "",
+        sasKey: "",
         resourceUri: "abc.com"
     };
     eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
-    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
+    map<string> brokerProps = {CorrelationId: "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
 
     eventhub:BatchEvent eventBatch = {
@@ -21,3 +29,5 @@ public function main() {
     var b = c->resumePublisher("hello");
     io:println(b);
 }
+```
+
