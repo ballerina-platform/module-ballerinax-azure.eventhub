@@ -374,4 +374,5 @@ public type BatchEvent record {|
     BatchMessage[] events;
 |};
 
+# EventHub Error constant
 public const EVENT_HUB_ERROR = "{azure.eventhub}Error";

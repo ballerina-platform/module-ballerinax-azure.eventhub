@@ -1,5 +1,6 @@
-Azure Eventhub connector
+Azure EventHub Connector
 [//]: # (above is the module summary)
+
 
 # Module Overview
 ## Sample
