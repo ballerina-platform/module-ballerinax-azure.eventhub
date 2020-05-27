@@ -30,8 +30,6 @@ public function main() {
 }
 ```
 
-
-
 2. Sending an event with broker properties and user properties.
 
 ```ballerina
@@ -50,7 +48,6 @@ public function main() {
    var b = c->send("eventData", userProps, brokerProps);
 }
 ```
-
 
 3. Sending an event with broker properties, user properties & partition id.
 ```ballerina
@@ -121,8 +118,6 @@ public function main() {
 ```
 
 6. Sending a batch event to partition with publisher id
-
-
 ```ballerina
 import ballerinax/azure.eventhub as eventhub;
 
