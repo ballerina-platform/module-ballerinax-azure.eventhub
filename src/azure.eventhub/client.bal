@@ -22,7 +22,7 @@ import ballerina/log;
 import ballerina/mime;
 import ballerina/time;
 
-# Description 
+# Eventhub client implementation
 #
 # + config - Client configuration
 public type Client client object {
