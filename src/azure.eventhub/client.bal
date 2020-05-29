@@ -24,15 +24,17 @@ import ballerina/time;
 
 # Description 
 #
-# + config - config Parameter Description
+# + config - Client configuration
 public type Client client object {
 
     private ClientEndpointConfiguration config;
     private string API_PREFIX = "";
+    private http:Client clientEndpoint;
 
     public function __init(ClientEndpointConfiguration config) returns error? {
         self.config = config;
         self.API_PREFIX = "?timeout=" + config.timeout.toString() + "&api-version=" + config.apiVersion;
+        self.clientEndpoint = new ("https://" + self.config.resourceUri);
     }
 
     # Send a single event
@@ -42,11 +44,10 @@ public type Client client object {
     # + data - event data
     # + brokerProperties - broker properties
     # + partitionId - partition ID
-    # + return - @error if an error occurs
+    # + return - @error if remote API is unreachable
     public remote function send(string|xml|json|byte[]|io:ReadableByteChannel|mime:Entity[] data,
         public map<string> userProperties = {}, public map<anydata> brokerProperties = {}, public int partitionId = -1,
         public string publisherId = "") returns @tainted error? {
-        http:Client clientEndpoint = new ("https://" + self.config.resourceUri);
         http:Request req = self.getAuthorizedRequest();
         req.setHeader("Content-Type", "application/atom+xml;type=entry;charset=utf-8");
         foreach var [header, value] in userProperties.entries() {
@@ -71,7 +72,7 @@ public type Client client object {
             postResource = "/publisher/" + publisherId;
         }
         postResource = postResource + "/messages";
-        var response = clientEndpoint->post(postResource + self.API_PREFIX, req);
+        var response = self.clientEndpoint->post(postResource + self.API_PREFIX, req);
         if (response is http:Response) {
             int statusCode = response.statusCode;
             if (statusCode == 201) {
@@ -103,7 +104,6 @@ public type Client client object {
     # + partitionId - partition ID
     # + return - Eventhub error if unsucessful 
     public remote function sendBatch(BatchEvent batchEvent, public int partitionId = -1) returns @tainted error? {
-        http:Client clientEndpoint = new ("https://" + self.config.resourceUri);
         http:Request req = self.getAuthorizedRequest();
         req.setJsonPayload(self.getBatchEventJson(batchEvent));
         req.setHeader("content-type", "application/vnd.microsoft.servicebus.json");
@@ -111,7 +111,7 @@ public type Client client object {
         if (partitionId > -1) {
             postResource = "/partitions/" + partitionId.toString() + postResource;
         }
-        var response = clientEndpoint->post(postResource, req);
+        var response = self.clientEndpoint->post(postResource, req);
         if (response is http:Response) {
             int statusCode = response.statusCode;
             if (statusCode != 201) {
@@ -127,11 +127,8 @@ public type Client client object {
     #
     # + return - Return XML or Error
     public remote function getEventHub() returns @tainted xml|error {
-        http:Client clientEndpoint = new ("https://" + self.config.resourceUri);
-        http:Request req = new;
-        string token = self.getSASToken();
-        req.addHeader("Authorization", token);
-        var response = clientEndpoint->get("/", req);
+        http:Request req = self.getAuthorizedRequest();
+        var response = self.clientEndpoint->get("/", req);
         if (response is http:Response) {
             var xmlPayload = response.getXmlPayload();
             if (xmlPayload is xml) {
@@ -148,11 +145,8 @@ public type Client client object {
     #
     # + return - Return revoke publisher or Error
     public remote function getRevokedPublishers() returns @tainted xml|error {
-        http:Client clientEndpoint = new ("https://" + self.config.resourceUri);
-        http:Request req = new;
-        string token = self.getSASToken();
-        req.addHeader("Authorization", token);
-        var response = clientEndpoint->get("/revokedpublishers", req);
+        http:Request req = self.getAuthorizedRequest();
+        var response = self.clientEndpoint->get("/revokedpublishers", req);
         if (response is http:Response) {
             var xmlPayload = response.getXmlPayload();
             if (xmlPayload is xml) {
@@ -170,11 +164,8 @@ public type Client client object {
     # + publisherName - publisher name 
     # + return - Return revoke publisher details or error
     public remote function revokePublisher(string publisherName) returns @tainted xml|error {
-        http:Client clientEndpoint = new ("https://" + self.config.resourceUri);
-        http:Request req = new;
-        string token = self.getSASToken();
-        req.addHeader("Authorization", token);
-        var response = clientEndpoint->put("/revokedpublishers/" + publisherName, req);
+        http:Request req = self.getAuthorizedRequest();
+        var response = self.clientEndpoint->put("/revokedpublishers/" + publisherName, req);
         if (response is http:Response) {
             var xmlPayload = response.getXmlPayload();
             if (xmlPayload is xml) {
@@ -192,11 +183,8 @@ public type Client client object {
     # + publisherName - publisher name 
     # + return - Return publisher details or error
     public remote function resumePublisher(string publisherName) returns @tainted xml|error {
-        http:Client clientEndpoint = new ("https://" + self.config.resourceUri);
-        http:Request req = new;
-        string token = self.getSASToken();
-        req.addHeader("Authorization", token);
-        var response = clientEndpoint->delete("/revokedpublishers/" + publisherName, req);
+        http:Request req = self.getAuthorizedRequest();
+        var response = self.clientEndpoint->delete("/revokedpublishers/" + publisherName, req);
         if (response is http:Response) {
             var xmlPayload = response.getXmlPayload();
             if (xmlPayload is xml) {
@@ -208,93 +196,80 @@ public type Client client object {
         }
     }
 
-        # Lit available partitions
-        #
-        # + consumerGroupName - consumer group name
-        # + return - Return partition list or error
-        public remote function listPartitions(string consumerGroupName) returns @tainted xml | error {
-            http:Client clientEndpoint = new ("https://" + self.config.resourceUri);
-            http:Request req = new;
-            string token = self.getSASToken();
-            req.addHeader("Authorization", token);
-            var response = clientEndpoint->get("/consumergroups/" + consumerGroupName + "/partitions", req);
-            if (response is http:Response) {
-                var xmlPayload = response.getXmlPayload();
-                if (xmlPayload is xml) {
-                    return xmlPayload;
-                }
-                return error(EVENT_HUB_ERROR, message = "invalid response from EventHub API " + response.statusCode.toString());
-            } else {
-                return error(EVENT_HUB_ERROR, message = "error invoking EventHub API ", cause = response);
+    # Lit available partitions
+    #
+    # + consumerGroupName - consumer group name
+    # + return - Return partition list or error
+    public remote function listPartitions(string consumerGroupName) returns @tainted xml|error { 
+        http:Request req = self.getAuthorizedRequest();
+        var response = self.clientEndpoint->get("/consumergroups/" + consumerGroupName + "/partitions", req);
+        if (response is http:Response) {
+            var xmlPayload = response.getXmlPayload();
+            if (xmlPayload is xml) {
+                return xmlPayload;
             }
+            return error(EVENT_HUB_ERROR, message = "invalid response from EventHub API " + response.statusCode.toString());
+        } else {
+            return error(EVENT_HUB_ERROR, message = "error invoking EventHub API ", cause = response);
         }
+    }
 
-        # Get partition details
-        #
-        # + consumerGroupName - consumer group name
-        # + partitionId - partitionId
-        # + return - Returns partition details
-        public remote function getPartition(string consumerGroupName, int partitionId) returns @tainted xml | error {
-            http:Client clientEndpoint = new ("https://" + self.config.resourceUri);
-            http:Request req = new;
-            string token = self.getSASToken();
-            req.addHeader("Authorization", token);
-            var response = clientEndpoint->get("/consumergroups/" + consumerGroupName + "/partitions/" + partitionId.toString(), req);
-            if (response is http:Response) {
-                var xmlPayload = response.getXmlPayload();
-                if (xmlPayload is xml) {
-                    return xmlPayload;
-                }
-                return error(EVENT_HUB_ERROR, message = "invalid response from EventHub API " + response.statusCode.toString());
-            } else {
-                return error(EVENT_HUB_ERROR, message = "error invoking EventHub API ", cause = response);
+    # Get partition details
+    #
+    # + consumerGroupName - consumer group name
+    # + partitionId - partitionId 
+    # + return - Returns partition details
+    public remote function getPartition(string consumerGroupName, int partitionId) returns @tainted xml|error {
+        http:Request req = self.getAuthorizedRequest();
+        var response = self.clientEndpoint->get("/consumergroups/" + consumerGroupName + "/partitions/" + partitionId.toString(), req);
+        if (response is http:Response) {
+            var xmlPayload = response.getXmlPayload();
+            if (xmlPayload is xml) {
+                return xmlPayload;
             }
+            return error(EVENT_HUB_ERROR, message = "invalid response from EventHub API " + response.statusCode.toString());
+        } else {
+            return error(EVENT_HUB_ERROR, message = "error invoking EventHub API ", cause = response);
         }
+    }
 
-        # Get consumer group
-        #
-        # + consumerGroupName - consumer group name Parameter Description
-        # + return - Return Consumer group details or error
-        public remote function getConsumerGroups(string consumerGroupName) returns @tainted xml | error {
-            http:Client clientEndpoint = new ("https://" + self.config.resourceUri);
-            http:Request req = new;
-            string token = self.getSASToken();
-            req.addHeader("Authorization", token);
-            var response = clientEndpoint->get("/consumergroups/" + consumerGroupName, req);
-            if (response is http:Response) {
-                int statusCode = response.statusCode;
-                var xmlPayload = response.getXmlPayload();
-                if (xmlPayload is xml) {
-                    return xmlPayload;
-                }
-                return error(EVENT_HUB_ERROR, message = "invalid response from EventHub API " + response.statusCode.toString());
-            } else {
-                return error(EVENT_HUB_ERROR, message = "error invoking EventHub API ", cause = response);
+    # Get consumer group
+    #
+    # + consumerGroupName - consumer group name Parameter Description
+    # + return - Return Consumer group details or error
+    public remote function getConsumerGroups(string consumerGroupName) returns @tainted xml|error {
+        http:Request req = self.getAuthorizedRequest();
+        var response = self.clientEndpoint->get("/consumergroups/" + consumerGroupName, req);
+        if (response is http:Response) {
+            int statusCode = response.statusCode;
+            var xmlPayload = response.getXmlPayload();
+            if (xmlPayload is xml) {
+                return xmlPayload;
             }
+            return error(EVENT_HUB_ERROR, message = "invalid response from EventHub API " + response.statusCode.toString());
+        } else {
+            return error(EVENT_HUB_ERROR, message = "error invoking EventHub API ", cause = response);
         }
+    }
 
-        # List consumer groups
-        #
-        # + return - Return list of consumer group or error
-        public remote function listConsumerGroups() returns @tainted xml | error {
-            http:Client clientEndpoint = new ("https://" + self.config.resourceUri);
-            http:Request req = new;
-            string token = self.getSASToken();
-            req.addHeader("Authorization", token);
-            var response = clientEndpoint->get("/consumergroups", req);
-            if (response is http:Response) {
-                int statusCode = response.statusCode;
-                io:println("Status code: " + statusCode.toString());
-                io:println(response.getXmlPayload());
-                var xmlPayload = response.getXmlPayload();
-                if (xmlPayload is xml) {
-                    return xmlPayload;
-                }
-                return error(EVENT_HUB_ERROR, message = "invalid response from EventHub API " + response.statusCode.toString());
-            } else {
-                return error(EVENT_HUB_ERROR, message = "error invoking EventHub API ", cause = response);
+    # List consumer groups
+    #
+    # + return - Return list of consumer group or error
+    public remote function listConsumerGroups() returns @tainted xml|error {
+        http:Request req = self.getAuthorizedRequest();
+        var response = self.clientEndpoint->get("/consumergroups", req);
+        if (response is http:Response) {
+            int statusCode = response.statusCode;
+            var xmlPayload = response.getXmlPayload();
+            if (xmlPayload is xml) {
+                return xmlPayload;
             }
+            return error(EVENT_HUB_ERROR, message = "invalid response from EventHub API " + response.statusCode.toString());
+        } else {
+            return error(EVENT_HUB_ERROR, message = "error invoking EventHub API ", cause = response);
         }
+    }
+
 
     # Convert batch event to json
     #
