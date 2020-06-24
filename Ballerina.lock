@@ -1,42 +1,7 @@
 org_name = "ballerinax"
-version = "0.1.0"
+version = "0.9.0"
 lockfile_version = "1.0.0"
-ballerina_version = "2.0.0-Preview1-M6"
-
-[[imports."ballerinax/azure.eventhub:0.1.0"]]
-org_name = "ballerina"
-name = "crypto"
-version = "1.0.0"
-
-[[imports."ballerinax/azure.eventhub:0.1.0"]]
-org_name = "ballerina"
-name = "encoding"
-version = "1.0.0"
-
-[[imports."ballerinax/azure.eventhub:0.1.0"]]
-org_name = "ballerina"
-name = "http"
-version = "1.0.0"
-
-[[imports."ballerinax/azure.eventhub:0.1.0"]]
-org_name = "ballerina"
-name = "io"
-version = "0.5.0"
-
-[[imports."ballerinax/azure.eventhub:0.1.0"]]
-org_name = "ballerina"
-name = "log"
-version = "1.0.0"
-
-[[imports."ballerinax/azure.eventhub:0.1.0"]]
-org_name = "ballerina"
-name = "mime"
-version = "1.0.0"
-
-[[imports."ballerinax/azure.eventhub:0.1.0"]]
-org_name = "ballerina"
-name = "time"
-version = "1.0.0"
+ballerina_version = "slp1"
 
 [[imports."ballerina/log:1.0.0"]]
 org_name = "ballerina"
@@ -272,6 +237,41 @@ version = "1.0.0"
 org_name = "ballerina"
 name = "java"
 version = "0.9.0"
+
+[[imports."ballerinax/azure.eventhub:0.9.0"]]
+org_name = "ballerina"
+name = "crypto"
+version = "1.0.0"
+
+[[imports."ballerinax/azure.eventhub:0.9.0"]]
+org_name = "ballerina"
+name = "encoding"
+version = "1.0.0"
+
+[[imports."ballerinax/azure.eventhub:0.9.0"]]
+org_name = "ballerina"
+name = "http"
+version = "1.0.0"
+
+[[imports."ballerinax/azure.eventhub:0.9.0"]]
+org_name = "ballerina"
+name = "io"
+version = "0.5.0"
+
+[[imports."ballerinax/azure.eventhub:0.9.0"]]
+org_name = "ballerina"
+name = "log"
+version = "1.0.0"
+
+[[imports."ballerinax/azure.eventhub:0.9.0"]]
+org_name = "ballerina"
+name = "mime"
+version = "1.0.0"
+
+[[imports."ballerinax/azure.eventhub:0.9.0"]]
+org_name = "ballerina"
+name = "time"
+version = "1.0.0"
 
 [[imports."ballerina/file:0.5.0"]]
 org_name = "ballerina"
