@@ -12,6 +12,12 @@ The REST APIs fall into the following categories:
 - Event Hubs service: 
   APIs that enable operations directly on the Event Hubs service, and have <namespaceName>.servicebus.windows.net/ in the request URI. The Event Hubs service API is focused on this implementation. 
 
+## Compatibility
+|                     |    Version         |
+|:-------------------:|:------------------:|
+| Ballerina Language  | swan-lake-preview1 |
+
+
 ## Samples:
 
 1. Sending an event.

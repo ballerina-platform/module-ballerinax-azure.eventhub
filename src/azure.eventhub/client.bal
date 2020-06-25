@@ -31,7 +31,7 @@ public type Client client object {
     private string API_PREFIX = "";
     private http:Client clientEndpoint;
 
-    public function __init(ClientEndpointConfiguration config) returns error? {
+    public function init(ClientEndpointConfiguration config) returns error? {
         self.config = config;
         self.API_PREFIX = "?timeout=" + config.timeout.toString() + "&api-version=" + config.apiVersion;
         self.clientEndpoint = new ("https://" + self.config.resourceUri);
@@ -54,7 +54,7 @@ public type Client client object {
             req.addHeader(header, value.toString());
         }
         if (brokerProperties.length() > 0) {
-            json|error props = json.constructFrom(brokerProperties);
+            json|error props = brokerProperties.cloneWithType(json);
             if (props is error) {
                 return error(EVENT_HUB_ERROR, message = "unbale to parse broker properties ", cause = props);
             } else {
@@ -200,7 +200,7 @@ public type Client client object {
     #
     # + consumerGroupName - consumer group name
     # + return - Return partition list or error
-    public remote function listPartitions(string consumerGroupName) returns @tainted xml|error { 
+    public remote function listPartitions(string consumerGroupName) returns @tainted xml|error {
         http:Request req = self.getAuthorizedRequest();
         var response = self.clientEndpoint->get("/consumergroups/" + consumerGroupName + "/partitions", req);
         if (response is http:Response) {
@@ -278,16 +278,16 @@ public type Client client object {
     private function getBatchEventJson(BatchEvent batchEvent) returns json {
         json[] message = [];
         foreach var item in batchEvent.events {
-            json data = checkpanic json.constructFrom(item.data);
+            json data = checkpanic item.data.cloneWithType(json);
             json j = {
                 Body: data
             };
             if (!(item["userProperties"] is ())) {
-                json userProperties = {UserProperties:checkpanic json.constructFrom(item["userProperties"])};
+                json userProperties = {UserProperties:checkpanic item["userProperties"].cloneWithType(json)};
                 j = checkpanic j.mergeJson(userProperties);
             }
             if (!(item["brokerProperties"] is ())) {
-                json brokerProperties = {BrokerProperties:checkpanic json.constructFrom(item["brokerProperties"])};
+                json brokerProperties = {BrokerProperties:checkpanic item["brokerProperties"].cloneWithType(json)};
                 j = checkpanic j.mergeJson(brokerProperties);
             }
             message.push(j);
