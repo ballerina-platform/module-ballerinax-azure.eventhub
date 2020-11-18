@@ -101,14 +101,19 @@ public client class Client {
     #
     # + batchEvent - batch of events
     # + partitionId - partition ID
+    # + publisherId - publisher ID
     # + return - Eventhub error if unsuccessful
-    public remote function sendBatch(BatchEvent batchEvent, int partitionId = -1) returns @tainted error? {
+    public remote function sendBatch(BatchEvent batchEvent, int partitionId = -1, string publisherId = "") returns @tainted error? {
         http:Request req = self.getAuthorizedRequest();
         req.setJsonPayload(self.getBatchEventJson(batchEvent));
         req.setHeader("content-type", "application/vnd.microsoft.servicebus.json");
         string postResource = "/messages";
         if (partitionId > -1) {
             postResource = "/partitions/" + partitionId.toString() + postResource;
+        }
+
+        if (publisherId != "") {
+            postResource = "/publishers/" + publisherId + postResource;
         }
         var response = self.clientEndpoint->post(postResource, req);
         if (response is http:Response) {
