@@ -25,7 +25,7 @@ import ballerina/time;
 # Eventhub client implementation
 #
 # + config - Client configuration
-public type Client client object {
+public client class Client {
 
     private ClientEndpointConfiguration config;
     private string API_PREFIX = "";
@@ -45,9 +45,8 @@ public type Client client object {
     # + brokerProperties - broker properties
     # + partitionId - partition ID
     # + return - @error if remote API is unreachable
-    public remote function send(string|xml|json|byte[]|io:ReadableByteChannel|mime:Entity[] data,
-        public map<string> userProperties = {}, public map<anydata> brokerProperties = {}, public int partitionId = -1,
-        public string publisherId = "") returns @tainted error? {
+    public remote function send(string|xml|json|byte[]|io:ReadableByteChannel|mime:Entity[] data, map<string> userProperties = {},
+        map<anydata> brokerProperties = {}, int partitionId = -1, string publisherId = "") returns @tainted error? {
         http:Request req = self.getAuthorizedRequest();
         req.setHeader("Content-Type", "application/atom+xml;type=entry;charset=utf-8");
         foreach var [header, value] in userProperties.entries() {
@@ -56,7 +55,7 @@ public type Client client object {
         if (brokerProperties.length() > 0) {
             json|error props = brokerProperties.cloneWithType(json);
             if (props is error) {
-                return error(EVENT_HUB_ERROR, message = "unbale to parse broker properties ", cause = props);
+                return Error("unbale to parse broker properties ", props);
             } else {
                 req.addHeader("BrokerProperties", props.toJsonString());
             }
@@ -78,17 +77,17 @@ public type Client client object {
             if (statusCode == 201) {
                 return;
             }
-            return error(EVENT_HUB_ERROR, message = "invalid response from EventHub API. status code: " + response.statusCode.toString()
+            return Error("invalid response from EventHub API. status code: " + response.statusCode.toString()
                 + ", payload: " + response.getTextPayload().toString());
         } else {
-            return error(EVENT_HUB_ERROR, message = "error invoking EventHub API ", cause = response);
+            return Error("error invoking EventHub API ", <error>response);
         }
     }
 
     # Get request with common headers
     #
     # + return - Return a http request with authorization header
-    private function getAuthorizedRequest() returns http:Request {
+    private isolated function getAuthorizedRequest() returns http:Request {
         http:Request req = new;
         req.addHeader("Authorization", self.getSASToken());
         if (!self.config.enableRetry) {
@@ -102,8 +101,9 @@ public type Client client object {
     #
     # + batchEvent - batch of events
     # + partitionId - partition ID
-    # + return - Eventhub error if unsucessful 
-    public remote function sendBatch(BatchEvent batchEvent, public int partitionId = -1) returns @tainted error? {
+    # + publisherId - publisher ID
+    # + return - Eventhub error if unsuccessful
+    public remote function sendBatch(BatchEvent batchEvent, int partitionId = -1, string publisherId = "") returns @tainted error? {
         http:Request req = self.getAuthorizedRequest();
         req.setJsonPayload(self.getBatchEventJson(batchEvent));
         req.setHeader("content-type", "application/vnd.microsoft.servicebus.json");
@@ -111,15 +111,19 @@ public type Client client object {
         if (partitionId > -1) {
             postResource = "/partitions/" + partitionId.toString() + postResource;
         }
+
+        if (publisherId != "") {
+            postResource = "/publishers/" + publisherId + postResource;
+        }
         var response = self.clientEndpoint->post(postResource, req);
         if (response is http:Response) {
             int statusCode = response.statusCode;
             if (statusCode != 201) {
-                return error(EVENT_HUB_ERROR, message = "invalid response from EventHub API. status code: " + response.statusCode.toString()
+                return Error("invalid response from EventHub API. status code: " + response.statusCode.toString()
                     + ", payload: " + response.getTextPayload().toString());
             }
         } else {
-            return error(EVENT_HUB_ERROR, message = "error invoking EventHub API ", cause = response);
+            return Error("error invoking EventHub API ",  <error>response);
         }
     }
 
@@ -134,10 +138,10 @@ public type Client client object {
             if (xmlPayload is xml) {
                 return xmlPayload;
             }
-            return error(EVENT_HUB_ERROR, message = "invalid response from EventHub API. status code: " + response.statusCode.toString()
+            return Error("invalid response from EventHub API. status code: " + response.statusCode.toString()
                 + ", payload: " + response.getTextPayload().toString());
         } else {
-            return error(EVENT_HUB_ERROR, message = "error invoking EventHub API ", cause = response);
+            return Error("error invoking EventHub API ", <error>response);
         }
     }
 
@@ -152,10 +156,10 @@ public type Client client object {
             if (xmlPayload is xml) {
                 return xmlPayload;
             }
-            return error(EVENT_HUB_ERROR, message = "invalid response while getting revoked publishers: status code: " + response.statusCode.toString()
+            return Error("invalid response while getting revoked publishers: status code: " + response.statusCode.toString()
                 + ", payload: " + response.getTextPayload().toString());
         } else {
-            return error(EVENT_HUB_ERROR, message = "error invoking EventHub API ", cause = response);
+            return Error("error invoking EventHub API ", <error>response);
         }
     }
 
@@ -171,10 +175,10 @@ public type Client client object {
             if (xmlPayload is xml) {
                 return xmlPayload;
             }
-            return error(EVENT_HUB_ERROR, message = "invalid response while revoking publisher: " + publisherName
+            return Error("invalid response while revoking publisher: " + publisherName
                 + ". " + response.statusCode.toString());
         } else {
-            return error(EVENT_HUB_ERROR, message = "error invoking EventHub API ", cause = response);
+            return Error("error invoking EventHub API ", <error>response);
         }
     }
 
@@ -190,9 +194,9 @@ public type Client client object {
             if (xmlPayload is xml) {
                 return xmlPayload;
             }
-            return error(EVENT_HUB_ERROR, message = "invalid response from EventHub API " + response.statusCode.toString());
+            return Error("invalid response from EventHub API " + response.statusCode.toString());
         } else {
-            return error(EVENT_HUB_ERROR, message = "error invoking EventHub API ", cause = response);
+            return Error("error invoking EventHub API ", <error>response);
         }
     }
 
@@ -208,9 +212,9 @@ public type Client client object {
             if (xmlPayload is xml) {
                 return xmlPayload;
             }
-            return error(EVENT_HUB_ERROR, message = "invalid response from EventHub API " + response.statusCode.toString());
+            return Error("invalid response from EventHub API " + response.statusCode.toString());
         } else {
-            return error(EVENT_HUB_ERROR, message = "error invoking EventHub API ", cause = response);
+            return Error("error invoking EventHub API ", <error>response);
         }
     }
 
@@ -227,9 +231,9 @@ public type Client client object {
             if (xmlPayload is xml) {
                 return xmlPayload;
             }
-            return error(EVENT_HUB_ERROR, message = "invalid response from EventHub API " + response.statusCode.toString());
+            return Error("invalid response from EventHub API " + response.statusCode.toString());
         } else {
-            return error(EVENT_HUB_ERROR, message = "error invoking EventHub API ", cause = response);
+            return Error("error invoking EventHub API ", <error>response);
         }
     }
 
@@ -246,9 +250,9 @@ public type Client client object {
             if (xmlPayload is xml) {
                 return xmlPayload;
             }
-            return error(EVENT_HUB_ERROR, message = "invalid response from EventHub API " + response.statusCode.toString());
+            return Error("invalid response from EventHub API " + response.statusCode.toString());
         } else {
-            return error(EVENT_HUB_ERROR, message = "error invoking EventHub API ", cause = response);
+            return Error("error invoking EventHub API ", <error>response);
         }
     }
 
@@ -264,18 +268,17 @@ public type Client client object {
             if (xmlPayload is xml) {
                 return xmlPayload;
             }
-            return error(EVENT_HUB_ERROR, message = "invalid response from EventHub API " + response.statusCode.toString());
+            return Error("invalid response from EventHub API " + response.statusCode.toString());
         } else {
-            return error(EVENT_HUB_ERROR, message = "error invoking EventHub API ", cause = response);
+            return Error("error invoking EventHub API ", <error>response);
         }
     }
-
 
     # Convert batch event to json
     #
     # + batchEvent - batch event 
     # + return - Return eventhub formatted json
-    private function getBatchEventJson(BatchEvent batchEvent) returns json {
+    private isolated function getBatchEventJson(BatchEvent batchEvent) returns json {
         json[] message = [];
         foreach var item in batchEvent.events {
             json data = checkpanic item.data.cloneWithType(json);
@@ -298,7 +301,7 @@ public type Client client object {
     # Generate the SAS token
     #
     # + return - Return SAS token
-    private function getSASToken() returns string {
+    private isolated function getSASToken() returns string {
         time:Time time = time:currentTime();
         int currentTimeMills = time.time / 1000;
         int week = 60 * 60 * 24 * 7;
@@ -309,7 +312,7 @@ public type Client client object {
             + <string>encoding:encodeUriComponent(self.config.resourceUri, "UTF-8")
             + "&sig=" + <string>encoding:encodeUriComponent(signature, "UTF-8")
             + "&se=" + expiry.toString() + "&skn=" + self.config.sasKeyName;
-        log:printDebug(() => io:sprintf("SAS token: [%s]", sasToken));
+        log:printDebug(io:sprintf("SAS token: [%s]", sasToken));
         return sasToken;
     }
 };
@@ -349,5 +352,5 @@ public type BatchEvent record {|
     BatchMessage[] events;
 |};
 
-# EventHub Error constant
-public const EVENT_HUB_ERROR = "{azure.eventhub}Error";
+# Represents the Eventhub error type.
+public type Error distinct error;

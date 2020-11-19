@@ -15,7 +15,7 @@ The REST APIs fall into the following categories:
 ## Compatibility
 |                     |    Version         |
 |:-------------------:|:------------------:|
-| Ballerina Language  | swan-lake-preview1 |
+| Ballerina Language  | swan-lake-preview5 |
 
 
 ## Samples:
@@ -123,7 +123,7 @@ public function main() {
 }
 ```
 
-6. Sending a batch event to partition with publisher id
+6. Sending a batch event with publisher id
 ```ballerina
 import ballerinax/azure.eventhub as eventhub;
 
@@ -144,7 +144,7 @@ public function main() {
             {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
         ]
     };
-    var b = c->sendBatch(batchEvent, partitionId=1, publisherId="device-1");
+    var b = c->sendBatch(batchEvent, publisherId="device-1");
 }
 ```
 
