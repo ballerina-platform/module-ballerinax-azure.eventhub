@@ -25,7 +25,7 @@ The REST APIs fall into the following categories:
 1. Sending an event.
 
 ```ballerina
-import azure_eventhub as eventhub;
+import ballerinax/azure_eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
@@ -41,7 +41,7 @@ public function main() {
 2. Sending an event with broker properties and user properties.
 
 ```ballerina
-import azure_eventhub as eventhub;
+import ballerinax/azure_eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
@@ -59,7 +59,7 @@ public function main() {
 
 3. Sending an event with broker properties, user properties & partition id.
 ```ballerina
-import azure_eventhub as eventhub;
+import ballerinax/azure_eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
@@ -77,7 +77,7 @@ public function main() {
 
 4. Sending a batch event.
 ```ballerina
-import azure_eventhub as eventhub;
+import ballerinax/azure_eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
@@ -102,7 +102,7 @@ public function main() {
 
 5. Sending a batch event to partition.
 ```ballerina
-import azure_eventhub as eventhub;
+import ballerinax/azure_eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
@@ -127,7 +127,7 @@ public function main() {
 
 6. Sending a batch event with publisher id
 ```ballerina
-import azure.eventhub as eventhub;
+import ballerinax/azure.eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
@@ -150,10 +150,9 @@ public function main() {
 }
 ```
 
-
 7. Create a new event hub
 ```ballerina
-import azure.eventhub as eventhub;
+import ballerinax/azure.eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
@@ -168,7 +167,7 @@ public function main() {
 
 8. Get an event hub
 ```ballerina
-import azure.eventhub as eventhub;
+import ballerinax/azure.eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
@@ -181,10 +180,9 @@ public function main() {
 }
 ```
 
-
 9. Delete a event hub
 ```ballerina
-import azure.eventhub as eventhub;
+import ballerinax/azure.eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
@@ -199,7 +197,7 @@ public function main() {
 
 10. Create a new consumer group
 ```ballerina
-import azure.eventhub as eventhub;
+import ballerinax/azure.eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
@@ -214,7 +212,7 @@ public function main() {
 
 11. Get consumer group
 ```ballerina
-import azure.eventhub as eventhub;
+import ballerinax/azure.eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
@@ -227,10 +225,9 @@ public function main() {
 }
 ```
 
-
 12. Delete a consumer group
 ```ballerina
-import azure.eventhub as eventhub;
+import ballerinax/azure.eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
