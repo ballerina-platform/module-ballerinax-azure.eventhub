@@ -1,6 +1,7 @@
-[project]
-org-name= "ballerinax"
-version= "0.9.0"
+[package]
+org = "ballerinax"
+name = "azure_eventhub"
+version = "0.9.0"
 license= ["Apache-2.0"]
 authors = ["Ballerina"]
 keywords = ["Azure","Eventhub"]

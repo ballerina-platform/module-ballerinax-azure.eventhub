@@ -22,7 +22,7 @@ function testBatchEventError() {
     ClientEndpointConfiguration config = {
         sasKeyName: "admin",
         sasKey: "Ct9V2xF9X8ulLxYPiasINsoZSZSVPTzpeKKocV4XBHE=",
-        resourceUri: "c2cnamespace.servicebus.windows.net/myhub"
+        resourceUri: "c2cnamespace.servicebus.windows.net"
     };
     Client c = <Client>new Client(config);
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
@@ -35,7 +35,7 @@ function testBatchEventError() {
                 {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
             ]
     };
-    var b = c->sendBatch(batchEvent);
+    var b = c->sendBatch("myhub", batchEvent);
     test:assertTrue(b is error);
     if (b is error) {
         test:assertExactEquals(b.message(), "error invoking EventHub API ");
