@@ -29,9 +29,9 @@ import ballerinax/azure_eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: "admin",
-       sasKey: "Ct9V2xF9X8ulLxYPiasINsoZSZSVPTzpeKKocV4XBHE=",
-       resourceUri: "c2cnamespace.servicebus.windows.net"
+       sasKeyName: "<sas_key_name>",
+       sasKey: "<sas_key>",
+       resourceUri: "<resource_uri>"
    };
    eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
    var b = c->send("myhub", "eventData");
@@ -45,9 +45,9 @@ import ballerinax/azure_eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: "admin",
-       sasKey: "Ct9V2xF9X8ulLxYPiasINsoZSZSVPTzpeKKocV4XBHE=",
-       resourceUri: "c2cnamespace.servicebus.windows.net"
+       sasKeyName: "<sas_key_name>",
+       sasKey: "<sas_key>",
+       resourceUri: "<resource_uri>"
    };
    eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
    map<string> brokerProps = {"CorrelationId": "32119834", "CorrelationId2": "32119834"};
@@ -63,9 +63,9 @@ import ballerinax/azure_eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: "admin",
-       sasKey: "Ct9V2xF9X8ulLxYPiasINsoZSZSVPTzpeKKocV4XBHE=",
-       resourceUri: "c2cnamespace.servicebus.windows.net"
+       sasKeyName: "<sas_key_name>",
+       sasKey: "<sas_key>",
+       resourceUri: "<resource_uri>"
    };
    eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
@@ -81,9 +81,9 @@ import ballerinax/azure_eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: "admin",
-       sasKey: "Ct9V2xF9X8ulLxYPiasINsoZSZSVPTzpeKKocV4XBHE=",
-       resourceUri: "c2cnamespace.servicebus.windows.net"
+       sasKeyName: "<sas_key_name>",
+       sasKey: "<sas_key>",
+       resourceUri: "<resource_uri>"
    };
    eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
@@ -106,9 +106,9 @@ import ballerinax/azure_eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: "admin",
-       sasKey: "Ct9V2xF9X8ulLxYPiasINsoZSZSVPTzpeKKocV4XBHE=",
-       resourceUri: "c2cnamespace.servicebus.windows.net"
+       sasKeyName: "<sas_key_name>",
+       sasKey: "<sas_key>",
+       resourceUri: "<resource_uri>"
    };
    eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
@@ -131,9 +131,9 @@ import ballerinax/azure.eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: "admin",
-       sasKey: "Ct9V2xF9X8ulLxYPiasINsoZSZSVPTzpeKKocV4XBHE=",
-       resourceUri: "c2cnamespace.servicebus.windows.net"
+       sasKeyName: "<sas_key_name>",
+       sasKey: "<sas_key>",
+       resourceUri: "<resource_uri>"
    };
    eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
@@ -156,9 +156,9 @@ import ballerinax/azure.eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: "admin",
-       sasKey: "Ct9V2xF9X8ulLxYPiasINsoZSZSVPTzpeKKocV4XBHE=",
-       resourceUri: "c2cnamespace.servicebus.windows.net"
+       sasKeyName: "<sas_key_name>",
+       sasKey: "<sas_key>",
+       resourceUri: "<resource_uri>"
    };
    eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
    var b = c->createEventHub("myhub");
@@ -171,9 +171,9 @@ import ballerinax/azure.eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: "admin",
-       sasKey: "Ct9V2xF9X8ulLxYPiasINsoZSZSVPTzpeKKocV4XBHE=",
-       resourceUri: "c2cnamespace.servicebus.windows.net"
+       sasKeyName: "<sas_key_name>",
+       sasKey: "<sas_key>",
+       resourceUri: "<resource_uri>"
    };
    eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
    var b = c->getEventHub("myhub");
@@ -186,9 +186,9 @@ import ballerinax/azure.eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: "admin",
-       sasKey: "Ct9V2xF9X8ulLxYPiasINsoZSZSVPTzpeKKocV4XBHE=",
-       resourceUri: "c2cnamespace.servicebus.windows.net"
+       sasKeyName: "<sas_key_name>",
+       sasKey: "<sas_key>",
+       resourceUri: "<resource_uri>"
    };
    eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
    var b = c->deleteEventHub("myhub");
@@ -201,9 +201,9 @@ import ballerinax/azure.eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: "admin",
-       sasKey: "Ct9V2xF9X8ulLxYPiasINsoZSZSVPTzpeKKocV4XBHE=",
-       resourceUri: "c2cnamespace.servicebus.windows.net"
+       sasKeyName: "<sas_key_name>",
+       sasKey: "<sas_key>",
+       resourceUri: "<resource_uri>"
    };
    eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
    var b = c->createConsumerGroup("myhub", "groupName");
@@ -216,9 +216,9 @@ import ballerinax/azure.eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: "admin",
-       sasKey: "Ct9V2xF9X8ulLxYPiasINsoZSZSVPTzpeKKocV4XBHE=",
-       resourceUri: "c2cnamespace.servicebus.windows.net"
+       sasKeyName: "<sas_key_name>",
+       sasKey: "<sas_key>",
+       resourceUri: "<resource_uri>"
    };
    eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
    var b = c->getConsumerGroup("myhub", "groupName");
@@ -231,9 +231,9 @@ import ballerinax/azure.eventhub as eventhub;
 
 public function main() {
    eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: "admin",
-       sasKey: "Ct9V2xF9X8ulLxYPiasINsoZSZSVPTzpeKKocV4XBHE=",
-       resourceUri: "c2cnamespace.servicebus.windows.net"
+       sasKeyName: "<sas_key_name>",
+       sasKey: "<sas_key>",
+       resourceUri: "<resource_uri>"
    };
    eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
    var b = c->deleteConsumerGroup("myhub", "groupName");
