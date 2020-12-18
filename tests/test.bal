@@ -15,14 +15,16 @@
 // under the License.
 
 import ballerina/test;
+import ballerina/config;
+import ballerina/system;
 
 // Test function
 @test:Config {}
 function testBatchEventError() {
     ClientEndpointConfiguration config = {
-        sasKeyName: "admin",
-        sasKey: "Ct9V2xF9X8ulLxYPiasINsoZSZSVPTzpeKKocV4XBHE=",
-        resourceUri: "c2cnamespace.servicebus.windows.net"
+        sasKeyName: getConfigValue("SAS_KEY_NAME"),
+        sasKey: getConfigValue("SAS_KEY"),
+        resourceUri: getConfigValue("RESOURCE_URI")
     };
     Client c = <Client>new Client(config);
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
@@ -40,4 +42,11 @@ function testBatchEventError() {
     if (b is error) {
         test:assertExactEquals(b.message(), "error invoking EventHub API ");
     }
+}
+
+# Get configuration value for the given key from ballerina.conf file.
+# 
+# + return - configuration value of the given key as a string
+isolated function getConfigValue(string key) returns string {
+    return (system:getEnv(key) != "") ? system:getEnv(key) : config:getAsString(key);
 }
