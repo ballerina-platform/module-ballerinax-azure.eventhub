@@ -17,7 +17,7 @@ The REST APIs fall into the following categories:
 ## Compatibility
 |                     |    Version                  |
 |:-------------------:|:---------------------------:|
-| Ballerina Language  | swan-lake-preview8-Snapshot |
+| Ballerina Language  | swan-lake-preview8          |
 
 
 ## Samples:
