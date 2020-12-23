@@ -22,9 +22,9 @@ import ballerina/system;
 @test:Config {}
 function testBatchEventError() {
     ClientEndpointConfiguration config = {
-        sasKeyName: getConfigValue("SAS_KEY_NAME"),
-        sasKey: getConfigValue("SAS_KEY"),
-        resourceUri: getConfigValue("RESOURCE_URI")
+        sasKeyName: config:getAsString("SAS_KEY_NAME"),
+        sasKey: config:getAsString("SAS_KEY"),
+        resourceUri: config:getAsString("RESOURCE_URI")
     };
     Client c = <Client>new Client(config);
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
