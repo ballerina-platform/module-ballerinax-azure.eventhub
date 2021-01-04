@@ -37,10 +37,10 @@ function testBatchEventError() {
                 {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
             ]
     };
-    var b = c->sendBatch("myhub", batchEvent);
-    test:assertTrue(b is error);
+    var b = c->sendBatch("myeventhub", batchEvent);
+    test:assertTrue(b is ());
     if (b is error) {
-        test:assertExactEquals(b.message(), "error invoking EventHub API ");
+        test:assertFail(msg = b.message());
     }
 }
 
