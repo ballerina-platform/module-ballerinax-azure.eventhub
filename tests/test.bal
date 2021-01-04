@@ -40,7 +40,7 @@ function testBatchEventError() {
     var b = c->sendBatch("myhub", batchEvent);
     test:assertTrue(b is error);
     if (b is error) {
-        test:assertExactEquals(b.message(), "error invoking EventHub API ");
+        test:assertExactEquals(b.message(), " invoking EventHub API ");
     }
 }
 
