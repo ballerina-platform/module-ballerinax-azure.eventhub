@@ -38,10 +38,10 @@ function testBatchEventError() {
             ]
     };
     var b = c->sendBatch("myeventhub", batchEvent);
-    test:assertTrue(b is ());
     if (b is error) {
         test:assertFail(msg = b.message());
     }
+    test:assertTrue(b is ());
 }
 
 # Get configuration value for the given key from ballerina.conf file.
