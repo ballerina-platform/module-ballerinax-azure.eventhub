@@ -18,7 +18,7 @@ import ballerina/test;
 import ballerina/config;
 import ballerina/system;
 
-// Test function
+// Test functions
 @test:Config {}
 function testBatchEventError() {
     ClientEndpointConfiguration config = {
