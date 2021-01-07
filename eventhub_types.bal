@@ -14,7 +14,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-# The Client endpoint configuration for Redis databases.
+# The Client endpoint configuration for Azure Event Hubs.
 #
 # + sasKeyName - shared access service key name
 # + sasKey - shared access service key 
@@ -64,7 +64,7 @@ public type EventHubDescription record {|
     int partitionCount?;
 |};
 
-# EventHub Description Record
+# EventHub Description to Update Record
 #
 # + messageRetentionInDays - event data
 public type EventHubDescriptionToUpdate record {|

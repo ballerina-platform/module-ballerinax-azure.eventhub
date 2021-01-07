@@ -19,7 +19,7 @@ import ballerina/io;
 import ballerina/mime;
 import ballerina/lang.'xml as xmllib;
 
-# Eventhub client implementation
+# Eventhub client implementation.
 #
 # + config - Client configuration
 public client class Client {
