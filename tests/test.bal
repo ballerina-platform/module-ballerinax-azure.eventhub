@@ -178,6 +178,7 @@ function testGetEventHub() {
     }
 }
 
+// TODO:Fix updateEventHub logic
 @test:Config {
     enable: false
 }
@@ -234,6 +235,7 @@ function testGetRevokedPublishers() {
     }
 }
 
+// TODO:Fix revokePublisher logic
 @test:Config {
     enable: false
 }
@@ -249,10 +251,66 @@ function testRevokePublisher() {
 }
 
 @test:Config {
-    enable: true
+    enable: false
 }
 function testResumePublisher() {
     var b = c->resumePublisher("myeventhub", "device-1");
+    if (b is error) {
+        test:assertFail(msg = b.message());
+    }
+    test:assertTrue(b is ());
+    if (b is ()) {
+        log:print("successful");
+    }
+}
+
+@test:Config {
+    enable: false
+}
+function testCreateConsumerGroup() {
+    var b = c->createConsumerGroup("myeventhub","consumerGroup1");
+    if (b is error) {
+        test:assertFail(msg = b.message());
+    }
+    test:assertTrue(b is xml);
+    if (b is xml) {
+        log:print(b.toString());
+    }
+}
+
+@test:Config {
+    enable: false
+}
+function testGetConsumerGroup() {
+    var b = c->getConsumerGroup("myeventhub","consumerGroup1");
+    if (b is error) {
+        test:assertFail(msg = b.message());
+    }
+    test:assertTrue(b is xml);
+    if (b is xml) {
+        log:print(b.toString());
+    }
+}
+
+@test:Config {
+    enable: false
+}
+function testListConsumerGroups() {
+    var b = c->listConsumerGroups("myeventhub");
+    if (b is error) {
+        test:assertFail(msg = b.message());
+    }
+    test:assertTrue(b is xml);
+    if (b is xml) {
+        log:print("successful");
+    }
+}
+
+@test:Config {
+    enable: true
+}
+function testDeleteConsumerGroups() {
+    var b = c->deleteConsumerGroup("myeventhub","consumerGroup1");
     if (b is error) {
         test:assertFail(msg = b.message());
     }
