@@ -321,7 +321,7 @@ function testListPartitions() {
 }
 
 @test:Config {
-    enable: true
+    enable: false
 }
 function testGetPartition() {
     var b = c->getPartition("myeventhub", "consumerGroup1", 1);
@@ -335,7 +335,7 @@ function testGetPartition() {
 }
 
 @test:Config {
-    enable: false
+    enable: true
 }
 function testDeleteConsumerGroups() {
     var b = c->deleteConsumerGroup("myeventhub","consumerGroup1");
