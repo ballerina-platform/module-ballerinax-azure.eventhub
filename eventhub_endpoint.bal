@@ -261,13 +261,13 @@ public client class Client {
     # + eventHubPath - event hub path
     # + publisherName - publisher name 
     # + return - Return publisher details or error
-    remote function resumePublisher(string eventHubPath, string publisherName) returns @tainted xml|error {
+    remote function resumePublisher(string eventHubPath, string publisherName) returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
         var response = self.clientEndpoint->delete("/" + eventHubPath + "/revokedpublishers/" + publisherName, req);
         if (response is http:Response) {
-            var xmlPayload = response.getXmlPayload();
-            if (xmlPayload is xml) {
-                return xmlPayload;
+            int statusCode = response.statusCode;
+            if (statusCode == 200) {
+                return;
             }
             return Error("invalid response from EventHub API " + response.statusCode.toString());
         } else {

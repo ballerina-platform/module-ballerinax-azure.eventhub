@@ -256,9 +256,9 @@ function testResumePublisher() {
     if (b is error) {
         test:assertFail(msg = b.message());
     }
-    test:assertTrue(b is xml);
-    if (b is xml) {
-        log:print(b.toString());
+    test:assertTrue(b is ());
+    if (b is ()) {
+        log:print("successful");
     }
 }
 
