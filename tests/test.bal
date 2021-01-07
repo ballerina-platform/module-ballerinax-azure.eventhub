@@ -282,7 +282,7 @@ function testCreateConsumerGroup() {
     enable: false
 }
 function testGetConsumerGroup() {
-    var b = c->getConsumerGroup("myeventhub","consumerGroup1");
+    var b = c->getConsumerGroup("myeventhub", "consumerGroup1");
     if (b is error) {
         test:assertFail(msg = b.message());
     }
@@ -307,7 +307,35 @@ function testListConsumerGroups() {
 }
 
 @test:Config {
+    enable: false
+}
+function testListPartitions() {
+    var b = c->listPartitions("myeventhub", "consumerGroup1");
+    if (b is error) {
+        test:assertFail(msg = b.message());
+    }
+    test:assertTrue(b is xml);
+    if (b is xml) {
+        log:print("successful");
+    }
+}
+
+@test:Config {
     enable: true
+}
+function testGetPartition() {
+    var b = c->getPartition("myeventhub", "consumerGroup1", 1);
+    if (b is error) {
+        test:assertFail(msg = b.message());
+    }
+    test:assertTrue(b is xml);
+    if (b is xml) {
+        log:print(b.toString());
+    }
+}
+
+@test:Config {
+    enable: false
 }
 function testDeleteConsumerGroups() {
     var b = c->deleteConsumerGroup("myeventhub","consumerGroup1");
