@@ -299,7 +299,7 @@ function testGetRevokedPublishers() {
 }
 
 @test:Config {
-    enable: true
+    enable: false
 }
 function testResumePublisher() {
     var b = c->resumePublisher("myeventhub", "device-1");
@@ -316,7 +316,7 @@ function testResumePublisher() {
     enable: false
 }
 function testCreateConsumerGroup() {
-    var b = c->createConsumerGroup("myeventhub","consumerGroup1");
+    var b = c->createConsumerGroup("myeventhub", "consumerGroup1");
     if (b is error) {
         test:assertFail(msg = b.message());
     }
@@ -383,7 +383,7 @@ function testGetPartition() {
 }
 
 @test:Config {
-    enable: false
+    enable: true
 }
 function testDeleteConsumerGroups() {
     var b = c->deleteConsumerGroup("myeventhub","consumerGroup1");
