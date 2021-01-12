@@ -29,8 +29,7 @@ Client c = new (config);
 
 // Test functions
 @test:Config {
-    groups: ["eventhub"],
-    enable: true
+    groups: ["eventhub"]
 }
 function testBatchEventError() {
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
@@ -51,8 +50,7 @@ function testBatchEventError() {
 }
 
 @test:Config {
-    groups: ["eventhub"],
-    enable: false
+    groups: ["eventhub"]
 }
 function testSendEvent() {
     var b = c->send("myeventhub", "eventData");
@@ -63,8 +61,7 @@ function testSendEvent() {
 }
 
 @test:Config {
-    groups: ["eventhub"],
-    enable: false
+    groups: ["eventhub"]
 }
 function testSendEventWithBrokerAndUserProperties() {
     map<string> brokerProps = {"CorrelationId": "32119834", "CorrelationId2": "32119834"};
@@ -78,8 +75,7 @@ function testSendEventWithBrokerAndUserProperties() {
 }
 
 @test:Config {
-    groups: ["eventhub"],
-    enable: false
+    groups: ["eventhub"]
 }
 function testSendPartitionEvent() {
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
@@ -93,8 +89,7 @@ function testSendPartitionEvent() {
 }
 
 @test:Config {
-    groups: ["eventhub"],
-    enable: false
+    groups: ["eventhub"]
 }
 function testSendBatchEvent() {
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
@@ -115,8 +110,7 @@ function testSendBatchEvent() {
 }
 
 @test:Config {
-    groups: ["eventhub"],
-    enable: false
+    groups: ["eventhub"]
 }
 function testSendBatchEventToPartition() {
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
@@ -137,7 +131,7 @@ function testSendBatchEventToPartition() {
 }
 
 @test:Config {
-    groups: ["eventhub"]
+    groups: ["publisher"]
 }
 function testSendBatchEventWithPublisherID() {
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
