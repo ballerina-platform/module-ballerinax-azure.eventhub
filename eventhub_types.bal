@@ -78,5 +78,12 @@ public type ConsumerGroupDescription record {|
     string userMetadata?;
 |};
 
+# RevokePublisher Description Record
+#
+# + Name - The name of the revoked publisher
+public type RevokePublisherDescription record {|
+    string Name?;
+|};
+
 # Represents the Eventhub error type.
 public type Error distinct error;

@@ -223,7 +223,7 @@ public client class Client {
     # + return - Return revoke publisher or Error
     remote function getRevokedPublishers(string eventHubPath) returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
-        var response = self.clientEndpoint->get("/" + eventHubPath + "/revokedpublishers", req);
+        var response = self.clientEndpoint->get("/" + eventHubPath + "/revokedpublishers"+ "?timeout=60&api-version=2014-01", req);
         if (response is http:Response) {
             var xmlPayload = response.getXmlPayload();
             if (xmlPayload is xml) {
@@ -243,7 +243,13 @@ public client class Client {
     # + return - Return revoke publisher details or error
     remote function revokePublisher(string eventHubPath, string publisherName) returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
-        var response = self.clientEndpoint->put("/" + eventHubPath + "/revokedpublishers/" + publisherName, req);
+        RevokePublisherDescription revokePublisherDescription = {
+            Name: publisherName
+        };
+        xmllib:Element revPubDes = <xmllib:Element> xml `<RevokedPublisherDescription xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns="http://schemas.microsoft.com/netservices/2010/10/servicebus/connect"/>`;
+        req.setXmlPayload(getRevPubDescriptionProperties(revokePublisherDescription, revPubDes));
+        var response = self.clientEndpoint->put("/" + eventHubPath + "/revokedpublishers/" + publisherName + "?timeout=60&api-version=2014-05", req);
         if (response is http:Response) {
             var xmlPayload = response.getXmlPayload();
             if (xmlPayload is xml) {

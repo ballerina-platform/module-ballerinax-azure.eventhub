@@ -196,7 +196,7 @@ function testUpdateEventHub() {
     }
 }
 
-//TODO: xml returned cannot be converted to string
+//TODO: Fix xml returned cannot be converted to string
 @test:Config {
     enable: false
 }
@@ -243,7 +243,7 @@ function testCreateEventHubWithEventHubDescription() {
 }
 
 @test:Config {
-    enable: true
+    enable: false
 }
 function testDeleteEventHubWithEventHubDescription() {
     var b = c->deleteEventHub("myhubnew");
@@ -256,18 +256,17 @@ function testDeleteEventHubWithEventHubDescription() {
 @test:Config {
     enable: false
 }
-function testGetRevokedPublishers() {
-    var b = c->getRevokedPublishers("myeventhub");
+function testSendEventWithPublisherID() {
+    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
+    map<string> userProps = {Alert: "windy", warning: "true"};
+
+    var b = c->send("myeventhub", "data", userProps, brokerProps, publisherId="dev-01");
     if (b is error) {
         test:assertFail(msg = b.message());
     }
-    test:assertTrue(b is xml);
-    if (b is xml) {
-        log:print(b.toString());
-    }
+    test:assertTrue(b is ());
 }
 
-// TODO:Fix revokePublisher logic
 @test:Config {
     enable: false
 }
@@ -282,8 +281,25 @@ function testRevokePublisher() {
     }
 }
 
+//TODO: xml returned cannot be converted to string
 @test:Config {
     enable: false
+}
+function testGetRevokedPublishers() {
+    var b = c->getRevokedPublishers("myeventhub");
+    if (b is error) {
+        test:assertFail(msg = b.message());
+    }
+    test:assertTrue(b is xml);
+    if (b is xml) {
+        log:print("listReceived");
+        json|error signedIdentifiers = jsonutils:fromXML(b);
+        log:print(signedIdentifiers.toString());
+    }
+}
+
+@test:Config {
+    enable: true
 }
 function testResumePublisher() {
     var b = c->resumePublisher("myeventhub", "device-1");
