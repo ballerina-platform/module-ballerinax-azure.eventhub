@@ -28,7 +28,7 @@ public client class Client {
     private string API_PREFIX = "";
     private http:Client clientEndpoint;
 
-    public function init(ClientEndpointConfiguration config) returns error? {
+    public function init(ClientEndpointConfiguration config) {
         self.config = config;
         self.API_PREFIX = "?timeout=" + config.timeout.toString() + "&api-version=" + config.apiVersion;
         self.clientEndpoint = new ("https://" + self.config.resourceUri);
@@ -36,12 +36,12 @@ public client class Client {
 
     # Send a single event
     #
-    # + userProperties - user properties
     # + eventHubPath - event hub path
-    # + publisherId - publisher ID 
     # + data - event data
+    # + userProperties - user properties
     # + brokerProperties - broker properties
     # + partitionId - partition ID
+    # + publisherId - publisher ID 
     # + return - @error if remote API is unreachable
     remote function send(string eventHubPath, string|xml|json|byte[]|io:ReadableByteChannel|mime:Entity[] data, map<string> userProperties = {},
         map<anydata> brokerProperties = {}, int partitionId = -1, string publisherId = "") returns @tainted error? {

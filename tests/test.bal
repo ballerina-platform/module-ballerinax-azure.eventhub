@@ -24,11 +24,11 @@ ClientEndpointConfiguration config = {
     sasKey: getConfigValue("SAS_KEY"),
     resourceUri: getConfigValue("RESOURCE_URI")
 };
-Client c = <Client>new Client(config);
+Client c = new (config);
 
 // Test functions
 @test:Config {
-    enable: false
+    enable: true
 }
 function testBatchEventError() {
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
@@ -335,7 +335,7 @@ function testGetPartition() {
 }
 
 @test:Config {
-    enable: true
+    enable: false
 }
 function testDeleteConsumerGroups() {
     var b = c->deleteConsumerGroup("myeventhub","consumerGroup1");
