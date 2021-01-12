@@ -66,7 +66,7 @@ public client class Client {
         }
         if (publisherId != "") {
             //append publisher ID
-            postResource = postResource + "/publisher/" + publisherId;
+            postResource = postResource + "/publishers/" + publisherId;
         }
         postResource = postResource + "/messages";
         var response = self.clientEndpoint->post(postResource + self.API_PREFIX, req);
@@ -84,8 +84,8 @@ public client class Client {
 
     # Send batch of events
     #
-    # + batchEvent - batch of events
     # + eventHubPath - event hub path
+    # + batchEvent - batch of events
     # + partitionId - partition ID
     # + publisherId - publisher ID
     # + return - Eventhub error if unsuccessful
