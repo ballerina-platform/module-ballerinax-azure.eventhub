@@ -28,7 +28,7 @@ Client c = new (config);
 
 // Test functions
 @test:Config {
-    enable: true
+    enable: false
 }
 function testBatchEventError() {
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
@@ -178,13 +178,12 @@ function testGetEventHub() {
     }
 }
 
-// TODO:Fix updateEventHub logic
 @test:Config {
-    enable: false
+    enable: true
 }
 function testUpdateEventHub() {
     EventHubDescriptionToUpdate eventHubDescriptionToUpdate = {
-        messageRetentionInDays: 5
+        MessageRetentionInDays: 5
     };
     var b = c->updateEventHub("myhub", eventHubDescriptionToUpdate);
     if (b is error) {

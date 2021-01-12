@@ -66,9 +66,9 @@ public type EventHubDescription record {|
 
 # EventHub Description to Update Record
 #
-# + messageRetentionInDays - event data
+# + MessageRetentionInDays - event data
 public type EventHubDescriptionToUpdate record {|
-    int messageRetentionInDays;
+    int MessageRetentionInDays;
 |};
 
 # Consumer group Description Record
