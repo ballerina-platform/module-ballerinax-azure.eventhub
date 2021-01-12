@@ -18,6 +18,7 @@ import ballerina/test;
 import ballerina/config;
 import ballerina/system;
 import ballerina/log;
+import ballerina/jsonutils;
 
 ClientEndpointConfiguration config = {
     sasKeyName: getConfigValue("SAS_KEY_NAME"),
@@ -179,7 +180,7 @@ function testGetEventHub() {
 }
 
 @test:Config {
-    enable: true
+    enable: false
 }
 function testUpdateEventHub() {
     EventHubDescriptionToUpdate eventHubDescriptionToUpdate = {
@@ -196,7 +197,7 @@ function testUpdateEventHub() {
 }
 
 @test:Config {
-    enable: false
+    enable: true
 }
 function testListEventHubs() {
     var b = c->listEventHubs();
@@ -206,6 +207,8 @@ function testListEventHubs() {
     test:assertTrue(b is xml);
     if (b is xml) {
         log:print("listReceived");
+        json|error signedIdentifiers = jsonutils:fromXML(b);
+        log:print(signedIdentifiers.toString());
     }
 }
 
