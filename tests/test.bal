@@ -29,7 +29,8 @@ Client c = new (config);
 
 // Test functions
 @test:Config {
-    enable: false
+    groups: ["eventhub"],
+    enable: true
 }
 function testBatchEventError() {
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
@@ -50,6 +51,7 @@ function testBatchEventError() {
 }
 
 @test:Config {
+    groups: ["eventhub"],
     enable: false
 }
 function testSendEvent() {
@@ -61,6 +63,7 @@ function testSendEvent() {
 }
 
 @test:Config {
+    groups: ["eventhub"],
     enable: false
 }
 function testSendEventWithBrokerAndUserProperties() {
@@ -75,6 +78,7 @@ function testSendEventWithBrokerAndUserProperties() {
 }
 
 @test:Config {
+    groups: ["eventhub"],
     enable: false
 }
 function testSendPartitionEvent() {
@@ -89,6 +93,7 @@ function testSendPartitionEvent() {
 }
 
 @test:Config {
+    groups: ["eventhub"],
     enable: false
 }
 function testSendBatchEvent() {
@@ -110,6 +115,7 @@ function testSendBatchEvent() {
 }
 
 @test:Config {
+    groups: ["eventhub"],
     enable: false
 }
 function testSendBatchEventToPartition() {
@@ -131,7 +137,7 @@ function testSendBatchEventToPartition() {
 }
 
 @test:Config {
-    enable: false
+    groups: ["eventhub"]
 }
 function testSendBatchEventWithPublisherID() {
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
@@ -152,7 +158,7 @@ function testSendBatchEventWithPublisherID() {
 }
 
 @test:Config {
-    enable: false
+    groups: ["eventHubManagment"]
 }
 function testCreateEventHub() {
     var b = c->createEventHub("myhub");
@@ -166,7 +172,8 @@ function testCreateEventHub() {
 }
 
 @test:Config {
-    enable: false
+    groups: ["eventHubManagment"],
+    dependsOn: ["testCreateEventHub"]
 }
 function testGetEventHub() {
     var b = c->getEventHub("myhub");
@@ -180,7 +187,8 @@ function testGetEventHub() {
 }
 
 @test:Config {
-    enable: false
+    groups: ["eventHubManagment"],
+    dependsOn: ["testCreateEventHub"]
 }
 function testUpdateEventHub() {
     EventHubDescriptionToUpdate eventHubDescriptionToUpdate = {
@@ -198,7 +206,8 @@ function testUpdateEventHub() {
 
 //TODO: Fix xml returned cannot be converted to string
 @test:Config {
-    enable: false
+    groups: ["eventHubManagment"],
+    dependsOn: ["testCreateEventHub"]
 }
 function testListEventHubs() {
     var b = c->listEventHubs();
@@ -214,7 +223,13 @@ function testListEventHubs() {
 }
 
 @test:Config {
-    enable: false
+    groups: ["eventHubManagment"],
+    dependsOn: [
+        "testCreateEventHub",
+        "testGetEventHub",
+        "testUpdateEventHub",
+        "testListEventHubs"
+    ]
 }
 function testDeleteEventHub() {
     var b = c->deleteEventHub("myhub");
@@ -225,7 +240,8 @@ function testDeleteEventHub() {
 }
 
 @test:Config {
-    enable: false
+    groups: ["eventHubManagment"],
+    dependsOn: ["testDeleteEventHub"]
 }
 function testCreateEventHubWithEventHubDescription() {
     EventHubDescription eventHubDescription = {
@@ -243,7 +259,8 @@ function testCreateEventHubWithEventHubDescription() {
 }
 
 @test:Config {
-    enable: false
+    groups: ["eventHubManagment"],
+    dependsOn: ["testCreateEventHubWithEventHubDescription"]
 }
 function testDeleteEventHubWithEventHubDescription() {
     var b = c->deleteEventHub("myhubnew");
@@ -268,7 +285,8 @@ function testSendEventWithPublisherID() {
 }
 
 @test:Config {
-    enable: false
+    groups: ["publisher"],
+    dependsOn: ["testSendBatchEventWithPublisherID"]
 }
 function testRevokePublisher() {
     var b = c->revokePublisher("myeventhub", "device-1");
@@ -283,7 +301,8 @@ function testRevokePublisher() {
 
 //TODO: xml returned cannot be converted to string
 @test:Config {
-    enable: false
+    groups: ["publisher"],
+    dependsOn: ["testRevokePublisher"]
 }
 function testGetRevokedPublishers() {
     var b = c->getRevokedPublishers("myeventhub");
@@ -299,7 +318,11 @@ function testGetRevokedPublishers() {
 }
 
 @test:Config {
-    enable: false
+    groups: ["publisher"],
+    dependsOn: [
+        "testRevokePublisher",
+        "testGetRevokedPublishers"
+    ]
 }
 function testResumePublisher() {
     var b = c->resumePublisher("myeventhub", "device-1");
@@ -313,7 +336,7 @@ function testResumePublisher() {
 }
 
 @test:Config {
-    enable: false
+    groups: ["consumergroup"]
 }
 function testCreateConsumerGroup() {
     var b = c->createConsumerGroup("myeventhub", "consumerGroup1");
@@ -327,7 +350,8 @@ function testCreateConsumerGroup() {
 }
 
 @test:Config {
-    enable: false
+    groups: ["consumergroup"],
+    dependsOn: ["testCreateConsumerGroup"]
 }
 function testGetConsumerGroup() {
     var b = c->getConsumerGroup("myeventhub", "consumerGroup1");
@@ -341,7 +365,8 @@ function testGetConsumerGroup() {
 }
 
 @test:Config {
-    enable: false
+    groups: ["consumergroup"],
+    dependsOn: ["testCreateConsumerGroup"]
 }
 function testListConsumerGroups() {
     var b = c->listConsumerGroups("myeventhub");
@@ -355,7 +380,8 @@ function testListConsumerGroups() {
 }
 
 @test:Config {
-    enable: false
+    groups: ["consumergroup"],
+    dependsOn: ["testCreateConsumerGroup"]
 }
 function testListPartitions() {
     var b = c->listPartitions("myeventhub", "consumerGroup1");
@@ -369,7 +395,8 @@ function testListPartitions() {
 }
 
 @test:Config {
-    enable: false
+    groups: ["consumergroup"],
+    dependsOn: ["testCreateConsumerGroup"]
 }
 function testGetPartition() {
     var b = c->getPartition("myeventhub", "consumerGroup1", 1);
@@ -383,7 +410,14 @@ function testGetPartition() {
 }
 
 @test:Config {
-    enable: true
+    groups: ["consumergroup"],
+    dependsOn: [
+        "testCreateConsumerGroup",
+        "testGetConsumerGroup",
+        "testListConsumerGroups",
+        "testListPartitions",
+        "testGetPartition"
+    ]
 }
 function testDeleteConsumerGroups() {
     var b = c->deleteConsumerGroup("myeventhub","consumerGroup1");
