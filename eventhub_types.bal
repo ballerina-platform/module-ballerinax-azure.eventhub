@@ -51,17 +51,17 @@ public type BatchEvent record {|
 
 # EventHub Description Record
 #
-# + messageRetentionInDays - retention time of the event data
-# + authorization - authorization rules
-# + status - status of the event hub
-# + userMetadata - user metadata
-# + partitionCount - number of subscriptions on the Event Hub
+# + MessageRetentionInDays - retention time of the event data
+# + Authorization - authorization rules
+# + Status - status of the event hub
+# + UserMetadata - user metadata
+# + PartitionCount - number of subscriptions on the Event Hub
 public type EventHubDescription record {|
-    int messageRetentionInDays?;
-    string authorization?;
-    string userMetadata?;
-    string status?;
-    int partitionCount?;
+    int MessageRetentionInDays?;
+    string Authorization?;
+    string UserMetadata?;
+    string Status?;
+    int PartitionCount?;
 |};
 
 # EventHub Description to Update Record
