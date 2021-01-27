@@ -43,8 +43,9 @@ public client class Client {
     # + partitionId - partition ID
     # + publisherId - publisher ID 
     # + return - @error if remote API is unreachable
-    remote function send(string eventHubPath, string|xml|json|byte[]|io:ReadableByteChannel|mime:Entity[] data, map<string> userProperties = {},
-        map<anydata> brokerProperties = {}, int partitionId = -1, string publisherId = "") returns @tainted error? {
+    remote function send(string eventHubPath, string|xml|json|byte[]|io:ReadableByteChannel|mime:Entity[] data, 
+        map<string> userProperties = {}, map<anydata> brokerProperties = {}, int partitionId = -1, 
+        string publisherId = "") returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
         req.setHeader("Content-Type", "application/atom+xml;type=entry;charset=utf-8");
         foreach var [header, value] in userProperties.entries() {
@@ -89,7 +90,8 @@ public client class Client {
     # + partitionId - partition ID
     # + publisherId - publisher ID
     # + return - Eventhub error if unsuccessful
-    remote function sendBatch(string eventHubPath, BatchEvent batchEvent, int partitionId = -1, string publisherId = "") returns @tainted error? {
+    remote function sendBatch(string eventHubPath, BatchEvent batchEvent, int partitionId = -1, string publisherId = "") 
+        returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
         req.setJsonPayload(getBatchEventJson(batchEvent));
         req.setHeader("content-type", "application/vnd.microsoft.servicebus.json");
@@ -119,10 +121,12 @@ public client class Client {
     # + eventHubPath - event hub path
     # + eventHubDescription - event hub description
     # + return - Return XML or Error
-    remote function createEventHub(string eventHubPath, EventHubDescription eventHubDescription = {}) returns @tainted xml|error {
+    remote function createEventHub(string eventHubPath, EventHubDescription eventHubDescription = {}) 
+        returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
-        xmllib:Element eventHubDes = <xmllib:Element> xml `<EventHubDescription xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
-                  xmlns="http://schemas.microsoft.com/netservices/2010/10/servicebus/connect"/>`;
+        xmllib:Element eventHubDes = <xmllib:Element> xml `<EventHubDescription 
+            xmlns:i="http://www.w3.org/2001/XMLSchema-instance" 
+            xmlns="http://schemas.microsoft.com/netservices/2010/10/servicebus/connect"/>`;
         req.setXmlPayload(getDescriptionProperties(eventHubDescription, eventHubDes));
         var response = self.clientEndpoint->put("/" + eventHubPath + self.API_PREFIX, req);
         if (response is http:Response) {
@@ -161,11 +165,13 @@ public client class Client {
     # + eventHubPath - event hub path
     # + eventHubDescriptionToUpdate - event hub description to update
     # + return - Return XML or Error
-    remote function updateEventHub(string eventHubPath, EventHubDescriptionToUpdate eventHubDescriptionToUpdate) returns @tainted xml|error {
+    remote function updateEventHub(string eventHubPath, EventHubDescriptionToUpdate eventHubDescriptionToUpdate) 
+        returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
         req.addHeader("If-Match", "*");
-        xmllib:Element eventHubDescription = <xmllib:Element> xml `<EventHubDescription xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
-                  xmlns="http://schemas.microsoft.com/netservices/2010/10/servicebus/connect"/>`;
+        xmllib:Element eventHubDescription = <xmllib:Element> xml `<EventHubDescription 
+            xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://schemas.microsoft.com/netservices/2010/10/servicebus/connect"/>`;
         req.setXmlPayload(getDescriptionProperties(eventHubDescriptionToUpdate, eventHubDescription));
         var response = self.clientEndpoint->put("/" + eventHubPath + self.API_PREFIX, req);
         if (response is http:Response) {
@@ -223,14 +229,15 @@ public client class Client {
     # + return - Return revoke publisher or Error
     remote function getRevokedPublishers(string eventHubPath) returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
-        var response = self.clientEndpoint->get("/" + eventHubPath + "/revokedpublishers"+ "?timeout=60&api-version=2014-01", req);
+        var response = self.clientEndpoint->get("/" + eventHubPath + "/revokedpublishers" + 
+            "?timeout=60&api-version=2014-01", req);
         if (response is http:Response) {
             var xmlPayload = response.getXmlPayload();
             if (xmlPayload is xml) {
                 return xmlPayload;
             }
-            return Error("invalid response while getting revoked publishers: status code: " + response.statusCode.toString()
-                + ", payload: " + response.getTextPayload().toString());
+            return Error("invalid response while getting revoked publishers: status code: " + 
+                response.statusCode.toString() + ", payload: " + response.getTextPayload().toString());
         } else {
             return Error("error invoking EventHub API ", <error>response);
         }
@@ -246,10 +253,12 @@ public client class Client {
         RevokePublisherDescription revokePublisherDescription = {
             Name: publisherName
         };
-        xmllib:Element revPubDes = <xmllib:Element> xml `<RevokedPublisherDescription xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
-                  xmlns="http://schemas.microsoft.com/netservices/2010/10/servicebus/connect"/>`;
+        xmllib:Element revPubDes = <xmllib:Element> xml `<RevokedPublisherDescription 
+            xmlns:i="http://www.w3.org/2001/XMLSchema-instance" 
+            xmlns="http://schemas.microsoft.com/netservices/2010/10/servicebus/connect"/>`;
         req.setXmlPayload(getRevPubDescriptionProperties(revokePublisherDescription, revPubDes));
-        var response = self.clientEndpoint->put("/" + eventHubPath + "/revokedpublishers/" + publisherName + "?timeout=60&api-version=2014-05", req);
+        var response = self.clientEndpoint->put("/" + eventHubPath + "/revokedpublishers/" + publisherName + 
+            "?timeout=60&api-version=2014-05", req);
         if (response is http:Response) {
             var xmlPayload = response.getXmlPayload();
             if (xmlPayload is xml) {
@@ -288,7 +297,8 @@ public client class Client {
     # + return - Return partition list or error
     remote function listPartitions(string eventHubPath, string consumerGroupName) returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
-        var response = self.clientEndpoint->get("/" + eventHubPath + "/consumergroups/" + consumerGroupName + "/partitions", req);
+        var response = self.clientEndpoint->get("/" + eventHubPath + "/consumergroups/" + consumerGroupName + 
+            "/partitions", req);
         if (response is http:Response) {
             var xmlPayload = response.getXmlPayload();
             if (xmlPayload is xml) {
@@ -306,9 +316,11 @@ public client class Client {
     # + consumerGroupName - consumer group name
     # + partitionId - partitionId 
     # + return - Returns partition details
-    remote function getPartition(string eventHubPath, string consumerGroupName, int partitionId) returns @tainted xml|error {
+    remote function getPartition(string eventHubPath, string consumerGroupName, int partitionId) 
+        returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
-        var response = self.clientEndpoint->get("/" + eventHubPath + "/consumergroups/" + consumerGroupName + "/partitions/" + partitionId.toString(), req);
+        var response = self.clientEndpoint->get("/" + eventHubPath + "/consumergroups/" + consumerGroupName + 
+            "/partitions/" + partitionId.toString(), req);
         if (response is http:Response) {
             var xmlPayload = response.getXmlPayload();
             if (xmlPayload is xml) {
@@ -326,12 +338,15 @@ public client class Client {
     # + consumerGroupName - consumer group name
     # + consumerGroupDescription - consumer group description
     # + return - Return Consumer group details or error
-    remote function createConsumerGroup(string eventHubPath, string consumerGroupName, ConsumerGroupDescription consumerGroupDescription = {}) returns @tainted xml|error {
+    remote function createConsumerGroup(string eventHubPath, string consumerGroupName, 
+        ConsumerGroupDescription consumerGroupDescription = {}) returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
-        xmllib:Element consumerGroupDes = <xmllib:Element> xml `<ConsumerGroupDescription xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
-                  xmlns="http://schemas.microsoft.com/netservices/2010/10/servicebus/connect"/>`;
+        xmllib:Element consumerGroupDes = <xmllib:Element> xml `<ConsumerGroupDescription 
+            xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://schemas.microsoft.com/netservices/2010/10/servicebus/connect"/>`;
         req.setXmlPayload(getDescriptionProperties(consumerGroupDescription, consumerGroupDes));
-        var response = self.clientEndpoint->put("/" + eventHubPath + "/consumergroups/" + consumerGroupName + self.API_PREFIX, req);
+        var response = self.clientEndpoint->put("/" + eventHubPath + "/consumergroups/" + consumerGroupName + 
+            self.API_PREFIX, req);
         if (response is http:Response) {
             var xmlPayload = response.getXmlPayload();
             if (xmlPayload is xml) {

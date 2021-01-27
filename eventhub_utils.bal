@@ -42,7 +42,8 @@ isolated function getSASToken(ClientEndpointConfiguration config) returns string
     int currentTimeMills = time.time / 1000;
     int week = 60 * 60 * 24 * 7;
     int expiry = currentTimeMills + week;
-    string stringToSign = <string>encoding:encodeUriComponent(config.resourceUri, UTF8_URL_ENCODING) + "\n" + expiry.toString();
+    string stringToSign = <string>encoding:encodeUriComponent(config.resourceUri, UTF8_URL_ENCODING) + "\n" + 
+        expiry.toString();
     string signature = crypto:hmacSha256(stringToSign.toBytes(), config.sasKey.toBytes()).toBase64();
     string sasToken = "SharedAccessSignature sr="
         + <string>encoding:encodeUriComponent(config.resourceUri, UTF8_URL_ENCODING)
