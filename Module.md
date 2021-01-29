@@ -33,7 +33,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
+   eventhub:Client c = new (config);
    var b = c->send("myhub", "eventData");
 }
 ```
@@ -49,7 +49,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
+   eventhub:Client c = new (config);
    map<string> brokerProps = {"CorrelationId": "32119834", "CorrelationId2": "32119834"};
    map<string> userProps = {Alert: "windy", warning: "true"};
 
@@ -67,7 +67,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
+   eventhub:Client c = new (config);
    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
    map<string> userProps = {Alert: "windy", warning: "true"};
 
@@ -85,7 +85,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
+   eventhub:Client c = new (config);
    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
    map<string> userProps = {Alert: "windy", warning: "true"};
 
@@ -110,7 +110,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
+   eventhub:Client c = new (config);
    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
    map<string> userProps = {Alert: "windy", warning: "true"};
 
@@ -135,7 +135,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
+   eventhub:Client c = new (config);
    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
    map<string> userProps = {Alert: "windy", warning: "true"};
 
@@ -160,7 +160,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
+   eventhub:Client c = new (config);
    var b = c->createEventHub("myhub");
 }
 ```
@@ -175,7 +175,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
+   eventhub:Client c = new (config);
    var b = c->getEventHub("myhub");
 }
 ```
@@ -190,7 +190,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
+   eventhub:Client c = new (config);
    var b = c->deleteEventHub("myhub");
 }
 ```
@@ -205,7 +205,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
+   eventhub:Client c = new (config);
    var b = c->createConsumerGroup("myhub", "groupName");
 }
 ```
@@ -220,7 +220,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
+   eventhub:Client c = new (config);
    var b = c->getConsumerGroup("myhub", "groupName");
 }
 ```
@@ -235,7 +235,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
+   eventhub:Client c = new (config);
    var b = c->deleteConsumerGroup("myhub", "groupName");
 }
 ```
