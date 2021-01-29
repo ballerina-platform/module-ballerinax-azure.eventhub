@@ -18,6 +18,7 @@ import ballerina/http;
 import ballerina/io;
 import ballerina/mime;
 import ballerina/lang.'xml as xmllib;
+import ballerina/stringutils;
 
 # Eventhub client implementation.
 #
@@ -193,9 +194,15 @@ public client class Client {
         http:Request req = getAuthorizedRequest(self.config);
         var response = self.clientEndpoint->get("/$Resources/EventHubs", req);
         if (response is http:Response) {
-            var xmlPayload = response.getXmlPayload();
-            if (xmlPayload is xml) {
-                return xmlPayload;
+            var textPayload = response.getTextPayload();
+            if (textPayload is string) {
+                string cleanedStringXMLObject = stringutils:replaceAll(textPayload, "xml:base", "xml");
+                xml|error xmlPayload = 'xml:fromString(cleanedStringXMLObject);
+                if (xmlPayload is xml) {
+                    return xmlPayload;
+                } else {
+                    return Error(xmlPayload.message()); 
+                }         
             }
             return Error("invalid response from EventHub API. status code: " + response.statusCode.toString()
                 + ", payload: " + response.getTextPayload().toString());
