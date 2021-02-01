@@ -48,7 +48,7 @@ public client class Client {
         map<string> userProperties = {}, map<anydata> brokerProperties = {}, int partitionId = -1, 
         string publisherId = "") returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
-        req.setHeader("Content-Type", "application/atom+xml;type=entry;charset=utf-8");
+        var head = req.setContentType("application/atom+xml;type=entry;charset=utf-8");
         foreach var [header, value] in userProperties.entries() {
             req.addHeader(header, value.toString());
         }
@@ -71,7 +71,8 @@ public client class Client {
             postResource = postResource + "/publishers/" + publisherId;
         }
         postResource = postResource + "/messages";
-        http:Response response = <http:Response> check self.clientEndpoint->post(postResource + self.API_PREFIX, req);
+        string requestPath = postResource + self.API_PREFIX;
+        http:Response response = <http:Response> check self.clientEndpoint->post(requestPath, req);
         if (response.statusCode == 201) {
             return;
         }
@@ -88,8 +89,8 @@ public client class Client {
     remote function sendBatch(string eventHubPath, BatchEvent batchEvent, int partitionId = -1, string publisherId = "") 
         returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
-        req.setJsonPayload(getBatchEventJson(batchEvent));
         req.setHeader("content-type", "application/vnd.microsoft.servicebus.json");
+        req.setJsonPayload(getBatchEventJson(batchEvent));
         string postResource = "/" + eventHubPath;
         if (partitionId > -1) {
             postResource = postResource + "/partitions/" + partitionId.toString();
@@ -99,7 +100,8 @@ public client class Client {
             postResource = postResource + "/publishers/" + publisherId;
         }
         postResource = postResource + "/messages";
-        http:Response response = <http:Response> check self.clientEndpoint->post(postResource, req);
+        string requestPath = postResource + self.API_PREFIX;
+        http:Response response = <http:Response> check self.clientEndpoint->post(requestPath, req);
         if (response.statusCode != 201) {
             return getErrorMessage(response);
         }
@@ -118,7 +120,8 @@ public client class Client {
             xmlns:i="http://www.w3.org/2001/XMLSchema-instance" 
             xmlns="http://schemas.microsoft.com/netservices/2010/10/servicebus/connect"/>`;
         req.setXmlPayload(getDescriptionProperties(eventHubDescription, eventHubDes));
-        http:Response response = <http:Response> check self.clientEndpoint->put("/" + eventHubPath + self.API_PREFIX, req);
+        string requestPath = "/" + eventHubPath + self.API_PREFIX;
+        http:Response response = <http:Response> check self.clientEndpoint->put(requestPath, req);
         if (response.statusCode == 201) {
             xml xmlPayload = check response.getXmlPayload();
             return xmlPayload;
@@ -132,7 +135,8 @@ public client class Client {
     # + return - Return XML or Error
     remote function getEventHub(string eventHubPath) returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
-        http:Response response = <http:Response> check self.clientEndpoint->get("/" + eventHubPath, req);
+        string requestPath = "/" + eventHubPath;
+        http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
         if (response.statusCode == 200) {
             xml xmlPayload = check response.getXmlPayload();
             return xmlPayload;
@@ -153,7 +157,8 @@ public client class Client {
             xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
             xmlns="http://schemas.microsoft.com/netservices/2010/10/servicebus/connect"/>`;
         req.setXmlPayload(getDescriptionProperties(eventHubDescriptionToUpdate, eventHubDescription));
-        http:Response response = <http:Response> check self.clientEndpoint->put("/" + eventHubPath + self.API_PREFIX, req);
+        string requestPath = "/" + eventHubPath + self.API_PREFIX;
+        http:Response response = <http:Response> check self.clientEndpoint->put(requestPath, req);
         if (response.statusCode == 200) {
             xml xmlPayload = check response.getXmlPayload();
             return xmlPayload;
@@ -166,7 +171,8 @@ public client class Client {
     # + return - Return list of event hubs or error
     remote function listEventHubs() returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
-        http:Response response = <http:Response> check self.clientEndpoint->get("/$Resources/EventHubs", req);
+        string requestPath = "/$Resources/EventHubs";
+        http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
         if (response.statusCode == 200) {
             string textPayload = check response.getTextPayload();
             string cleanedStringXMLObject = stringutils:replaceAll(textPayload, "xml:base", "xml");
@@ -182,7 +188,8 @@ public client class Client {
     # + return - Return Error if unsuccessful
     remote function deleteEventHub(string eventHubPath) returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
-        http:Response response = <http:Response> check self.clientEndpoint->delete("/" + eventHubPath, req);
+        string requestPath = "/" + eventHubPath;
+        http:Response response = <http:Response> check self.clientEndpoint->delete(requestPath, req);
         if (response.statusCode == 200) {
             return;
         } 
@@ -195,8 +202,8 @@ public client class Client {
     # + return - Return revoke publisher or Error
     remote function getRevokedPublishers(string eventHubPath) returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
-        http:Response response = <http:Response> check self.clientEndpoint->get("/" + eventHubPath + "/revokedpublishers" + 
-            "?timeout=60&api-version=2014-01", req);
+        string requestPath = "/" + eventHubPath + "/revokedpublishers" + self.API_PREFIX;
+        http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
         if (response.statusCode == 200) {
             xml xmlPayload = check response.getXmlPayload();
             return xmlPayload;
@@ -217,9 +224,10 @@ public client class Client {
         xmllib:Element revPubDes = <xmllib:Element> xml `<RevokedPublisherDescription 
             xmlns:i="http://www.w3.org/2001/XMLSchema-instance" 
             xmlns="http://schemas.microsoft.com/netservices/2010/10/servicebus/connect"/>`;
-        req.setXmlPayload(getRevPubDescriptionProperties(revokePublisherDescription, revPubDes));
-        http:Response response = <http:Response> check self.clientEndpoint->put("/" + eventHubPath + "/revokedpublishers/" + publisherName + 
-            "?timeout=60&api-version=2014-05", req);
+        req.setXmlPayload(getDescriptionProperties(revokePublisherDescription, revPubDes));
+        string requestPath = "/" + eventHubPath + "/revokedpublishers/" + publisherName + 
+            "?timeout=60&api-version=2014-05";
+        http:Response response = <http:Response> check self.clientEndpoint->put(requestPath, req);
         if (response.statusCode == 201) {
             xml xmlPayload = check response.getXmlPayload();
             return xmlPayload;
@@ -234,7 +242,8 @@ public client class Client {
     # + return - Return publisher details or error
     remote function resumePublisher(string eventHubPath, string publisherName) returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
-        http:Response response = <http:Response> check self.clientEndpoint->delete("/" + eventHubPath + "/revokedpublishers/" + publisherName, req);
+        string requestPath = "/" + eventHubPath + "/revokedpublishers/" + publisherName;
+        http:Response response = <http:Response> check self.clientEndpoint->delete(requestPath, req);
         if (response.statusCode == 200) {
             return;
         }
@@ -248,8 +257,8 @@ public client class Client {
     # + return - Return partition list or error
     remote function listPartitions(string eventHubPath, string consumerGroupName) returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
-        http:Response response = <http:Response> check self.clientEndpoint->get("/" + eventHubPath + "/consumergroups/" + consumerGroupName + 
-            "/partitions", req);
+        string requestPath = "/" + eventHubPath + "/consumergroups/" + consumerGroupName + "/partitions";
+        http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
         if (response.statusCode == 200) {
             xml xmlPayload = check response.getXmlPayload();
             return xmlPayload;
@@ -266,8 +275,9 @@ public client class Client {
     remote function getPartition(string eventHubPath, string consumerGroupName, int partitionId) 
         returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
-        http:Response response = <http:Response> check self.clientEndpoint->get("/" + eventHubPath + "/consumergroups/" + consumerGroupName + 
-            "/partitions/" + partitionId.toString(), req);
+        string requestPath = "/" + eventHubPath + "/consumergroups/" + consumerGroupName + "/partitions/" + 
+            partitionId.toString();
+        http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
         if (response.statusCode == 200) {
             xml xmlPayload = check response.getXmlPayload();
             return xmlPayload;
@@ -288,8 +298,8 @@ public client class Client {
             xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
             xmlns="http://schemas.microsoft.com/netservices/2010/10/servicebus/connect"/>`;
         req.setXmlPayload(getDescriptionProperties(consumerGroupDescription, consumerGroupDes));
-        http:Response response = <http:Response> check self.clientEndpoint->put("/" + eventHubPath + "/consumergroups/" + consumerGroupName + 
-            self.API_PREFIX, req);
+        string requestPath = "/" + eventHubPath + "/consumergroups/" + consumerGroupName + self.API_PREFIX;
+        http:Response response = <http:Response> check self.clientEndpoint->put(requestPath, req);
         if (response.statusCode == 201) {
             xml xmlPayload = check response.getXmlPayload();
             return xmlPayload;
@@ -304,7 +314,8 @@ public client class Client {
     # + return - Return Consumer group details or error
     remote function getConsumerGroup(string eventHubPath, string consumerGroupName) returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
-        http:Response response = <http:Response> check self.clientEndpoint->get("/" + eventHubPath + "/consumergroups/" + consumerGroupName, req);
+        string requestPath = "/" + eventHubPath + "/consumergroups/" + consumerGroupName;
+        http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
         if (response.statusCode == 200) {
             xml xmlPayload = check response.getXmlPayload();
             return xmlPayload;
@@ -319,7 +330,8 @@ public client class Client {
     # + return - Return Error if unsuccessful
     remote function deleteConsumerGroup(string eventHubPath, string consumerGroupName) returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
-        http:Response response = <http:Response> check self.clientEndpoint->delete("/" + eventHubPath + "/consumergroups/" + consumerGroupName, req);
+        string requestPath = "/" + eventHubPath + "/consumergroups/" + consumerGroupName;
+        http:Response response = <http:Response> check self.clientEndpoint->delete(requestPath, req);
         if (response.statusCode == 200) {
             return;
         } 
@@ -332,7 +344,8 @@ public client class Client {
     # + return - Return list of consumer group or error
     remote function listConsumerGroups(string eventHubPath) returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
-        http:Response response = <http:Response> check self.clientEndpoint->get("/" + eventHubPath + "/consumergroups", req);
+        string requestPath = "/" + eventHubPath + "/consumergroups";
+        http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
         if (response.statusCode == 200) {
             xml xmlPayload = check response.getXmlPayload();
             return xmlPayload;
