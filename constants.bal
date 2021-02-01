@@ -17,6 +17,43 @@
 // Request Headers
 const string AUTHORIZATION_HEADER = "Authorization";
 const string RETRY_POLICY = "x-ms-retrypolicy";
+const string BROKER_PROPERTIES = "BrokerProperties";
+const string IF_MATCH = "If-Match";
 
-//Encoding types
+// Request Headers Values
+const string CONTENT_TYPE_SEND = "application/atom+xml;type=entry;charset=utf-8";
+const string CONTENT_TYPE_SEND_BATCH = "application/vnd.microsoft.servicebus.json";
+const string ALL = "*";
+
+// Encoding types
 const string UTF8_URL_ENCODING = "UTF-8";
+
+// Response Status Codes
+const int OK = 200;
+const int SUCCESS = 201;
+
+// URL paths
+const string PARTITIONS_PATH = "/partitions";
+const string PARTITION_PATH = "/partitions/";
+const string PUBLISHER_PATH = "/publishers/";
+const string MESSAGES_PATH = "/messages";
+const string EVENT_HUBS_PATH = "/$Resources/EventHubs";
+const string REVOKED_PUBLISHERS_PATH = "/revokedpublishers";
+const string REVOKED_PUBLISHER_PATH = "/revokedpublishers/";
+const string CONSUMER_GROUPS_PATH = "/consumergroups";
+const string CONSUMER_GROUP_PATH = "/consumergroups/";
+
+// URL suffixes and prefixes
+const string TIME_OUT = "?timeout=";
+const string API_VERSION = "&api-version=";
+const string HTTPS = "https://";
+const string TIME_OUT_AND_API_VERSION = "?timeout=60&api-version=2014-05";
+
+// Error messages
+const string BROKER_PROPERTIES_PARSE_ERROR = "Unable to parse broker properties ";
+
+// String Constants
+const string EMPTY_STRING = "";
+const string FORWARD_SLASH = "/";
+const string XML_BASE = "xml:base";
+const string XML = "xml";
