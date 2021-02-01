@@ -71,17 +71,11 @@ public client class Client {
             postResource = postResource + "/publishers/" + publisherId;
         }
         postResource = postResource + "/messages";
-        var response = self.clientEndpoint->post(postResource + self.API_PREFIX, req);
-        if (response is http:Response) {
-            int statusCode = response.statusCode;
-            if (statusCode == 201) {
-                return;
-            }
-            return Error("invalid response from EventHub API. status code: " + response.statusCode.toString()
-                + ", payload: " + response.getTextPayload().toString());
-        } else {
-            return Error("error invoking EventHub API ", <error>response);
+        http:Response response = <http:Response> check self.clientEndpoint->post(postResource + self.API_PREFIX, req);
+        if (response.statusCode == 201) {
+            return;
         }
+        return getErrorMessage(response);
     }
 
     # Send batch of events
@@ -105,16 +99,11 @@ public client class Client {
             postResource = postResource + "/publishers/" + publisherId;
         }
         postResource = postResource + "/messages";
-        var response = self.clientEndpoint->post(postResource, req);
-        if (response is http:Response) {
-            int statusCode = response.statusCode;
-            if (statusCode != 201) {
-                return Error("invalid response from EventHub API. status code: " + response.statusCode.toString()
-                    + ", payload: " + response.getTextPayload().toString());
-            }
-        } else {
-            return Error("error invoking EventHub API ",  <error>response);
+        http:Response response = <http:Response> check self.clientEndpoint->post(postResource, req);
+        if (response.statusCode != 201) {
+            return getErrorMessage(response);
         }
+        return;
     }
 
     # Create a new Eventhub
@@ -129,17 +118,12 @@ public client class Client {
             xmlns:i="http://www.w3.org/2001/XMLSchema-instance" 
             xmlns="http://schemas.microsoft.com/netservices/2010/10/servicebus/connect"/>`;
         req.setXmlPayload(getDescriptionProperties(eventHubDescription, eventHubDes));
-        var response = self.clientEndpoint->put("/" + eventHubPath + self.API_PREFIX, req);
-        if (response is http:Response) {
-            var xmlPayload = response.getXmlPayload();
-            if (xmlPayload is xml) {
-                return xmlPayload;
-            }
-            return Error("invalid response from EventHub API. status code: " + response.statusCode.toString()
-                + ", payload: " + response.getTextPayload().toString());
-        } else {
-            return Error("error invoking EventHub API ", <error>response);
+        http:Response response = <http:Response> check self.clientEndpoint->put("/" + eventHubPath + self.API_PREFIX, req);
+        if (response.statusCode == 201) {
+            xml xmlPayload = check response.getXmlPayload();
+            return xmlPayload;
         }
+        return getErrorMessage(response);
     }
 
     # Get Eventhub description
@@ -148,17 +132,12 @@ public client class Client {
     # + return - Return XML or Error
     remote function getEventHub(string eventHubPath) returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
-        var response = self.clientEndpoint->get("/" + eventHubPath, req);
-        if (response is http:Response) {
-            var xmlPayload = response.getXmlPayload();
-            if (xmlPayload is xml) {
-                return xmlPayload;
-            }
-            return Error("invalid response from EventHub API. status code: " + response.statusCode.toString()
-                + ", payload: " + response.getTextPayload().toString());
-        } else {
-            return Error("error invoking EventHub API ", <error>response);
+        http:Response response = <http:Response> check self.clientEndpoint->get("/" + eventHubPath, req);
+        if (response.statusCode == 200) {
+            xml xmlPayload = check response.getXmlPayload();
+            return xmlPayload;
         }
+        return getErrorMessage(response);
     }
 
     # Update Eventhub properties
@@ -174,17 +153,12 @@ public client class Client {
             xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
             xmlns="http://schemas.microsoft.com/netservices/2010/10/servicebus/connect"/>`;
         req.setXmlPayload(getDescriptionProperties(eventHubDescriptionToUpdate, eventHubDescription));
-        var response = self.clientEndpoint->put("/" + eventHubPath + self.API_PREFIX, req);
-        if (response is http:Response) {
-            var xmlPayload = response.getXmlPayload();
-            if (xmlPayload is xml) {
-                return xmlPayload;
-            }
-            return Error("invalid response from EventHub API. status code: " + response.statusCode.toString()
-                + ", payload: " + response.getTextPayload().toString());
-        } else {
-            return Error("error invoking EventHub API ", <error>response);
-        }
+        http:Response response = <http:Response> check self.clientEndpoint->put("/" + eventHubPath + self.API_PREFIX, req);
+        if (response.statusCode == 200) {
+            xml xmlPayload = check response.getXmlPayload();
+            return xmlPayload;
+        } 
+        return getErrorMessage(response);
     }
 
     # Retrieves all metadata associated with all Event Hubs within a specified Service Bus namespace
@@ -192,23 +166,14 @@ public client class Client {
     # + return - Return list of event hubs or error
     remote function listEventHubs() returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
-        var response = self.clientEndpoint->get("/$Resources/EventHubs", req);
-        if (response is http:Response) {
-            var textPayload = response.getTextPayload();
-            if (textPayload is string) {
-                string cleanedStringXMLObject = stringutils:replaceAll(textPayload, "xml:base", "xml");
-                xml|error xmlPayload = 'xml:fromString(cleanedStringXMLObject);
-                if (xmlPayload is xml) {
-                    return xmlPayload;
-                } else {
-                    return Error(xmlPayload.message()); 
-                }         
-            }
-            return Error("invalid response from EventHub API. status code: " + response.statusCode.toString()
-                + ", payload: " + response.getTextPayload().toString());
-        } else {
-            return Error("error invoking EventHub API ", <error>response);
-        }
+        http:Response response = <http:Response> check self.clientEndpoint->get("/$Resources/EventHubs", req);
+        if (response.statusCode == 200) {
+            string textPayload = check response.getTextPayload();
+            string cleanedStringXMLObject = stringutils:replaceAll(textPayload, "xml:base", "xml");
+            xml xmlPayload = check 'xml:fromString(cleanedStringXMLObject);
+            return xmlPayload;       
+        } 
+        return getErrorMessage(response);
     }
 
     # Delete an Eventhub
@@ -217,17 +182,11 @@ public client class Client {
     # + return - Return Error if unsuccessful
     remote function deleteEventHub(string eventHubPath) returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
-        var response = self.clientEndpoint->delete("/" + eventHubPath, req);
-        if (response is http:Response) {
-            int statusCode = response.statusCode;
-            if (statusCode == 200) {
-                return;
-            }
-            return Error("invalid response from EventHub API. status code: " + response.statusCode.toString()
-               + ", payload: " + response.getTextPayload().toString());
-        } else {
-            return Error("error invoking EventHub API ", <error>response);
-        }
+        http:Response response = <http:Response> check self.clientEndpoint->delete("/" + eventHubPath, req);
+        if (response.statusCode == 200) {
+            return;
+        } 
+        return getErrorMessage(response);
     }
 
     # Get details of revoked publisher
@@ -236,18 +195,13 @@ public client class Client {
     # + return - Return revoke publisher or Error
     remote function getRevokedPublishers(string eventHubPath) returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
-        var response = self.clientEndpoint->get("/" + eventHubPath + "/revokedpublishers" + 
+        http:Response response = <http:Response> check self.clientEndpoint->get("/" + eventHubPath + "/revokedpublishers" + 
             "?timeout=60&api-version=2014-01", req);
-        if (response is http:Response) {
-            var xmlPayload = response.getXmlPayload();
-            if (xmlPayload is xml) {
-                return xmlPayload;
-            }
-            return Error("invalid response while getting revoked publishers: status code: " + 
-                response.statusCode.toString() + ", payload: " + response.getTextPayload().toString());
-        } else {
-            return Error("error invoking EventHub API ", <error>response);
-        }
+        if (response.statusCode == 200) {
+            xml xmlPayload = check response.getXmlPayload();
+            return xmlPayload;
+        } 
+        return getErrorMessage(response);
     }
 
     # Revoke a publisher
@@ -264,18 +218,13 @@ public client class Client {
             xmlns:i="http://www.w3.org/2001/XMLSchema-instance" 
             xmlns="http://schemas.microsoft.com/netservices/2010/10/servicebus/connect"/>`;
         req.setXmlPayload(getRevPubDescriptionProperties(revokePublisherDescription, revPubDes));
-        var response = self.clientEndpoint->put("/" + eventHubPath + "/revokedpublishers/" + publisherName + 
+        http:Response response = <http:Response> check self.clientEndpoint->put("/" + eventHubPath + "/revokedpublishers/" + publisherName + 
             "?timeout=60&api-version=2014-05", req);
-        if (response is http:Response) {
-            var xmlPayload = response.getXmlPayload();
-            if (xmlPayload is xml) {
-                return xmlPayload;
-            }
-            return Error("invalid response while revoking publisher: " + publisherName
-                + ". " + response.statusCode.toString());
-        } else {
-            return Error("error invoking EventHub API ", <error>response);
-        }
+        if (response.statusCode == 201) {
+            xml xmlPayload = check response.getXmlPayload();
+            return xmlPayload;
+        } 
+        return getErrorMessage(response);
     }
 
     # Resume a publisher
@@ -285,16 +234,11 @@ public client class Client {
     # + return - Return publisher details or error
     remote function resumePublisher(string eventHubPath, string publisherName) returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
-        var response = self.clientEndpoint->delete("/" + eventHubPath + "/revokedpublishers/" + publisherName, req);
-        if (response is http:Response) {
-            int statusCode = response.statusCode;
-            if (statusCode == 200) {
-                return;
-            }
-            return Error("invalid response from EventHub API " + response.statusCode.toString());
-        } else {
-            return Error("error invoking EventHub API ", <error>response);
+        http:Response response = <http:Response> check self.clientEndpoint->delete("/" + eventHubPath + "/revokedpublishers/" + publisherName, req);
+        if (response.statusCode == 200) {
+            return;
         }
+        return getErrorMessage(response);
     }
 
     # Lit available partitions
@@ -304,17 +248,13 @@ public client class Client {
     # + return - Return partition list or error
     remote function listPartitions(string eventHubPath, string consumerGroupName) returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
-        var response = self.clientEndpoint->get("/" + eventHubPath + "/consumergroups/" + consumerGroupName + 
+        http:Response response = <http:Response> check self.clientEndpoint->get("/" + eventHubPath + "/consumergroups/" + consumerGroupName + 
             "/partitions", req);
-        if (response is http:Response) {
-            var xmlPayload = response.getXmlPayload();
-            if (xmlPayload is xml) {
-                return xmlPayload;
-            }
-            return Error("invalid response from EventHub API " + response.statusCode.toString());
-        } else {
-            return Error("error invoking EventHub API ", <error>response);
-        }
+        if (response.statusCode == 200) {
+            xml xmlPayload = check response.getXmlPayload();
+            return xmlPayload;
+        } 
+        return getErrorMessage(response);
     }
 
     # Get partition details
@@ -326,17 +266,13 @@ public client class Client {
     remote function getPartition(string eventHubPath, string consumerGroupName, int partitionId) 
         returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
-        var response = self.clientEndpoint->get("/" + eventHubPath + "/consumergroups/" + consumerGroupName + 
+        http:Response response = <http:Response> check self.clientEndpoint->get("/" + eventHubPath + "/consumergroups/" + consumerGroupName + 
             "/partitions/" + partitionId.toString(), req);
-        if (response is http:Response) {
-            var xmlPayload = response.getXmlPayload();
-            if (xmlPayload is xml) {
-                return xmlPayload;
-            }
-            return Error("invalid response from EventHub API " + response.statusCode.toString());
-        } else {
-            return Error("error invoking EventHub API ", <error>response);
-        }
+        if (response.statusCode == 200) {
+            xml xmlPayload = check response.getXmlPayload();
+            return xmlPayload;
+        } 
+        return getErrorMessage(response);
     }
 
     # Create consumer group
@@ -352,17 +288,13 @@ public client class Client {
             xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
             xmlns="http://schemas.microsoft.com/netservices/2010/10/servicebus/connect"/>`;
         req.setXmlPayload(getDescriptionProperties(consumerGroupDescription, consumerGroupDes));
-        var response = self.clientEndpoint->put("/" + eventHubPath + "/consumergroups/" + consumerGroupName + 
+        http:Response response = <http:Response> check self.clientEndpoint->put("/" + eventHubPath + "/consumergroups/" + consumerGroupName + 
             self.API_PREFIX, req);
-        if (response is http:Response) {
-            var xmlPayload = response.getXmlPayload();
-            if (xmlPayload is xml) {
-                return xmlPayload;
-            }
-            return Error("invalid response from EventHub API " + response.statusCode.toString());
-        } else {
-            return Error("error invoking EventHub API ", <error>response);
-        }
+        if (response.statusCode == 201) {
+            xml xmlPayload = check response.getXmlPayload();
+            return xmlPayload;
+        } 
+        return getErrorMessage(response);
     }
 
     # Get consumer group
@@ -372,16 +304,12 @@ public client class Client {
     # + return - Return Consumer group details or error
     remote function getConsumerGroup(string eventHubPath, string consumerGroupName) returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
-        var response = self.clientEndpoint->get("/" + eventHubPath + "/consumergroups/" + consumerGroupName, req);
-        if (response is http:Response) {
-            var xmlPayload = response.getXmlPayload();
-            if (xmlPayload is xml) {
-                return xmlPayload;
-            }
-            return Error("invalid response from EventHub API " + response.statusCode.toString());
-        } else {
-            return Error("error invoking EventHub API ", <error>response);
-        }
+        http:Response response = <http:Response> check self.clientEndpoint->get("/" + eventHubPath + "/consumergroups/" + consumerGroupName, req);
+        if (response.statusCode == 200) {
+            xml xmlPayload = check response.getXmlPayload();
+            return xmlPayload;
+        } 
+        return getErrorMessage(response);
     }
 
     # Delete consumer group
@@ -391,17 +319,11 @@ public client class Client {
     # + return - Return Error if unsuccessful
     remote function deleteConsumerGroup(string eventHubPath, string consumerGroupName) returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
-        var response = self.clientEndpoint->delete("/" + eventHubPath + "/consumergroups/" + consumerGroupName, req);
-        if (response is http:Response) {
-            int statusCode = response.statusCode;
-            if (statusCode == 200) {
-                return;
-            }
-            return Error("invalid response from EventHub API. status code: " + response.statusCode.toString()
-               + ", payload: " + response.getTextPayload().toString());
-        } else {
-            return Error("error invoking EventHub API ", <error>response);
-        }
+        http:Response response = <http:Response> check self.clientEndpoint->delete("/" + eventHubPath + "/consumergroups/" + consumerGroupName, req);
+        if (response.statusCode == 200) {
+            return;
+        } 
+        return getErrorMessage(response);
     }
 
     # List consumer groups
@@ -410,16 +332,11 @@ public client class Client {
     # + return - Return list of consumer group or error
     remote function listConsumerGroups(string eventHubPath) returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
-        var response = self.clientEndpoint->get("/" + eventHubPath + "/consumergroups", req);
-        if (response is http:Response) {
-            int statusCode = response.statusCode;
-            var xmlPayload = response.getXmlPayload();
-            if (xmlPayload is xml) {
-                return xmlPayload;
-            }
-            return Error("invalid response from EventHub API " + response.statusCode.toString());
-        } else {
-            return Error("error invoking EventHub API ", <error>response);
-        }
+        http:Response response = <http:Response> check self.clientEndpoint->get("/" + eventHubPath + "/consumergroups", req);
+        if (response.statusCode == 200) {
+            xml xmlPayload = check response.getXmlPayload();
+            return xmlPayload;
+        } 
+        return getErrorMessage(response);
     }
 }

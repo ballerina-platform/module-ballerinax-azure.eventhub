@@ -52,3 +52,12 @@ isolated function getSASToken(ClientEndpointConfiguration config) returns string
     // log:print(io:sprintf("SAS token: [%s]", sasToken));
     return sasToken;
 }
+
+# Get the error message from the response.
+#
+# + response - Received response.
+# + return - Returns module error with payload and response code.
+isolated function getErrorMessage(http:Response response) returns @tainted error {
+    return Error("Invalid response from EventHub API. statuscode: " + response.statusCode.toString() + ", payload: " + 
+        response.getTextPayload().toString(), status = response.statusCode);
+}
