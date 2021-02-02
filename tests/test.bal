@@ -27,7 +27,19 @@ ClientEndpointConfiguration config = {
 };
 Client c = new (config);
 
-// Test functions
+# Before Suite Function
+@test:BeforeSuite
+function beforeSuiteFunc() {
+    var b = c->createEventHub("myeventhub");
+    if (b is error) {
+        test:assertFail(msg = b.message());
+    }
+    test:assertTrue(b is xml);
+    if (b is xml) {
+        log:print(b.toString());
+    }
+}
+
 @test:Config {
     groups: ["eventhub"],
     enable: false
@@ -445,6 +457,16 @@ function testDeleteConsumerGroups() {
     if (b is ()) {
         log:print("successful");
     }
+}
+
+# After Suite Function
+@test:AfterSuite {}
+function afterSuiteFunc() {
+    var b = c->deleteEventHub("myeventhub");
+    if (b is error) {
+        test:assertFail(msg = b.message());
+    }
+    test:assertTrue(b is ());
 }
 
 # Get configuration value for the given key from ballerina.conf file.
