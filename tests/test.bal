@@ -18,7 +18,7 @@ import ballerina/test;
 import ballerina/config;
 import ballerina/system;
 import ballerina/log;
-import ballerina/jsonutils;
+// import ballerina/jsonutils;
 
 ClientEndpointConfiguration config = {
     sasKeyName: getConfigValue("SAS_KEY_NAME"),
@@ -30,7 +30,7 @@ Client c = new (config);
 // Test functions
 @test:Config {
     groups: ["eventhub"],
-    enable: true
+    enable: false
 }
 function testBatchEventError() {
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
@@ -278,20 +278,6 @@ function testDeleteEventHubWithEventHubDescription() {
 }
 
 @test:Config {
-    enable: false
-}
-function testSendEventWithPublisherID() {
-    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
-    map<string> userProps = {Alert: "windy", warning: "true"};
-
-    var b = c->send("myeventhub", "data", userProps, brokerProps, publisherId="dev-01");
-    if (b is error) {
-        test:assertFail(msg = b.message());
-    }
-    test:assertTrue(b is ());
-}
-
-@test:Config {
     groups: ["publisher"],
     dependsOn: ["testSendBatchEventWithPublisherID"],
     enable: true
@@ -305,6 +291,20 @@ function testRevokePublisher() {
     if (b is xml) {
         log:print(b.toString());
     }
+}
+
+@test:Config {
+    enable: false
+}
+function testSendEventWithPublisherID() {
+    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
+    map<string> userProps = {Alert: "windy", warning: "true"};
+
+    var b = c->send("myeventhub", "data", userProps, brokerProps, publisherId="device-1");
+    if (b is error) {
+        test:assertFail(msg = b.message());
+    }
+    test:assertTrue(b is ());
 }
 
 //TODO: xml returned cannot be converted to string
@@ -321,8 +321,7 @@ function testGetRevokedPublishers() {
     test:assertTrue(b is xml);
     if (b is xml) {
         log:print("listReceived");
-        json|error signedIdentifiers = jsonutils:fromXML(b);
-        log:print(signedIdentifiers.toString());
+        log:print(b.toString());
     }
 }
 
@@ -389,6 +388,7 @@ function testListConsumerGroups() {
     test:assertTrue(b is xml);
     if (b is xml) {
         log:print("successful");
+        log:print(b.toString());
     }
 }
 
@@ -405,6 +405,7 @@ function testListPartitions() {
     test:assertTrue(b is xml);
     if (b is xml) {
         log:print("successful");
+        log:print(b.toString());
     }
 }
 

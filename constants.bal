@@ -24,6 +24,7 @@ const string IF_MATCH = "If-Match";
 const string CONTENT_TYPE_SEND = "application/atom+xml;type=entry;charset=utf-8";
 const string CONTENT_TYPE_SEND_BATCH = "application/vnd.microsoft.servicebus.json";
 const string ALL = "*";
+const string NO_RETRY = "NoRetry";
 
 // Encoding types
 const string UTF8_URL_ENCODING = "UTF-8";
@@ -56,4 +57,4 @@ const string BROKER_PROPERTIES_PARSE_ERROR = "Unable to parse broker properties 
 const string EMPTY_STRING = "";
 const string FORWARD_SLASH = "/";
 const string XML_BASE = "xml:base";
-const string XML = "xml";
+const string BASE = "base";

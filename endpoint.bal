@@ -95,7 +95,6 @@ public client class Client {
         if (partitionId > -1) {
             postResource = postResource + PARTITION_PATH + partitionId.toString();
         }
-
         if (publisherId != "") {
             postResource = postResource + PUBLISHER_PATH + publisherId;
         }
@@ -120,7 +119,7 @@ public client class Client {
             xmlns:i="http://www.w3.org/2001/XMLSchema-instance" 
             xmlns="http://schemas.microsoft.com/netservices/2010/10/servicebus/connect"/>`;
         req.setXmlPayload(getDescriptionProperties(eventHubDescription, eventHubDes));
-        string requestPath = "/" + eventHubPath + self.API_PREFIX;
+        string requestPath = FORWARD_SLASH + eventHubPath + self.API_PREFIX;
         http:Response response = <http:Response> check self.clientEndpoint->put(requestPath, req);
         if (response.statusCode == SUCCESS) {
             xml xmlPayload = check response.getXmlPayload();
@@ -175,7 +174,7 @@ public client class Client {
         http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
         if (response.statusCode == OK) {
             string textPayload = check response.getTextPayload();
-            string cleanedStringXMLObject = stringutils:replaceAll(textPayload, XML_BASE, XML);
+            string cleanedStringXMLObject = stringutils:replaceAll(textPayload, XML_BASE, BASE);
             xml xmlPayload = check 'xml:fromString(cleanedStringXMLObject);
             return xmlPayload;       
         } 
@@ -205,7 +204,9 @@ public client class Client {
         string requestPath = FORWARD_SLASH + eventHubPath + REVOKED_PUBLISHERS_PATH + self.API_PREFIX;
         http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
         if (response.statusCode == OK) {
-            xml xmlPayload = check response.getXmlPayload();
+            string textPayload = check response.getTextPayload();
+            string cleanedStringXMLObject = stringutils:replaceAll(textPayload, XML_BASE, BASE);
+            xml xmlPayload = check 'xml:fromString(cleanedStringXMLObject);
             return xmlPayload;
         } 
         return getErrorMessage(response);
@@ -260,7 +261,9 @@ public client class Client {
         string requestPath = FORWARD_SLASH + eventHubPath + CONSUMER_GROUP_PATH + consumerGroupName + PARTITIONS_PATH;
         http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
         if (response.statusCode == OK) {
-            xml xmlPayload = check response.getXmlPayload();
+            string textPayload = check response.getTextPayload();
+            string cleanedStringXMLObject = stringutils:replaceAll(textPayload, XML_BASE, BASE);
+            xml xmlPayload = check 'xml:fromString(cleanedStringXMLObject);
             return xmlPayload;
         } 
         return getErrorMessage(response);
@@ -347,7 +350,9 @@ public client class Client {
         string requestPath = FORWARD_SLASH + eventHubPath + CONSUMER_GROUPS_PATH;
         http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
         if (response.statusCode == OK) {
-            xml xmlPayload = check response.getXmlPayload();
+            string textPayload = check response.getTextPayload();
+            string cleanedStringXMLObject = stringutils:replaceAll(textPayload, XML_BASE, BASE);
+            xml xmlPayload = check 'xml:fromString(cleanedStringXMLObject);
             return xmlPayload;
         } 
         return getErrorMessage(response);

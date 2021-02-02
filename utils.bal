@@ -29,7 +29,7 @@ isolated function getAuthorizedRequest(ClientEndpointConfiguration config) retur
     req.addHeader(AUTHORIZATION_HEADER, getSASToken(config));
     if (!config.enableRetry) {
         // disable automatic retry
-        req.addHeader(RETRY_POLICY, "NoRetry");
+        req.addHeader(RETRY_POLICY, NO_RETRY);
     }
     return req;
 }
