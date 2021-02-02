@@ -15,6 +15,7 @@ public function main() {
         log:printError(b.message());
     }
     if (b is xml) {
+        log:print(b.toString());
         log:print("successful");
     }
 }

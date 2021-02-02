@@ -1,7 +1,6 @@
 import ballerinax/azure_eventhub;
 import ballerina/config;
 import ballerina/log;
-import ballerina/jsonutils;
 
 public function main() {
     azure_eventhub:ClientEndpointConfiguration config = {
@@ -17,8 +16,7 @@ public function main() {
     }
     if (b is xml) {
         log:print("listReceived");
-        json|error signedIdentifiers = jsonutils:fromXML(b);
-        log:print(signedIdentifiers.toString());
+        log:print(b.toString());
         log:print("Successful!");
     }
 }
