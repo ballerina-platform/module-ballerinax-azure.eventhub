@@ -10,12 +10,14 @@ public function main() {
     };
     azure_eventhub:Client c = new (config);
 
-    var b = c->listPartitions("myeventhub", "consumerGroup1");
+    map<string> brokerProps = {PartitionKey: "groupName1", CorrelationId: "32119834"};
+    map<string> userProps = {Alert: "windy", warning: "true"};
+
+    // partition key used as the parameter is prioritized over the partition key provided in the brokerProperties
+    var b = c->send("myeventhub", "data", userProps, brokerProps, partitionKey = "groupName");
     if (b is error) {
         log:printError(b.message());
-    }
-    if (b is xml) {
-        log:print(b.toString());
-        log:print("successful");
+    } else {
+        log:print("Successful!");
     }
 }

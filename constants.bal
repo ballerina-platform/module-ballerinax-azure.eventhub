@@ -50,6 +50,9 @@ const string API_VERSION = "&api-version=";
 const string HTTPS = "https://";
 const string TIME_OUT_AND_API_VERSION = "?timeout=60&api-version=2014-05";
 
+// Broker Properties
+const string PARTITION_KEY = "PartitionKey";
+
 // Error messages
 const string BROKER_PROPERTIES_PARSE_ERROR = "Unable to parse broker properties ";
 

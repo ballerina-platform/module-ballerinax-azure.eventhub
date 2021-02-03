@@ -43,14 +43,18 @@ public client class Client {
     # + brokerProperties - broker properties
     # + partitionId - partition ID
     # + publisherId - publisher ID 
+    # + partitionKey - partition Key
     # + return - @error if remote API is unreachable
     remote function send(string eventHubPath, string|xml|json|byte[]|io:ReadableByteChannel|mime:Entity[] data, 
         map<string> userProperties = {}, map<anydata> brokerProperties = {}, int partitionId = -1, 
-        string publisherId = "") returns @tainted error? {
+        string publisherId = "", string partitionKey = "") returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
         check req.setContentType(CONTENT_TYPE_SEND);
         foreach var [header, value] in userProperties.entries() {
             req.addHeader(header, value.toString());
+        }
+        if (partitionKey != "") {
+            brokerProperties[PARTITION_KEY] = partitionKey;
         }
         if (brokerProperties.length() > 0) {
             json|error props = brokerProperties.cloneWithType(json);
@@ -85,11 +89,17 @@ public client class Client {
     # + batchEvent - batch of events
     # + partitionId - partition ID
     # + publisherId - publisher ID
+    # + partitionKey - partition Key
     # + return - Eventhub error if unsuccessful
-    remote function sendBatch(string eventHubPath, BatchEvent batchEvent, int partitionId = -1, string publisherId = "") 
-        returns @tainted error? {
+    remote function sendBatch(string eventHubPath, BatchEvent batchEvent, int partitionId = -1, string publisherId = "", 
+        string partitionKey = "") returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
         check req.setContentType(CONTENT_TYPE_SEND_BATCH);
+        if (partitionKey != "") {
+            foreach var item in batchEvent.events {
+                item.brokerProperties[PARTITION_KEY] = partitionKey;
+            }
+        }
         req.setJsonPayload(getBatchEventJson(batchEvent));
         string postResource = FORWARD_SLASH + eventHubPath;
         if (partitionId > -1) {
