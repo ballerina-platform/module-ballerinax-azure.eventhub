@@ -15,15 +15,13 @@
 // under the License.
 
 import ballerina/http;
-import ballerina/io;
-import ballerina/mime;
 import ballerina/lang.'xml as xmllib;
 import ballerina/stringutils;
 
-# Eventhub client implementation.
+# Eventhub management client implementation.
 #
 # + config - Client configuration
-public client class Client {
+public client class ManagementClient {
 
     private ClientEndpointConfiguration config;
     private string API_PREFIX = EMPTY_STRING;
@@ -33,88 +31,6 @@ public client class Client {
         self.config = config;
         self.API_PREFIX = TIME_OUT + config.timeout.toString() + API_VERSION + config.apiVersion;
         self.clientEndpoint = new (HTTPS + self.config.resourceUri);
-    }
-
-    # Send a single event
-    #
-    # + eventHubPath - event hub path
-    # + data - event data
-    # + userProperties - user properties
-    # + brokerProperties - broker properties
-    # + partitionId - partition ID
-    # + publisherId - publisher ID 
-    # + partitionKey - partition Key
-    # + return - @error if remote API is unreachable
-    remote function send(string eventHubPath, string|xml|json|byte[]|io:ReadableByteChannel|mime:Entity[] data, 
-            map<string> userProperties = {}, map<anydata> brokerProperties = {}, int partitionId = -1, 
-            string publisherId = "", string partitionKey = "") returns @tainted error? {
-        http:Request req = getAuthorizedRequest(self.config);
-        check req.setContentType(CONTENT_TYPE_SEND);
-        foreach var [header, value] in userProperties.entries() {
-            req.addHeader(header, value.toString());
-        }
-        if (partitionKey != "") {
-            brokerProperties[PARTITION_KEY] = partitionKey;
-        }
-        if (brokerProperties.length() > 0) {
-            json|error props = brokerProperties.cloneWithType(json);
-            if (props is error) {
-                return Error(BROKER_PROPERTIES_PARSE_ERROR, props);
-            } else {
-                req.addHeader(BROKER_PROPERTIES, props.toJsonString());
-            }
-        }
-        req.setPayload(data);
-        string postResource = FORWARD_SLASH + eventHubPath;
-        if (partitionId > -1) {
-            //append partition ID
-            postResource = postResource + PARTITION_PATH + partitionId.toString();
-        }
-        if (publisherId != "") {
-            //append publisher ID
-            postResource = postResource + PUBLISHER_PATH + publisherId;
-        }
-        postResource = postResource + MESSAGES_PATH;
-        string requestPath = postResource + self.API_PREFIX;
-        http:Response response = <http:Response> check self.clientEndpoint->post(requestPath, req);
-        if (response.statusCode == SUCCESS) {
-            return;
-        }
-        return getErrorMessage(response);
-    }
-
-    # Send batch of events
-    #
-    # + eventHubPath - event hub path
-    # + batchEvent - batch of events
-    # + partitionId - partition ID
-    # + publisherId - publisher ID
-    # + partitionKey - partition Key
-    # + return - Eventhub error if unsuccessful
-    remote function sendBatch(string eventHubPath, BatchEvent batchEvent, int partitionId = -1, string publisherId = "", 
-            string partitionKey = "") returns @tainted error? {
-        http:Request req = getAuthorizedRequest(self.config);
-        check req.setContentType(CONTENT_TYPE_SEND_BATCH);
-        if (partitionKey != "") {
-            foreach var item in batchEvent.events {
-                item.brokerProperties[PARTITION_KEY] = partitionKey;
-            }
-        }
-        req.setJsonPayload(getBatchEventJson(batchEvent));
-        string postResource = FORWARD_SLASH + eventHubPath;
-        if (partitionId > -1) {
-            postResource = postResource + PARTITION_PATH + partitionId.toString();
-        }
-        if (publisherId != "") {
-            postResource = postResource + PUBLISHER_PATH + publisherId;
-        }
-        postResource = postResource + MESSAGES_PATH;
-        string requestPath = postResource + self.API_PREFIX;
-        http:Response response = <http:Response> check self.clientEndpoint->post(requestPath, req);
-        if (response.statusCode != SUCCESS) {
-            return getErrorMessage(response);
-        }
-        return;
     }
 
     # Create a new Eventhub
@@ -205,63 +121,7 @@ public client class Client {
         return getErrorMessage(response);
     }
 
-    # Get details of revoked publisher
-    #
-    # + eventHubPath - event hub path
-    # + return - Return revoke publisher or Error
-    remote function getRevokedPublishers(string eventHubPath) returns @tainted xml|error {
-        http:Request req = getAuthorizedRequest(self.config);
-        string requestPath = FORWARD_SLASH + eventHubPath + REVOKED_PUBLISHERS_PATH + self.API_PREFIX;
-        http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
-        if (response.statusCode == OK) {
-            string textPayload = check response.getTextPayload();
-            string cleanedStringXMLObject = stringutils:replaceAll(textPayload, XML_BASE, BASE);
-            xml xmlPayload = check 'xml:fromString(cleanedStringXMLObject);
-            return xmlPayload;
-        } 
-        return getErrorMessage(response);
-    }
-
-    # Revoke a publisher
-    #
-    # + eventHubPath - event hub path
-    # + publisherName - publisher name 
-    # + return - Return revoke publisher details or error
-    remote function revokePublisher(string eventHubPath, string publisherName) returns @tainted xml|error {
-        http:Request req = getAuthorizedRequest(self.config);
-        RevokePublisherDescription revokePublisherDescription = {
-            Name: publisherName
-        };
-        xmllib:Element revPubDes = <xmllib:Element> xml `<RevokedPublisherDescription 
-            xmlns:i="http://www.w3.org/2001/XMLSchema-instance" 
-            xmlns="http://schemas.microsoft.com/netservices/2010/10/servicebus/connect"/>`;
-        req.setXmlPayload(getDescriptionProperties(revokePublisherDescription, revPubDes));
-        string requestPath = FORWARD_SLASH + eventHubPath + REVOKED_PUBLISHER_PATH + publisherName + 
-            TIME_OUT_AND_API_VERSION;
-        http:Response response = <http:Response> check self.clientEndpoint->put(requestPath, req);
-        if (response.statusCode == SUCCESS) {
-            xml xmlPayload = check response.getXmlPayload();
-            return xmlPayload;
-        } 
-        return getErrorMessage(response);
-    }
-
-    # Resume a publisher
-    #
-    # + eventHubPath - event hub path
-    # + publisherName - publisher name 
-    # + return - Return publisher details or error
-    remote function resumePublisher(string eventHubPath, string publisherName) returns @tainted error? {
-        http:Request req = getAuthorizedRequest(self.config);
-        string requestPath = FORWARD_SLASH + eventHubPath + REVOKED_PUBLISHER_PATH + publisherName;
-        http:Response response = <http:Response> check self.clientEndpoint->delete(requestPath, req);
-        if (response.statusCode == OK) {
-            return;
-        }
-        return getErrorMessage(response);
-    }
-
-    # Lit available partitions
+    # List available partitions
     #
     # + eventHubPath - event hub path
     # + consumerGroupName - consumer group name

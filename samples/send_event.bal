@@ -8,11 +8,11 @@ public function main() {
         sasKey: config:getAsString("SAS_KEY"),
         resourceUri: config:getAsString("RESOURCE_URI") 
     };
-    azure_eventhub:Client c = new (config);
+    azure_eventhub:PublisherClient publisherClient = new (config);
     
-    var b = c->send("myeventhub", "eventData");
-    if (b is error) {
-        log:printError(msg = b.message());
+    var result = publisherClient->send("myeventhub", "eventData");
+    if (result is error) {
+        log:printError(msg = result.message());
     } else {
         log:print("Successful!");
     }

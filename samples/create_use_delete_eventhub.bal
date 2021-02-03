@@ -8,14 +8,15 @@ public function main() {
         sasKey: config:getAsString("SAS_KEY"),
         resourceUri: config:getAsString("RESOURCE_URI") 
     };
-    azure_eventhub:Client c = new (config);
+    azure_eventhub:ManagementClient managementClient = new (config);
+    azure_eventhub:PublisherClient publisherClient = new (config);
 
     // ------------------------------------ Event Hub Creation-----------------------------------------------
     azure_eventhub:EventHubDescription eventHubDescription = {
         MessageRetentionInDays: 3,
         PartitionCount: 8
     };
-    var createResult = c->createEventHub("mytesthub", eventHubDescription);
+    var createResult = managementClient->createEventHub("mytesthub", eventHubDescription);
     if (createResult is error) {
         log:printError(createResult.message());
     }
@@ -25,17 +26,18 @@ public function main() {
     }
 
     // ----------------------------------------- Send Event ------------------------------------------------
-    map<string> brokerProps = {"CorrelationId": "32119834", "CorrelationId2": "32119834"};
+    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
 
-    var sendResult = c->send("mytesthub", "eventData", userProps, brokerProps);
+    var sendResult = publisherClient->send("mytesthub", "eventData", userProps, brokerProps, 
+        partitionKey = "groupName");
     if (sendResult is error) {
         log:printError(sendResult.message());
     } else {
         log:print("Successfully Send Event to Event Hub!");
     }
 
-    // ------------------------------- Send Batch Event to Partition -----------------------------------------
+    // ------------------------------- Send Batch Event with Partition Key -----------------------------------------
     azure_eventhub:BatchEvent batchEvent = {
         events: [
             {data: "Message1"},
@@ -43,15 +45,15 @@ public function main() {
             {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
         ]
     };
-    var b = c->sendBatch("mytesthub", batchEvent, partitionId = 1);
-    if (b is error) {
-        log:printError(b.message());
+    var sendBatchResult = publisherClient->sendBatch("mytesthub", batchEvent, partitionKey = "groupName");
+    if (sendBatchResult is error) {
+        log:printError(sendBatchResult.message());
     } else {
         log:print("Successfully Send Batch Event to Event Hub!");
     } 
 
     // --------------------------------- Delete Event Hub ----------------------------------------------------
-    var deleteResult = c->deleteEventHub("mytesthub");
+    var deleteResult = managementClient->deleteEventHub("mytesthub");
     if (deleteResult is error) {
         log:printError(msg = deleteResult.message());
     } else {

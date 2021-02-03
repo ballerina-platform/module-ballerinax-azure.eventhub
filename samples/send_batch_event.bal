@@ -8,7 +8,7 @@ public function main() {
         sasKey: config:getAsString("SAS_KEY"),
         resourceUri: config:getAsString("RESOURCE_URI") 
     };
-    azure_eventhub:Client c = new (config);
+    azure_eventhub:PublisherClient publisherClient = new (config);
 
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
@@ -20,9 +20,9 @@ public function main() {
             {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
         ]
     };
-    var b = c->sendBatch("myeventhub", batchEvent);
-    if (b is error) {
-        log:printError(b.message());
+    var result = publisherClient->sendBatch("myeventhub", batchEvent);
+    if (result is error) {
+        log:printError(result.message());
     } else {
         log:print("Successful!");
     }

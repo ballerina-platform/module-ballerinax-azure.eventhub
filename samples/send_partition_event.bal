@@ -8,14 +8,14 @@ public function main() {
         sasKey: config:getAsString("SAS_KEY"),
         resourceUri: config:getAsString("RESOURCE_URI") 
     };
-    azure_eventhub:Client c = new (config);
+    azure_eventhub:PublisherClient publisherClient = new (config);
 
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
 
-    var b = c->send("myeventhub", "data", userProps, brokerProps, partitionId=1);
-    if (b is error) {
-        log:printError(b.message());
+    var result = publisherClient->send("myeventhub", "data", userProps, brokerProps, partitionId = 1);
+    if (result is error) {
+        log:printError(result.message());
     } else {
         log:print("Successful!");
     }

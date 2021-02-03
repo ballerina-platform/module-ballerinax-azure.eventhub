@@ -8,11 +8,11 @@ public function main() {
         sasKey: config:getAsString("SAS_KEY"),
         resourceUri: config:getAsString("RESOURCE_URI") 
     };
-    azure_eventhub:Client c = new (config);
+    azure_eventhub:ManagementClient managementClient= new (config);
 
-    var b = c->deleteEventHub("myhub");
-    if (b is error) {
-        log:printError(b.message());
+    var result = managementClient->deleteEventHub("myhub");
+    if (result is error) {
+        log:printError(result.message());
     } else {
         log:print("Successful!");
     }

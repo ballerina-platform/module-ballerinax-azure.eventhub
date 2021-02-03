@@ -8,10 +8,10 @@ public function main() {
         sasKey: config:getAsString("SAS_KEY"),
         resourceUri: config:getAsString("RESOURCE_URI") 
     };
-    azure_eventhub:Client c = new (config);
+    azure_eventhub:ManagementClient managementClient = new (config);
 
     // ------------------------------------ Event Hub Creation-----------------------------------------------
-    var createResult = c->createEventHub("mytesthub");
+    var createResult = managementClient->createEventHub("mytesthub");
     if (createResult is error) {
         log:printError(createResult.message());
     }
@@ -21,7 +21,7 @@ public function main() {
     }
 
     // ----------------------------------- Get Event Hub -----------------------------------------------------
-    var getEventHubResult = c->getEventHub("mytesthub");
+    var getEventHubResult = managementClient->getEventHub("mytesthub");
     if (getEventHubResult is error) {
         log:printError(getEventHubResult.message());
     }
@@ -34,7 +34,7 @@ public function main() {
     azure_eventhub:EventHubDescriptionToUpdate eventHubDescriptionToUpdate = {
         MessageRetentionInDays: 5
     };
-    var updateResult = c->updateEventHub("mytesthub", eventHubDescriptionToUpdate);
+    var updateResult = managementClient->updateEventHub("mytesthub", eventHubDescriptionToUpdate);
     if (updateResult is error) {
         log:printError(updateResult.message());
     }
@@ -44,7 +44,7 @@ public function main() {
     }
 
     // ---------------------------------- List Event Hubs -----------------------------------------------------
-    var listResult = c->listEventHubs();
+    var listResult = managementClient->listEventHubs();
     if (listResult is error) {
         log:printError(listResult.message());
     }
@@ -54,7 +54,7 @@ public function main() {
     }
 
     // --------------------------------- Delete Event Hub ----------------------------------------------------
-    var deleteResult = c->deleteEventHub("mytesthub");
+    var deleteResult = managementClient->deleteEventHub("mytesthub");
     if (deleteResult is error) {
         log:printError(msg = deleteResult.message());
     } else {

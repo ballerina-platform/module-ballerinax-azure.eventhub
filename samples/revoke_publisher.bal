@@ -8,14 +8,14 @@ public function main() {
         sasKey: config:getAsString("SAS_KEY"),
         resourceUri: config:getAsString("RESOURCE_URI") 
     };
-    azure_eventhub:Client c = new (config);
+    azure_eventhub:PublisherClient publisherClient = new (config);
 
-    var b = c->revokePublisher("myeventhub", "device-1");
-    if (b is error) {
-        log:printError(b.message());
+    var result = publisherClient->revokePublisher("myeventhub", "device-1");
+    if (result is error) {
+        log:printError(result.message());
     }
-    if (b is xml) {
-        log:print(b.toString());
+    if (result is xml) {
+        log:print(result.toString());
         log:print("Successful!");
     }
 }

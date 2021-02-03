@@ -8,13 +8,13 @@ public function main() {
         sasKey: config:getAsString("SAS_KEY"),
         resourceUri: config:getAsString("RESOURCE_URI") 
     };
-    azure_eventhub:Client c = new (config);
+    azure_eventhub:ManagementClient managementClient = new (config);
 
-    var b = c->deleteConsumerGroup("myeventhub","consumerGroup1");
-    if (b is error) {
-        log:printError(b.message());
+    var result = managementClient->deleteConsumerGroup("myeventhub","consumerGroup1");
+    if (result is error) {
+        log:printError(result.message());
     }
-    if (b is ()) {
+    if (result is ()) {
         log:print("successful");
     }
 }
