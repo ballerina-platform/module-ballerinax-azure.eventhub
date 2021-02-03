@@ -46,8 +46,8 @@ public client class Client {
     # + partitionKey - partition Key
     # + return - @error if remote API is unreachable
     remote function send(string eventHubPath, string|xml|json|byte[]|io:ReadableByteChannel|mime:Entity[] data, 
-        map<string> userProperties = {}, map<anydata> brokerProperties = {}, int partitionId = -1, 
-        string publisherId = "", string partitionKey = "") returns @tainted error? {
+            map<string> userProperties = {}, map<anydata> brokerProperties = {}, int partitionId = -1, 
+            string publisherId = "", string partitionKey = "") returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
         check req.setContentType(CONTENT_TYPE_SEND);
         foreach var [header, value] in userProperties.entries() {
@@ -92,7 +92,7 @@ public client class Client {
     # + partitionKey - partition Key
     # + return - Eventhub error if unsuccessful
     remote function sendBatch(string eventHubPath, BatchEvent batchEvent, int partitionId = -1, string publisherId = "", 
-        string partitionKey = "") returns @tainted error? {
+            string partitionKey = "") returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
         check req.setContentType(CONTENT_TYPE_SEND_BATCH);
         if (partitionKey != "") {
@@ -123,7 +123,7 @@ public client class Client {
     # + eventHubDescription - event hub description
     # + return - Return XML or Error
     remote function createEventHub(string eventHubPath, EventHubDescription eventHubDescription = {}) 
-        returns @tainted xml|error {
+            returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
         xmllib:Element eventHubDes = <xmllib:Element> xml `<EventHubDescription 
             xmlns:i="http://www.w3.org/2001/XMLSchema-instance" 
@@ -159,7 +159,7 @@ public client class Client {
     # + eventHubDescriptionToUpdate - event hub description to update
     # + return - Return XML or Error
     remote function updateEventHub(string eventHubPath, EventHubDescriptionToUpdate eventHubDescriptionToUpdate) 
-        returns @tainted xml|error {
+            returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
         req.addHeader(IF_MATCH, ALL);
         xmllib:Element eventHubDescription = <xmllib:Element> xml `<EventHubDescription 
@@ -286,7 +286,7 @@ public client class Client {
     # + partitionId - partitionId 
     # + return - Returns partition details
     remote function getPartition(string eventHubPath, string consumerGroupName, int partitionId) 
-        returns @tainted xml|error {
+            returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath + CONSUMER_GROUP_PATH + consumerGroupName + PARTITION_PATH + 
             partitionId.toString();
@@ -305,7 +305,7 @@ public client class Client {
     # + consumerGroupDescription - consumer group description
     # + return - Return Consumer group details or error
     remote function createConsumerGroup(string eventHubPath, string consumerGroupName, 
-        ConsumerGroupDescription consumerGroupDescription = {}) returns @tainted xml|error {
+            ConsumerGroupDescription consumerGroupDescription = {}) returns @tainted xml|error {
         http:Request req = getAuthorizedRequest(self.config);
         xmllib:Element consumerGroupDes = <xmllib:Element> xml `<ConsumerGroupDescription 
             xmlns:i="http://www.w3.org/2001/XMLSchema-instance"

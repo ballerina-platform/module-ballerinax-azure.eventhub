@@ -43,7 +43,7 @@ public function main() {
             {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
         ]
     };
-    var b = c->sendBatch("mytesthub", batchEvent, partitionId=1);
+    var b = c->sendBatch("mytesthub", batchEvent, partitionId = 1);
     if (b is error) {
         log:printError(b.message());
     } else {

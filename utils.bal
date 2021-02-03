@@ -47,7 +47,6 @@ isolated function getSASToken(ClientEndpointConfiguration config) returns string
         + <string>encoding:encodeUriComponent(config.resourceUri, UTF8_URL_ENCODING)
         + "&sig=" + <string>encoding:encodeUriComponent(signature, UTF8_URL_ENCODING)
         + "&se=" + expiry.toString() + "&skn=" + config.sasKeyName;
-    // log:print(io:sprintf("SAS token: [%s]", sasToken));
     return sasToken;
 }
 
