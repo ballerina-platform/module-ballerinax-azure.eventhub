@@ -25,18 +25,18 @@ isolated function getBatchEventJson(BatchEvent batchEvent) returns json {
     json[] message = [];
     foreach var item in batchEvent.events {
         json data = checkpanic item.data.cloneWithType(json);
-        json j = {
+        json jsonMessage = {
             Body: data
         };
         if (!(item["userProperties"] is ())) {
             json userProperties = {UserProperties:checkpanic item["userProperties"].cloneWithType(json)};
-            j = checkpanic j.mergeJson(userProperties);
+            jsonMessage = checkpanic jsonMessage.mergeJson(userProperties);
         }
         if (!(item["brokerProperties"] is ())) {
             json brokerProperties = {BrokerProperties:checkpanic item["brokerProperties"].cloneWithType(json)};
-            j = checkpanic j.mergeJson(brokerProperties);
+            jsonMessage = checkpanic jsonMessage.mergeJson(brokerProperties);
         }
-        message.push(j);
+        message.push(jsonMessage);
     }
     return message;
 }
