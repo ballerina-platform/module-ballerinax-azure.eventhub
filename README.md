@@ -15,9 +15,9 @@ The REST APIs fall into the following categories:
   APIs that enable operations directly on the Event Hubs service, and have <namespaceName>.servicebus.windows.net/ in the request URI. The Event Hubs service API is focused on this implementation. 
 
 ## Compatibility
-|                     |    Version                  |
-|:-------------------:|:---------------------------:|
-| Ballerina Language  | swan-lake-preview8          |
+|                     |    Version          |
+|:-------------------:|:-------------------:|
+| Ballerina Language  | swan-lake-preview8  |
 
 
 ## Samples:
@@ -33,8 +33,8 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = new (config);
-   var b = c->send("myhub", "eventData");
+   eventhub:Client eventHubClient = new (config);
+   var result = eventHubClient->send("myhub", "eventData");
 }
 ```
 
@@ -49,11 +49,11 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = new (config);
+   eventhub:Client eventHubClient = new (config);
    map<string> brokerProps = {"CorrelationId": "32119834", "CorrelationId2": "32119834"};
    map<string> userProps = {Alert: "windy", warning: "true"};
 
-   var b = c->send("myhub", "eventData", userProps, brokerProps);
+   var result = eventHubClient->send("myhub", "eventData", userProps, brokerProps);
 }
 ```
 
@@ -67,11 +67,11 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = new (config);
+   eventhub:Client eventHubClient = new (config);
    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
    map<string> userProps = {Alert: "windy", warning: "true"};
 
-   var b = c->send("myhub", "data", userProps, brokerProps, partitionId=1);
+   var result = eventHubClient->send("myhub", "data", userProps, brokerProps, partitionId=1);
 }
 ```
 
@@ -85,7 +85,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = new (config);
+   eventhub:Client eventHubClient = new (config);
    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
    map<string> userProps = {Alert: "windy", warning: "true"};
 
@@ -96,7 +96,7 @@ public function main() {
             {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
         ]
     };
-    var b = c->sendBatch("myhub", batchEvent);
+    var result = eventHubClient->sendBatch("myhub", batchEvent);
 }
 ```
 
@@ -110,7 +110,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = new (config);
+   eventhub:Client eventHubClient = new (config);
    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
    map<string> userProps = {Alert: "windy", warning: "true"};
 
@@ -121,7 +121,7 @@ public function main() {
             {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
         ]
     };
-    var b = c->sendBatch("myhub", batchEvent, partitionId=1);
+    var result = eventHubClient->sendBatch("myhub", batchEvent, partitionId=1);
 }
 ```
 
@@ -135,7 +135,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = new (config);
+   eventhub:Client eventHubClient = new (config);
    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
    map<string> userProps = {Alert: "windy", warning: "true"};
 
@@ -146,7 +146,7 @@ public function main() {
             {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
         ]
     };
-    var b = c->sendBatch("myhub", batchEvent, publisherId="device-1");
+    var result = eventHubClient->sendBatch("myhub", batchEvent, publisherId="device-1");
 }
 ```
 
@@ -160,8 +160,8 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = new (config);
-   var b = c->createEventHub("myhub");
+   eventhub:Client eventHubClient = new (config);
+   var result = eventHubClient->createEventHub("myhub");
 }
 ```
 
@@ -175,8 +175,8 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = new (config);
-   var b = c->getEventHub("myhub");
+   eventhub:Client eventHubClient = new (config);
+   var result = eventHubClient->getEventHub("myhub");
 }
 ```
 
@@ -190,8 +190,8 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = new (config);
-   var b = c->deleteEventHub("myhub");
+   eventhub:Client eventHubClient = new (config);
+   var result = eventHubClient->deleteEventHub("myhub");
 }
 ```
 
@@ -205,8 +205,8 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = new (config);
-   var b = c->createConsumerGroup("myhub", "groupName");
+   eventhub:Client eventHubClient = new (config);
+   var result = eventHubClient->createConsumerGroup("myhub", "groupName");
 }
 ```
 
@@ -220,8 +220,8 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = new (config);
-   var b = c->getConsumerGroup("myhub", "groupName");
+   eventhub:Client eventHubClient = new (config);
+   var result = eventHubClient->getConsumerGroup("myhub", "groupName");
 }
 ```
 
@@ -235,7 +235,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:Client c = new (config);
-   var b = c->deleteConsumerGroup("myhub", "groupName");
+   eventhub:Client eventHubClient = new (config);
+   var result = eventHubClient->deleteConsumerGroup("myhub", "groupName");
 }
 ```
