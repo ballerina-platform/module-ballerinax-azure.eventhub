@@ -57,3 +57,8 @@ const string EMPTY_STRING = "";
 const string FORWARD_SLASH = "/";
 const string XML_BASE = "xml:base";
 const string BASE = "base";
+
+// Setup and Teardown stage constants in test
+const string EVENT_HUB_NAME1 = "myeventhub";
+const string EVENT_HUB_NAME2 = "myhub";
+const string EVENT_HUB_NAME3 = "myhubnew";

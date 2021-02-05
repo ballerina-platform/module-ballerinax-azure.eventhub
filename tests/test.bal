@@ -30,7 +30,7 @@ PublisherClient publisherClient = new (config);
 # Before Suite Function
 @test:BeforeSuite
 function beforeSuiteFunc() {
-    var result = managementClient->createEventHub("myeventhub");
+    var result = managementClient->createEventHub(EVENT_HUB_NAME1);
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -45,7 +45,7 @@ function beforeSuiteFunc() {
     enable: true
 }
 function testSendEvent() {
-    var result = publisherClient->send("myeventhub", "eventData");
+    var result = publisherClient->send(EVENT_HUB_NAME1, "eventData");
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -60,7 +60,7 @@ function testSendEventWithBrokerAndUserProperties() {
     map<string> brokerProps = {"CorrelationId": "32119834", "CorrelationId2": "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
 
-    var result = publisherClient->send("myeventhub", "eventData", userProps, brokerProps);
+    var result = publisherClient->send(EVENT_HUB_NAME1, "eventData", userProps, brokerProps);
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -75,7 +75,7 @@ function testSendEventWithPartitionKey() {
     map<string> brokerProps = {PartitionKey: "groupName1", CorrelationId: "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
 
-    var result = publisherClient->send("myeventhub", "data", userProps, brokerProps, partitionKey = "groupName");
+    var result = publisherClient->send(EVENT_HUB_NAME1, "data", userProps, brokerProps, partitionKey = "groupName");
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -90,7 +90,7 @@ function testSendEventToPartition() {
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
 
-    var result = publisherClient->send("myeventhub", "data", userProps, brokerProps, partitionId = 1);
+    var result = publisherClient->send(EVENT_HUB_NAME1, "data", userProps, brokerProps, partitionId = 1);
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -112,7 +112,7 @@ function testSendBatchEvent() {
             {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
         ]
     };
-    var result = publisherClient->sendBatch("myeventhub", batchEvent);
+    var result = publisherClient->sendBatch(EVENT_HUB_NAME1, batchEvent);
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -134,7 +134,7 @@ function testSendBatchEventWithPartitionKey() {
             {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
         ]
     };
-    var result = publisherClient->sendBatch("myeventhub", batchEvent, partitionKey = "groupName");
+    var result = publisherClient->sendBatch(EVENT_HUB_NAME1, batchEvent, partitionKey = "groupName");
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -156,7 +156,7 @@ function testSendBatchEventToPartition() {
             {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
         ]
     };
-    var result = publisherClient->sendBatch("myeventhub", batchEvent, partitionId = 1);
+    var result = publisherClient->sendBatch(EVENT_HUB_NAME1, batchEvent, partitionId = 1);
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -178,7 +178,7 @@ function testSendBatchEventWithPublisherID() {
             {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
         ]
     };
-    var result = publisherClient->sendBatch("myeventhub", batchEvent, publisherId = "device-1");
+    var result = publisherClient->sendBatch(EVENT_HUB_NAME1, batchEvent, publisherId = "device-1");
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -190,7 +190,7 @@ function testSendBatchEventWithPublisherID() {
     enable: true
 }
 function testCreateEventHub() {
-    var result = managementClient->createEventHub("myhub");
+    var result = managementClient->createEventHub(EVENT_HUB_NAME2);
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -206,7 +206,7 @@ function testCreateEventHub() {
     enable: true
 }
 function testGetEventHub() {
-    var result = managementClient->getEventHub("myhub");
+    var result = managementClient->getEventHub(EVENT_HUB_NAME2);
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -225,7 +225,7 @@ function testUpdateEventHub() {
     EventHubDescriptionToUpdate eventHubDescriptionToUpdate = {
         MessageRetentionInDays: 5
     };
-    var result = managementClient->updateEventHub("myhub", eventHubDescriptionToUpdate);
+    var result = managementClient->updateEventHub(EVENT_HUB_NAME2, eventHubDescriptionToUpdate);
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -264,7 +264,7 @@ function testListEventHubs() {
     enable: true
 }
 function testDeleteEventHub() {
-    var result = managementClient->deleteEventHub("myhub");
+    var result = managementClient->deleteEventHub(EVENT_HUB_NAME2);
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -281,7 +281,7 @@ function testCreateEventHubWithEventHubDescription() {
         MessageRetentionInDays: 3,
         PartitionCount: 8
     };
-    var result = managementClient->createEventHub("myhubnew", eventHubDescription);
+    var result = managementClient->createEventHub(EVENT_HUB_NAME3, eventHubDescription);
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -297,7 +297,7 @@ function testCreateEventHubWithEventHubDescription() {
     enable: true
 }
 function testDeleteEventHubWithEventHubDescription() {
-    var result = managementClient->deleteEventHub("myhubnew");
+    var result = managementClient->deleteEventHub(EVENT_HUB_NAME3);
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -310,7 +310,7 @@ function testDeleteEventHubWithEventHubDescription() {
     enable: true
 }
 function testRevokePublisher() {
-    var result = publisherClient->revokePublisher("myeventhub", "device-1");
+    var result = publisherClient->revokePublisher(EVENT_HUB_NAME1, "device-1");
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -327,7 +327,7 @@ function testSendEventWithPublisherID() {
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
 
-    var result = publisherClient->send("myeventhub", "data", userProps, brokerProps, publisherId = "device-1");
+    var result = publisherClient->send(EVENT_HUB_NAME1, "data", userProps, brokerProps, publisherId = "device-1");
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -341,7 +341,7 @@ function testSendEventWithPublisherID() {
     enable: true
 }
 function testGetRevokedPublishers() {
-    var result = publisherClient->getRevokedPublishers("myeventhub");
+    var result = publisherClient->getRevokedPublishers(EVENT_HUB_NAME1);
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -361,7 +361,7 @@ function testGetRevokedPublishers() {
     enable: true
 }
 function testResumePublisher() {
-    var result = publisherClient->resumePublisher("myeventhub", "device-1");
+    var result = publisherClient->resumePublisher(EVENT_HUB_NAME1, "device-1");
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -376,7 +376,7 @@ function testResumePublisher() {
     enable: true
 }
 function testCreateConsumerGroup() {
-    var result = managementClient->createConsumerGroup("myeventhub", "consumerGroup1");
+    var result = managementClient->createConsumerGroup(EVENT_HUB_NAME1, "consumerGroup1");
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -392,7 +392,7 @@ function testCreateConsumerGroup() {
     enable: true
 }
 function testGetConsumerGroup() {
-    var result = managementClient->getConsumerGroup("myeventhub", "consumerGroup1");
+    var result = managementClient->getConsumerGroup(EVENT_HUB_NAME1, "consumerGroup1");
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -408,7 +408,7 @@ function testGetConsumerGroup() {
     enable: true
 }
 function testListConsumerGroups() {
-    var result = managementClient->listConsumerGroups("myeventhub");
+    var result = managementClient->listConsumerGroups(EVENT_HUB_NAME1);
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -425,7 +425,7 @@ function testListConsumerGroups() {
     enable: true
 }
 function testListPartitions() {
-    var result = managementClient->listPartitions("myeventhub", "consumerGroup1");
+    var result = managementClient->listPartitions(EVENT_HUB_NAME1, "consumerGroup1");
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -442,7 +442,7 @@ function testListPartitions() {
     enable: true
 }
 function testGetPartition() {
-    var result = managementClient->getPartition("myeventhub", "consumerGroup1", 1);
+    var result = managementClient->getPartition(EVENT_HUB_NAME1, "consumerGroup1", 1);
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -464,7 +464,7 @@ function testGetPartition() {
     enable: true
 }
 function testDeleteConsumerGroups() {
-    var result = managementClient->deleteConsumerGroup("myeventhub", "consumerGroup1");
+    var result = managementClient->deleteConsumerGroup(EVENT_HUB_NAME1, "consumerGroup1");
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -477,7 +477,7 @@ function testDeleteConsumerGroups() {
 # After Suite Function
 @test:AfterSuite {}
 function afterSuiteFunc() {
-    var result = managementClient->deleteEventHub("myeventhub");
+    var result = managementClient->deleteEventHub(EVENT_HUB_NAME1);
     if (result is error) {
         test:assertFail(msg = result.message());
     }
