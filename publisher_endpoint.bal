@@ -77,7 +77,7 @@ public client class PublisherClient {
         postResource = postResource + MESSAGES_PATH;
         string requestPath = postResource + self.API_PREFIX;
         http:Response response = <http:Response> check self.clientEndpoint->post(requestPath, req);
-        if (response.statusCode == SUCCESS) {
+        if (response.statusCode == http:STATUS_CREATED) {
             return;
         }
         return getErrorMessage(response);
@@ -111,7 +111,7 @@ public client class PublisherClient {
         postResource = postResource + MESSAGES_PATH;
         string requestPath = postResource + self.API_PREFIX;
         http:Response response = <http:Response> check self.clientEndpoint->post(requestPath, req);
-        if (response.statusCode != SUCCESS) {
+        if (response.statusCode != http:STATUS_CREATED) {
             return getErrorMessage(response);
         }
         return;
@@ -125,7 +125,7 @@ public client class PublisherClient {
         http:Request req = getAuthorizedRequest(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath + REVOKED_PUBLISHERS_PATH + self.API_PREFIX;
         http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
-        if (response.statusCode == OK) {
+        if (response.statusCode == http:STATUS_OK) {
             string textPayload = check response.getTextPayload();
             string cleanedStringXMLObject = stringutils:replaceAll(textPayload, XML_BASE, BASE);
             xml xmlPayload = check 'xml:fromString(cleanedStringXMLObject);
@@ -151,7 +151,7 @@ public client class PublisherClient {
         string requestPath = FORWARD_SLASH + eventHubPath + REVOKED_PUBLISHER_PATH + publisherName + 
             TIME_OUT_AND_API_VERSION;
         http:Response response = <http:Response> check self.clientEndpoint->put(requestPath, req);
-        if (response.statusCode == SUCCESS) {
+        if (response.statusCode == http:STATUS_CREATED) {
             xml xmlPayload = check response.getXmlPayload();
             return xmlPayload;
         } 
@@ -167,7 +167,7 @@ public client class PublisherClient {
         http:Request req = getAuthorizedRequest(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath + REVOKED_PUBLISHER_PATH + publisherName;
         http:Response response = <http:Response> check self.clientEndpoint->delete(requestPath, req);
-        if (response.statusCode == OK) {
+        if (response.statusCode == http:STATUS_OK) {
             return;
         }
         return getErrorMessage(response);

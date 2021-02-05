@@ -47,7 +47,7 @@ public client class ManagementClient {
         req.setXmlPayload(getDescriptionProperties(eventHubDescription, eventHubDes));
         string requestPath = FORWARD_SLASH + eventHubPath + self.API_PREFIX;
         http:Response response = <http:Response> check self.clientEndpoint->put(requestPath, req);
-        if (response.statusCode == SUCCESS) {
+        if (response.statusCode == http:STATUS_CREATED) {
             xml xmlPayload = check response.getXmlPayload();
             return xmlPayload;
         }
@@ -62,7 +62,7 @@ public client class ManagementClient {
         http:Request req = getAuthorizedRequest(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath;
         http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
-        if (response.statusCode == OK) {
+        if (response.statusCode == http:STATUS_OK) {
             xml xmlPayload = check response.getXmlPayload();
             return xmlPayload;
         }
@@ -84,7 +84,7 @@ public client class ManagementClient {
         req.setXmlPayload(getDescriptionProperties(eventHubDescriptionToUpdate, eventHubDescription));
         string requestPath = FORWARD_SLASH + eventHubPath + self.API_PREFIX;
         http:Response response = <http:Response> check self.clientEndpoint->put(requestPath, req);
-        if (response.statusCode == OK) {
+        if (response.statusCode == http:STATUS_OK) {
             xml xmlPayload = check response.getXmlPayload();
             return xmlPayload;
         } 
@@ -98,7 +98,7 @@ public client class ManagementClient {
         http:Request req = getAuthorizedRequest(self.config);
         string requestPath = EVENT_HUBS_PATH;
         http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
-        if (response.statusCode == OK) {
+        if (response.statusCode == http:STATUS_OK) {
             string textPayload = check response.getTextPayload();
             string cleanedStringXMLObject = stringutils:replaceAll(textPayload, XML_BASE, BASE);
             xml xmlPayload = check 'xml:fromString(cleanedStringXMLObject);
@@ -115,7 +115,7 @@ public client class ManagementClient {
         http:Request req = getAuthorizedRequest(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath;
         http:Response response = <http:Response> check self.clientEndpoint->delete(requestPath, req);
-        if (response.statusCode == OK) {
+        if (response.statusCode == http:STATUS_OK) {
             return;
         } 
         return getErrorMessage(response);
@@ -130,7 +130,7 @@ public client class ManagementClient {
         http:Request req = getAuthorizedRequest(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath + CONSUMER_GROUP_PATH + consumerGroupName + PARTITIONS_PATH;
         http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
-        if (response.statusCode == OK) {
+        if (response.statusCode == http:STATUS_OK) {
             string textPayload = check response.getTextPayload();
             string cleanedStringXMLObject = stringutils:replaceAll(textPayload, XML_BASE, BASE);
             xml xmlPayload = check 'xml:fromString(cleanedStringXMLObject);
@@ -151,7 +151,7 @@ public client class ManagementClient {
         string requestPath = FORWARD_SLASH + eventHubPath + CONSUMER_GROUP_PATH + consumerGroupName + PARTITION_PATH + 
             partitionId.toString();
         http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
-        if (response.statusCode == OK) {
+        if (response.statusCode == http:STATUS_OK) {
             xml xmlPayload = check response.getXmlPayload();
             return xmlPayload;
         } 
@@ -173,7 +173,7 @@ public client class ManagementClient {
         req.setXmlPayload(getDescriptionProperties(consumerGroupDescription, consumerGroupDes));
         string requestPath = FORWARD_SLASH + eventHubPath + CONSUMER_GROUP_PATH + consumerGroupName + self.API_PREFIX;
         http:Response response = <http:Response> check self.clientEndpoint->put(requestPath, req);
-        if (response.statusCode == SUCCESS) {
+        if (response.statusCode == http:STATUS_CREATED) {
             xml xmlPayload = check response.getXmlPayload();
             return xmlPayload;
         } 
@@ -189,7 +189,7 @@ public client class ManagementClient {
         http:Request req = getAuthorizedRequest(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath + CONSUMER_GROUP_PATH + consumerGroupName;
         http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
-        if (response.statusCode == OK) {
+        if (response.statusCode == http:STATUS_OK) {
             xml xmlPayload = check response.getXmlPayload();
             return xmlPayload;
         } 
@@ -205,7 +205,7 @@ public client class ManagementClient {
         http:Request req = getAuthorizedRequest(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath + CONSUMER_GROUP_PATH + consumerGroupName;
         http:Response response = <http:Response> check self.clientEndpoint->delete(requestPath, req);
-        if (response.statusCode == OK) {
+        if (response.statusCode == http:STATUS_OK) {
             return;
         } 
         return getErrorMessage(response);
@@ -219,7 +219,7 @@ public client class ManagementClient {
         http:Request req = getAuthorizedRequest(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath + CONSUMER_GROUPS_PATH;
         http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
-        if (response.statusCode == OK) {
+        if (response.statusCode == http:STATUS_OK) {
             string textPayload = check response.getTextPayload();
             string cleanedStringXMLObject = stringutils:replaceAll(textPayload, XML_BASE, BASE);
             xml xmlPayload = check 'xml:fromString(cleanedStringXMLObject);

@@ -29,10 +29,6 @@ const string NO_RETRY = "NoRetry";
 // Encoding types
 const string UTF8_URL_ENCODING = "UTF-8";
 
-// Response Status Codes
-const int OK = 200;
-const int SUCCESS = 201;
-
 // URL paths
 const string PARTITIONS_PATH = "/partitions";
 const string PARTITION_PATH = "/partitions/";
