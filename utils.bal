@@ -18,6 +18,8 @@ import ballerina/crypto;
 import ballerina/encoding;
 import ballerina/http;
 import ballerina/time;
+import ballerina/java;
+import ballerina/stringutils;
 
 # Get request with common headers
 #
@@ -58,3 +60,21 @@ isolated function getErrorMessage(http:Response response) returns @tainted error
     return Error("Invalid response from EventHub API. statuscode: " + response.statusCode.toString() + ", payload: " + 
         response.getTextPayload().toString(), status = response.statusCode);
 }
+
+# Create a random UUID removing the unnecessary hyphens which will interrupt querying opearations.
+# 
+# + return - A string UUID without hyphens
+public function createRandomUUIDWithoutHyphens() returns string {
+    string? stringUUID = java:toString(createRandomUUID());
+    if (stringUUID is string) {
+        stringUUID = stringutils:replace(stringUUID, "-", "");
+        return stringUUID;
+    } else {
+        return "";
+    }
+}
+
+function createRandomUUID() returns handle = @java:Method {
+    name: "randomUUID",
+    'class: "java.util.UUID"
+} external;
