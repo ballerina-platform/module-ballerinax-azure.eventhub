@@ -10,8 +10,9 @@ Connects to Microsoft Azure Event Hubs using Ballerina.
 
 ## What is Azure Event Hub?
 
-Azure Event Hubs is a fully managed, real-time data ingress service which is highly scalable, secured, open and 
-reliable that ingests data (events) from a variety of sources and reliably distribute between multiple independent 
+[Azure Event Hubs](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-about) is a fully managed, real-time 
+data ingress service which is highly scalable, secured, open and reliable that ingests data (events) from a variety of 
+sources and reliably distribute between multiple independent 
 systems for processing, storage and analysis. Azure Event Hubs streamline the data pipelines so that the journey from 
 inputs to insights is seamless.  It makes sure all the incoming data is received reliably, fast, in order and is 
 available for consumption by many processing systems at their own pace. It automatically decouples event producers from 
@@ -26,7 +27,8 @@ to unlock insights.
 * Enable real time and micro batch processing concurrently.
 * Handle massive amounts of data across various types, sizes and speeds with elastic scale.
 * Easily connect with Apache Kafka ecosystem
-* Natively connect with Stream Analytics to build an end-to-end serverless streaming solution.
+* Natively connect with [Stream Analytics](https://azure.microsoft.com/en-us/services/stream-analytics/) to build an 
+end-to-end serverless streaming solution.
 
 ## Connector Overview
 
@@ -76,9 +78,9 @@ https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-get-connection-stri
 * Shared Access Signature (SAS) Authentication Credentials
 You need to extract the Shared Access Key Name, Shared Access Key, Resource URI to the Event Hub Namespace separately 
 from the connection string.
-** Shared Access Key Name, 
-** Shared Access Key, 
-** Resource URI to the Event Hub Namespace.
+    * Shared Access Key Name, 
+    * Shared Access Key, 
+    * Resource URI to the Event Hub Namespace.
 
 # Supported Versions & Limitations
 
@@ -111,14 +113,14 @@ these configurations.
 
 * An Event Hub https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-create#create-an-event-hub
 
-* Connection String of the Event Hub Namespace
-Get the connection string from the Azure Event Hub namespace you created.
+* Connection String of the Event Hub Namespace.
+[Get the connection string](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-get-connection-string#get-connection-string-from-the-portal) from the Azure Event Hub namespace you created.
 
 * You need to extract the Shared Access Key Name, Shared Access Key, Resource URI to the Event Hub Namespace separately 
 from the connection string.
-** Shared Access Key Name, 
-** Shared Access Key, 
-** Resource URI to the Event Hub Namespace.
+    * Shared Access Key Name, 
+    * Shared Access Key, 
+    * Resource URI to the Event Hub Namespace.
 
 ### Step 1: Import the Azure Event Hub Ballerina Library
 First, import the ballerinax/azure_eventhub module into the Ballerina project.
@@ -178,14 +180,14 @@ these configurations.
 
 * An Event Hub https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-create#create-an-event-hub
 
-* Connection String of the Event Hub Namespace
-Get the connection string from the Azure Event Hub namespace you created.
+* Connection String of the Event Hub Namespace.
+[Get the connection string](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-get-connection-string#get-connection-string-from-the-portal) from the Azure Event Hub namespace you created.
 
 * You need to extract the Shared Access Key Name, Shared Access Key, Resource URI to the Event Hub Namespace separately 
 from the connection string.
-** Shared Access Key Name, 
-** Shared Access Key, 
-** Resource URI to the Event Hub Namespace.
+    * Shared Access Key Name, 
+    * Shared Access Key, 
+    * Resource URI to the Event Hub Namespace.
 
 ### Step 1: Import the Azure Event Hub Ballerina Library
 First, import the ballerinax/azure_eventhub module into the Ballerina project.
@@ -303,7 +305,7 @@ scenario of sending an event with string data “eventData” to the event hub p
 error if the operation is unsuccessful.
 
 Sample is available at:
-https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/samples/send_event.bal
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/send_event.bal
 
 ```ballerina
 import ballerinax/azure_eventhub;
@@ -338,8 +340,7 @@ named “myhub” with optional broker properties and user properties. It return
 unsuccessful.
 
 Sample is available at:
-https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/samples/send_event_with_broker_and_user_
-properties.bal
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/send_event_with_broker_and_user_properties.bal
 
 ```ballerina
 import ballerinax/azure_eventhub;
@@ -379,7 +380,7 @@ event data with the partition key “groupname” to a specific partition in the
 an eventhub error if the operation is unsuccessful.
 
 Sample is available at:
-https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/samples/send_event_with_partition_key.bal
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/send_event_with_partition_key.bal
 
 
 ```ballerina
@@ -420,7 +421,7 @@ path named “myhub” with optional broker properties and user properties. It s
 the eventhub named “myhub”. It returns an eventhub error if the operation is unsuccessful.
 
 Sample is available at:
-https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/samples/send_partition_event.bal
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/send_partition_event.bal
 
 ```ballerina
 import ballerinax/azure_eventhub;
@@ -461,7 +462,7 @@ properties. This is the basic scenario of sending an event with batch event to t
 BatchEvent. It returns an eventhub error if the operation is unsuccessful.
 
 Sample is available at:
-https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/samples/send_batch_event.bal
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/send_batch_event.bal
 
 ```ballerina
 import ballerinax/azure_eventhub;
@@ -501,6 +502,57 @@ You can specify the event hub path, the batch event of record type BatchEvent an
 send method.
 This operation will return a ballerina error if the operation failed.
 
+### Send batch event with partition key
+This section shows how to use the ballerina connector to send batch events to an event hub with broker properties, 
+user properties and specified partition key. We must specify the event hub path and the event data in 
+string/xml/json/byte[] array etc. formats as parameters to the send operation. Additionally we can specify user 
+properties and broker properties as a map which is optional. Events are specified as an array of BatchMessage records 
+and each BatchMessage includes event data, and optional user properties and broker properties. This is the basic 
+scenario of sending an event with batch event to the event hub path named “myhub” with BatchEvent and partition key as 
+“groupName”. It returns an eventhub error if the operation is unsuccessful.
+
+Sample is available at:
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/send_batch_event_with_partition_key.bal
+
+```ballerina
+import ballerinax/azure_eventhub;
+import ballerina/config;
+import ballerina/log;
+ 
+public function main() {
+   
+   azure_eventhub:ClientEndpointConfiguration config = {
+       sasKeyName: config:getAsString("SAS_KEY_NAME"),
+       sasKey: config:getAsString("SAS_KEY"),
+       resourceUri: config:getAsString("RESOURCE_URI")
+   };
+   azure_eventhub:PublisherClient publisherClient = new (config);
+ 
+   map<string> brokerProps = {PartitionKey: "groupName", CorrelationId: "32119834"};
+   map<string> userProps = {Alert: "windy", warning: "true"};
+ 
+   azure_eventhub:BatchEvent batchEvent = {
+       events: [
+           {data: "Message1"},
+           {data: "Message2", brokerProperties: brokerProps},
+           {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
+       ]
+   };
+   var result = publisherClient->sendBatch("myhub", batchEvent, partitionKey = "groupName");
+   if (result is error) {
+       
+ log:printError(result.message());
+   } else {
+       log:print("Successful!");
+   }
+}
+```
+Note:
+You can specify the event hub path, the batch event of record type BatchEvent and partition key as parameters of the 
+send method.
+This operation will return a ballerina error if the operation failed.
+
+
 ### Send batch event with publisher ID
 This section shows how to use the ballerina connector to send batch events to an event hub with broker properties, 
 user properties and specified publisher ID. We must specify the event hub path and the event data in 
@@ -512,7 +564,7 @@ path named “myhub” with BatchEvent and publisher ID as “device-1”. It re
 unsuccessful.
 
 Sample is available at:
-https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/samples/send_batch_event_with_publisherID.bal
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/send_batch_event_with_publisherId.bal
 
 ```ballerina
 import ballerinax/azure_eventhub;
@@ -562,7 +614,7 @@ a parameter to create a new event hub. This is the basic scenario of creating an
 an eventhub error if the operation is unsuccessful.
 
 Sample is available at:
-https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/samples/create_event_hub.bal
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/create_event_hub.bal
 
 ```ballerina
  
@@ -598,7 +650,7 @@ This is the basic scenario of getting all the metadata associated with the event
 an eventhub error if the operation is unsuccessful.
 
 Sample is available at:
-https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/samples/get_event_hub.bal
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/get_event_hub.bal
 
 ```ballerina
 import ballerinax/azure_eventhub;
@@ -633,7 +685,7 @@ the properties of the event hub. This is the basic scenario of updating the prop
 named “myhub”. It returns an eventhub error if the operation is unsuccessful.
 
 Sample is available at:
-https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/samples/update_event_hub.bal
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/update_event_hub.bal
 
 ```ballerina
 import ballerinax/azure_eventhub;
@@ -671,7 +723,7 @@ specified event hubs in the namespace. This is the basic scenario of getting all
 event hubs in the specified namespace. It returns an eventhub error if the operation is unsuccessful.
 
 Sample is available at:
-https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/samples/list_event_hiubs.bal
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/list_event_hubs.bal
 
 ```ballerina
 import ballerinax/azure_eventhub;
@@ -705,7 +757,7 @@ parameter to delete an event hub. This is the basic scenario of deleting an even
 eventhub error if the operation is unsuccessful.
 
 Sample is available at:
-https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/samples/delete_event_hub.bal
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/delete_event_hub.bal
 
 ```ballerina
 import ballerinax/azure_eventhub;
@@ -738,7 +790,7 @@ creating a consumer group named “groupname” in the event hub named “myhub�
 operation is unsuccessful.
 
 Sample is available at:
-https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/samples/create_consumer_group.bal
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/create_consumer_group.bal
 
 ```ballerina
 import ballerinax/azure_eventhub;
@@ -777,7 +829,7 @@ specified consumer group named “groupname” in the event hub named “myhub�
 operation is unsuccessful.
 
 Sample is available at:
-https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/samples/get_consumer_group.bal
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/get_consumer_group.bal
 
 ```ballerina
 import ballerinax/azure_eventhub;
@@ -816,7 +868,7 @@ consumer groups associated with the specified event hub named “myhub”. It re
 unsuccessful.
 
 Sample is available at:
-https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/samples/list_consumer_groups.bal
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/list_consumer_groups.bal
 
 ```ballerina
 import ballerinax/azure_eventhub;
@@ -852,7 +904,7 @@ This section shows how to use the ballerina connector to get all the metadata as
 specified consumer group.
 
 Sample is available at:
-https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/samples/list_partitions.bal
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/list_partitions.bal
 
 ```ballerina
 import ballerinax/azure_eventhub;
@@ -888,7 +940,7 @@ This section shows how to use the ballerina connector to get the metadata associ
 consumer group.
 
 Sample is available at:
-https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/samples/get_partition.bal
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/get_partition.bal
 
 ```ballerina
 import ballerinax/azure_eventhub;
@@ -927,7 +979,7 @@ a consumer group named “groupname” in the event hub named “myhub”. It re
 unsuccessful.
 
 Sample is available at:
-https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/samples/delete_consumer_groups.bal
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/delete_consumer_groups.bal
 
 ```ballerina
 import ballerinax/azure_eventhub;
@@ -964,7 +1016,7 @@ The Event Hub Ballerina Connector enables you to perform publisher policy operat
 This section shows how to use the ballerina connector to retrieve all revoked publishers within the specified event hub.
 
 Sample is available at:
-https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/samples/get_revoked_publisher.bal
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/get_revoked_publishers.bal
 
 ```ballerina
 import ballerinax/azure_eventhub;
@@ -998,7 +1050,7 @@ This section shows how to use the ballerina connector to revoke a publisher so t
 errors when sending events to the event hub.
 
 Sample is available at:
-https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/samples/revoke_publisher.bal
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/revoke_publisher.bal
 
 ```ballerina
 import ballerinax/azure.eventhub as eventhub;
@@ -1019,7 +1071,7 @@ This section shows how to use the ballerina connector to resume a revoked publis
 sending events to the event hub.
 
 Sample is available at:
-https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/samples/resume_publisher.bal
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/resume_publisher.bal
 
 ```ballerina
 import ballerinax/azure_eventhub;
