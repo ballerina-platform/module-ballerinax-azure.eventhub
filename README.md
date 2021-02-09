@@ -1,6 +1,6 @@
 # Ballerina Azure Event Hubs Connector
 
-[![Build](https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/workflows/Build/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/actions?query=workflow%3ACI)
+[![Build](https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/workflows/CI/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/actions?query=workflow%3ACI)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/ballerina-platform/module-ballerinax-kafka.svg)](https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/commits/master)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
