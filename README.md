@@ -214,6 +214,8 @@ Note:
 You must specify the SAS key name, SAS key and the resource URI when configuring the Azure Event Hub Client connector.
 
 ### Step 3: Create a new event hub
+You need to specify the event hub name as a parameter to create a new event hub. Here we are creating an event hub 
+named “mytesthub”. 
 ```ballerina
     var createResult = managementClient->createEventHub("mytesthub");
     if (createResult is error) {
@@ -232,6 +234,8 @@ This operation will return a ballerina error if the operation failed.
 
 
 ### Step 4: Get an event hub 
+You need to specify the event hub name as a parameter to get all the metadata associated with the specified event hub. 
+Here we are getting all the metadata associated with the event hub named “mytesthub”.
 ```ballerina
     var getEventHubResult = managementClient->getEventHub("mytesthub");
     if (getEventHubResult is error) {
@@ -248,6 +252,9 @@ You can specify the event hub path as a parameter of the getEventHub method.
 This operation will return a ballerina error if the operation failed.
 
 ### Step 5: Update an event hub 
+You need to specify the event hub name as a parameter and EventHubDecsriptionToUpdate record with message retention in 
+days property to update the properties of the event hub. Here we are updating the properties associated with the event 
+hub named “mytesthub”.
 ```ballerina
     azure_eventhub:EventHubDescriptionToUpdate eventHubDescriptionToUpdate = {
         MessageRetentionInDays: 5
@@ -268,6 +275,8 @@ of the updateEventHub method.
 This operation will return a ballerina error if the operation failed.
 
 ### Step 6: List event hubs
+You need to specify the event hub name as a parameter to get all the metadata associated with the specified event hubs 
+in the namespace. Here we are getting all the metadata associated with the event hubs in the specified namespace.
 ```ballerina
     var listResult = managementClient->listEventHubs();
     if (listResult is error) {
@@ -283,6 +292,8 @@ Note:
 This operation will return a ballerina error if the operation failed.
 
 ### Step 7: Delete a event hub
+You need to specify the event hub name as a parameter to delete an event hub. This is the basic scenario of deleting 
+an event hub named “mytesthub”. 
 ```ballerina
     var deleteResult = managementClient->deleteEventHub("mytesthub");
     if (deleteResult is error) {
