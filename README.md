@@ -30,6 +30,8 @@ to unlock insights.
 * Natively connect with [Stream Analytics](https://azure.microsoft.com/en-us/services/stream-analytics/) to build an 
 end-to-end serverless streaming solution.
 
+![image](docs/images/Azure_Event_Hubs.png)
+
 ## Connector Overview
 
 Azure Event Hubs Ballerina Connector is used to connect with the Azure Event Hubs to ingest millions of events per 
@@ -43,6 +45,8 @@ creating a new event hub, getting an event hub, updating an event hub, listing e
 creating a new consumer group, getting consumer groups, listing consumer groups, listing partitions, getting partitions, 
 deleting consumer groups. The connector also provides the capability to handle publisher policy operations like getting 
 revoked publishers, revoking a publisher, and resume publishers.
+
+![image](docs/images/Azure_Event_Hubs_Ballerina_Connector.png)
 
 The connector will only be focusing on sending events to the event hub. The event hub connector will invoke the 
 REST APIs exposed via the Azure Event Hub. https://docs.microsoft.com/en-us/rest/api/eventhub/.
