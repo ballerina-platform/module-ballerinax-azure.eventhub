@@ -13,4 +13,8 @@ jobs:
         uses: ballerina-platform/ballerina-action/@swan-lake-connector-release
         with:
           args:
-            build -a -c
+            build -c
+        env: 
+          SAS_KEY_NAME: ${{ secrets.SAS_KEY_NAME }}
+          SAS_KEY: ${{ secrets.SAS_KEY }}
+          RESOURCE_URI: ${{ secrets.RESOURCE_URI }}

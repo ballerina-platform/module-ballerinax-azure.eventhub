@@ -15,11 +15,15 @@ jobs:
         uses: ballerina-platform/ballerina-action/@swan-lake-connector-release
         with:
           args:
-            build -a -c
+            build -c --skip-tests
+        env: 
+          SAS_KEY_NAME: ${{ secrets.SAS_KEY_NAME }}
+          SAS_KEY: ${{ secrets.SAS_KEY }}
+          RESOURCE_URI: ${{ secrets.RESOURCE_URI }}
       - name: Ballerina Push
         uses: ballerina-platform/ballerina-action/@swan-lake-connector-release
         with:
           args:
-            push -a
+            push
         env:
           BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BALLERINA_CENTRAL_ACCESS_TOKEN }}
