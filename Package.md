@@ -48,7 +48,7 @@ list consumer groups, list partitions, get partition, delete a consumer group.
 The `ballerinax/azure_eventhub` module contains operations related to performing publisher policy operations on 
 event hubs. It includes operations to revoke publisher, get revoked publishers, resume upblisher.
 
-# Prerequisites
+# Prerequisites:
 
 * Azure Account to Access Azure Portal https://docs.microsoft.com/en-us/learn/modules/create-an-azure-account/
 
@@ -71,7 +71,7 @@ from the connection string.
     * Shared Access Key, 
     * Resource URI to the Event Hub Namespace.
 
-# Quickstart(s)
+# Quickstart(s):
 
 ## Publish Events to an Azure Event Hub 
 
@@ -241,7 +241,7 @@ Note:
 You can specify the event hub path as a parameter of the deleteEventHub method.
 This operation will return a ballerina error if the operation failed.
 
-## Samples:
+# Samples:
 
 1. Sending an event.
 
@@ -258,6 +258,8 @@ public function main() {
    var result = eventHubClient->send("myhub", "eventData");
 }
 ```
+Sample is available at:
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/send_event.bal
 
 2. Sending an event with broker properties and user properties.
 
@@ -277,6 +279,8 @@ public function main() {
    var result = eventHubClient->send("myhub", "eventData", userProps, brokerProps);
 }
 ```
+Sample is available at:
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/send_event_with_broker_and_user_properties.bal
 
 3. Sending an event with broker properties, user properties & partition key.
 ```ballerina
@@ -295,6 +299,8 @@ public function main() {
    var result = eventHubClient->send("myhub", "data", userProps, brokerProps, partitionKey = "groupName");
 }
 ```
+Sample is available at:
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/send_event_with_partition_key.bal
 
 4. Sending an event with broker properties, user properties & partition id.
 ```ballerina
@@ -313,6 +319,8 @@ public function main() {
    var result = eventHubClient->send("myhub", "data", userProps, brokerProps, partitionId = 1);
 }
 ```
+Sample is available at:
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/send_partition_event.bal
 
 5. Sending a batch event.
 ```ballerina
@@ -338,6 +346,8 @@ public function main() {
     var result = eventHubClient->sendBatch("myhub", batchEvent);
 }
 ```
+Sample is available at:
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/send_batch_event.bal
 
 6. Sending a batch event with partition key.
 ```ballerina
@@ -363,6 +373,8 @@ public function main() {
     var result = eventHubClient->sendBatch("myhub", batchEvent, partitionKey = "groupName");
 }
 ```
+Sample is available at:
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/send_batch_event_with_partition_key.bal
 
 7. Sending a batch event to partition.
 ```ballerina
@@ -388,6 +400,8 @@ public function main() {
     var result = eventHubClient->sendBatch("myhub", batchEvent, partitionId = 1);
 }
 ```
+Sample is available at:
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/send_batch_event_to_partition.bal
 
 8. Sending a batch event with publisher id
 ```ballerina
@@ -413,6 +427,8 @@ public function main() {
     var result = eventHubClient->sendBatch("myhub", batchEvent, publisherId = "device-1");
 }
 ```
+Sample is available at:
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/send_batch_event_with_publisherId.bal
 
 9. Create a new event hub
 ```ballerina
@@ -428,6 +444,8 @@ public function main() {
    var result = eventHubClient->createEventHub("myhub");
 }
 ```
+Sample is available at:
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/create_event_hub.bal
 
 10. Get an event hub
 ```ballerina
@@ -443,6 +461,9 @@ public function main() {
    var result = eventHubClient->getEventHub("myhub");
 }
 ```
+Sample is available at:
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/get_event_hub.bal
+
 
 11. Delete a event hub
 ```ballerina
@@ -458,6 +479,8 @@ public function main() {
    var result = eventHubClient->deleteEventHub("myhub");
 }
 ```
+Sample is available at:
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/delete_event_hub.bal
 
 12. Create a new consumer group
 ```ballerina
@@ -473,6 +496,8 @@ public function main() {
    var result = eventHubClient->createConsumerGroup("myhub", "groupName");
 }
 ```
+Sample is available at:
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/create_consumer_group.bal
 
 13. Get consumer group
 ```ballerina
@@ -488,6 +513,9 @@ public function main() {
    var result = eventHubClient->getConsumerGroup("myhub", "groupName");
 }
 ```
+Sample is available at:
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/get_consumer_group.bal
+
 
 14. Delete a consumer group
 ```ballerina
@@ -503,3 +531,5 @@ public function main() {
    var result = eventHubClient->deleteConsumerGroup("myhub", "groupName");
 }
 ```
+Sample is available at:
+https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/delete_consumer_groups.bal
