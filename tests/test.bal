@@ -169,6 +169,28 @@ function testSendBatchEventToPartition() {
 }
 
 @test:Config {
+    groups: ["publisher"],
+    enable: true
+}
+function testSendBatchEventWithPublisherID() {
+    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
+    map<string> userProps = {Alert: "windy", warning: "true"};
+
+    BatchEvent batchEvent = {
+        events: [
+            {data: "Message1"},
+            {data: "Message2", brokerProperties: brokerProps},
+            {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
+        ]
+    };
+    var result = publisherClient->sendBatch(event_hub_name1, batchEvent, publisherId = "device-1");
+    if (result is error) {
+        test:assertFail(msg = result.message());
+    }
+    test:assertTrue(result is ());
+}
+
+@test:Config {
     groups: ["eventHubManagment"],
     enable: true
 }
@@ -289,29 +311,6 @@ function testDeleteEventHubWithEventHubDescription() {
 
 @test:Config {
     groups: ["publisher"],
-    enable: true
-}
-function testSendBatchEventWithPublisherID() {
-    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
-    map<string> userProps = {Alert: "windy", warning: "true"};
-
-    BatchEvent batchEvent = {
-        events: [
-            {data: "Message1"},
-            {data: "Message2", brokerProperties: brokerProps},
-            {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
-        ]
-    };
-    var result = publisherClient->sendBatch(event_hub_name1, batchEvent, publisherId = "device-1");
-    if (result is error) {
-        test:assertFail(msg = result.message());
-    }
-    test:assertTrue(result is ());
-}
-
-@test:Config {
-    groups: ["publisher"],
-    dependsOn: [testSendBatchEventWithPublisherID],
     enable: true
 }
 function testRevokePublisher() {
