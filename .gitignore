@@ -36,3 +36,5 @@ target
 modules
 
 ballerina.conf
+
+resources
