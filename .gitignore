@@ -38,3 +38,5 @@ modules
 ballerina.conf
 
 resources
+
+Config.toml

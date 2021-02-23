@@ -18,8 +18,8 @@ import ballerina/crypto;
 import ballerina/encoding;
 import ballerina/http;
 import ballerina/time;
-import ballerina/java;
-import ballerina/stringutils;
+import ballerina/jballerina.java;
+import ballerina/regex;
 
 # Get request with common headers
 #
@@ -42,12 +42,13 @@ isolated function getSASToken(ClientEndpointConfiguration config) returns string
     int currentTimeMills = time.time / 1000;
     int week = 60 * 60 * 24 * 7;
     int expiry = currentTimeMills + week;
-    string stringToSign = <string>encoding:encodeUriComponent(config.resourceUri, UTF8_URL_ENCODING) + "\n" + 
+    string stringToSign = checkpanic encoding:encodeUriComponent(config.resourceUri, UTF8_URL_ENCODING) + "\n" + 
         expiry.toString();
-    string signature = crypto:hmacSha256(stringToSign.toBytes(), config.sasKey.toBytes()).toBase64();
+    byte[] output = checkpanic crypto:hmacSha256(stringToSign.toBytes(), config.sasKey.toBytes());
+    string signature = output.toBase64();
     string sasToken = "SharedAccessSignature sr="
-        + <string>encoding:encodeUriComponent(config.resourceUri, UTF8_URL_ENCODING)
-        + "&sig=" + <string>encoding:encodeUriComponent(signature, UTF8_URL_ENCODING)
+        + checkpanic encoding:encodeUriComponent(config.resourceUri, UTF8_URL_ENCODING)
+        + "&sig=" + checkpanic encoding:encodeUriComponent(signature, UTF8_URL_ENCODING)
         + "&se=" + expiry.toString() + "&skn=" + config.sasKeyName;
     return sasToken;
 }
@@ -57,8 +58,8 @@ isolated function getSASToken(ClientEndpointConfiguration config) returns string
 # + response - Received response.
 # + return - Returns module error with payload and response code.
 isolated function getErrorMessage(http:Response response) returns @tainted error {
-    return Error("Invalid response from EventHub API. statuscode: " + response.statusCode.toString() + ", payload: " + 
-        response.getTextPayload().toString(), status = response.statusCode);
+    return error Error("Invalid response from EventHub API. statuscode: " + response.statusCode.toString() + 
+        ", payload: " + check response.getTextPayload(), status = response.statusCode);
 }
 
 # Create a random UUID removing the unnecessary hyphens which will interrupt querying opearations.
@@ -67,7 +68,7 @@ isolated function getErrorMessage(http:Response response) returns @tainted error
 public function createRandomUUIDWithoutHyphens() returns string {
     string? stringUUID = java:toString(createRandomUUID());
     if (stringUUID is string) {
-        stringUUID = stringutils:replace(stringUUID, "-", "");
+        stringUUID = regex:replaceAll(stringUUID, "-", "");
         return stringUUID;
     } else {
         return "";
