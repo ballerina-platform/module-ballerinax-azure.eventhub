@@ -16,7 +16,7 @@
 
 import ballerina/http;
 import ballerina/lang.'xml as xmllib;
-import ballerina/stringutils;
+import ballerina/regex;
 
 # Eventhub management client implementation.
 #
@@ -27,10 +27,10 @@ public client class ManagementClient {
     private string API_PREFIX = EMPTY_STRING;
     private http:Client clientEndpoint;
 
-    public function init(ClientEndpointConfiguration config) {
+    public function init(ClientEndpointConfiguration config) returns error? {
         self.config = config;
         self.API_PREFIX = TIME_OUT + config.timeout.toString() + API_VERSION + config.apiVersion;
-        self.clientEndpoint = new (HTTPS + self.config.resourceUri);
+        self.clientEndpoint = check new (HTTPS + self.config.resourceUri);
     }
 
     # Create a new Eventhub
@@ -100,7 +100,7 @@ public client class ManagementClient {
         http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
         if (response.statusCode == http:STATUS_OK) {
             string textPayload = check response.getTextPayload();
-            string cleanedStringXMLObject = stringutils:replaceAll(textPayload, XML_BASE, BASE);
+            string cleanedStringXMLObject = regex:replaceAll(textPayload, XML_BASE, BASE);
             xml xmlPayload = check 'xml:fromString(cleanedStringXMLObject);
             return xmlPayload;       
         } 
@@ -132,7 +132,7 @@ public client class ManagementClient {
         http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
         if (response.statusCode == http:STATUS_OK) {
             string textPayload = check response.getTextPayload();
-            string cleanedStringXMLObject = stringutils:replaceAll(textPayload, XML_BASE, BASE);
+            string cleanedStringXMLObject = regex:replaceAll(textPayload, XML_BASE, BASE);
             xml xmlPayload = check 'xml:fromString(cleanedStringXMLObject);
             return xmlPayload;
         } 
@@ -221,7 +221,7 @@ public client class ManagementClient {
         http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
         if (response.statusCode == http:STATUS_OK) {
             string textPayload = check response.getTextPayload();
-            string cleanedStringXMLObject = stringutils:replaceAll(textPayload, XML_BASE, BASE);
+            string cleanedStringXMLObject = regex:replaceAll(textPayload, XML_BASE, BASE);
             xml xmlPayload = check 'xml:fromString(cleanedStringXMLObject);
             return xmlPayload;
         } 

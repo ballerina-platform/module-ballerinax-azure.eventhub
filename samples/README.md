@@ -15,25 +15,26 @@ https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/mast
 
 ```ballerina
 import ballerinax/azure_eventhub;
-import ballerina/config;
 import ballerina/log;
- 
+
+configurable string sasKeyName = ?;
+configurable string sasKey = ?;
+configurable string resourceUri = ?;
+
 public function main() {
-   
-   azure_eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: config:getAsString("SAS_KEY_NAME"),
-       sasKey: config:getAsString("SAS_KEY"),
-       resourceUri: config:getAsString("RESOURCE_URI")
-   };
-   azure_eventhub:PublisherClient publisherClient = new (config);
-  
-   var result = publisherClient->send("myhub", "eventData");
-   if (result is error) {
-       
- log:printError(msg = result.message());
-   } else {
-       log:print("Successful!");
-   }
+    azure_eventhub:ClientEndpointConfiguration config = {
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri 
+    };
+    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    
+    var result = publisherClient->send("myeventhub", "eventData");
+    if (result is error) {
+        log:printError(msg = result.message());
+    } else {
+        log:print("Successful!");
+    }
 }
 ```
 
@@ -50,28 +51,29 @@ https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/mast
 
 ```ballerina
 import ballerinax/azure_eventhub;
-import ballerina/config;
 import ballerina/log;
- 
+
+configurable string sasKeyName = ?;
+configurable string sasKey = ?;
+configurable string resourceUri = ?;
+
 public function main() {
-   
-   azure_eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: config:getAsString("SAS_KEY_NAME"),
-       sasKey: config:getAsString("SAS_KEY"),
-       resourceUri: config:getAsString("RESOURCE_URI")
-   };
-   azure_eventhub:PublisherClient publisherClient = new (config);
- 
-   map<string> brokerProps = {"CorrelationId": "32119834", "CorrelationId2": "32119834"};
-   map<string> userProps = {Alert: "windy", warning: "true"};
- 
-   var result = publisherClient->send("myhub", "eventData", userProps, brokerProps);
-   if (result is error) {
-       
- log:printError(result.message());
-   } else {
-       log:print("Successful!");
-   }
+    azure_eventhub:ClientEndpointConfiguration config = {
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri 
+    };
+    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+
+    map<string> brokerProps = {"CorrelationId": "32119834", "CorrelationId2": "32119834"};
+    map<string> userProps = {Alert: "windy", warning: "true"};
+
+    var result = publisherClient->send("myeventhub", "eventData", userProps, brokerProps);
+    if (result is error) {
+        log:printError(result.message());
+    } else {
+        log:print("Successful!");
+    }
 }
 ```
 
@@ -91,29 +93,30 @@ https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/mast
 
 ```ballerina
 import ballerinax/azure_eventhub;
-import ballerina/config;
 import ballerina/log;
- 
+
+configurable string sasKeyName = ?;
+configurable string sasKey = ?;
+configurable string resourceUri = ?;
+
 public function main() {
-   
-   azure_eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: config:getAsString("SAS_KEY_NAME"),
-       sasKey: config:getAsString("SAS_KEY"),
-       resourceUri: config:getAsString("RESOURCE_URI")
-   };
-   azure_eventhub:PublisherClient publisherClient = new (config);
- 
-   map<string> brokerProps = {PartitionKey: "groupName1", CorrelationId: "32119834"};
-   map<string> userProps = {Alert: "windy", warning: "true"};
- 
-   // partition key used as the parameter is prioritized over the partition key provided in the brokerProperties
-   var result = publisherClient->send("myhub", "eventData", userProps, brokerProps, partitionKey = "groupName");
-   if (result is error) {
-       
- log:printError(result.message());
-   } else {
-       log:print("Successful!");
-   }
+    azure_eventhub:ClientEndpointConfiguration config = {
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri 
+    };
+    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+
+    map<string> brokerProps = {PartitionKey: "groupName1", CorrelationId: "32119834"};
+    map<string> userProps = {Alert: "windy", warning: "true"};
+
+    // partition key used as the parameter is prioritized over the partition key provided in the brokerProperties
+    var result = publisherClient->send("myeventhub", "data", userProps, brokerProps, partitionKey = "groupName");
+    if (result is error) {
+        log:printError(result.message());
+    } else {
+        log:print("Successful!");
+    }
 }
 ```
 
@@ -131,28 +134,29 @@ https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/mast
 
 ```ballerina
 import ballerinax/azure_eventhub;
-import ballerina/config;
 import ballerina/log;
- 
+
+configurable string sasKeyName = ?;
+configurable string sasKey = ?;
+configurable string resourceUri = ?;
+
 public function main() {
-   
-   azure_eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: config:getAsString("SAS_KEY_NAME"),
-       sasKey: config:getAsString("SAS_KEY"),
-       resourceUri: config:getAsString("RESOURCE_URI")
-   };
-   azure_eventhub:PublisherClient publisherClient = new (config);
- 
-   map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
-   map<string> userProps = {Alert: "windy", warning: "true"};
- 
-   var result = publisherClient->send("myhub", "eventData", userProps, brokerProps, partitionId = 1);
-   if (result is error) {
-       
- log:printError(result.message());
-   } else {
-       log:print("Successful!");
-   }
+    azure_eventhub:ClientEndpointConfiguration config = {
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri 
+    };
+    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+
+    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
+    map<string> userProps = {Alert: "windy", warning: "true"};
+
+    var result = publisherClient->send("myeventhub", "data", userProps, brokerProps, partitionId = 1);
+    if (result is error) {
+        log:printError(result.message());
+    } else {
+        log:print("Successful!");
+    }
 }
 ```
 Note:
@@ -172,35 +176,36 @@ https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/mast
 
 ```ballerina
 import ballerinax/azure_eventhub;
-import ballerina/config;
 import ballerina/log;
- 
+
+configurable string sasKeyName = ?;
+configurable string sasKey = ?;
+configurable string resourceUri = ?;
+
 public function main() {
-   
-   azure_eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: config:getAsString("SAS_KEY_NAME"),
-       sasKey: config:getAsString("SAS_KEY"),
-       resourceUri: config:getAsString("RESOURCE_URI")
-   };
-   azure_eventhub:PublisherClient publisherClient = new (config);
- 
-   map<string> brokerProps = {PartitionKey: "groupName", CorrelationId: "32119834"};
-   map<string> userProps = {Alert: "windy", warning: "true"};
- 
-   azure_eventhub:BatchEvent batchEvent = {
-       events: [
-           {data: "Message1"},
-           {data: "Message2", brokerProperties: brokerProps},
-           {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
-       ]
-   };
-   var result = publisherClient->sendBatch("myhub", batchEvent, partitionKey = "groupName");
-   if (result is error) {
-       
- log:printError(result.message());
-   } else {
-       log:print("Successful!");
-   }
+    azure_eventhub:ClientEndpointConfiguration config = {
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri 
+    };
+    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+
+    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
+    map<string> userProps = {Alert: "windy", warning: "true"};
+
+    azure_eventhub:BatchEvent batchEvent = {
+        events: [
+            {data: "Message1"},
+            {data: "Message2", brokerProperties: brokerProps},
+            {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
+        ]
+    };
+    var result = publisherClient->sendBatch("myeventhub", batchEvent);
+    if (result is error) {
+        log:printError(result.message());
+    } else {
+        log:print("Successful!");
+    }
 }
 ```
 Note:
@@ -222,35 +227,36 @@ https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/mast
 
 ```ballerina
 import ballerinax/azure_eventhub;
-import ballerina/config;
 import ballerina/log;
- 
+
+configurable string sasKeyName = ?;
+configurable string sasKey = ?;
+configurable string resourceUri = ?;
+
 public function main() {
-   
-   azure_eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: config:getAsString("SAS_KEY_NAME"),
-       sasKey: config:getAsString("SAS_KEY"),
-       resourceUri: config:getAsString("RESOURCE_URI")
-   };
-   azure_eventhub:PublisherClient publisherClient = new (config);
- 
-   map<string> brokerProps = {PartitionKey: "groupName", CorrelationId: "32119834"};
-   map<string> userProps = {Alert: "windy", warning: "true"};
- 
-   azure_eventhub:BatchEvent batchEvent = {
-       events: [
-           {data: "Message1"},
-           {data: "Message2", brokerProperties: brokerProps},
-           {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
-       ]
-   };
-   var result = publisherClient->sendBatch("myhub", batchEvent, partitionKey = "groupName");
-   if (result is error) {
-       
- log:printError(result.message());
-   } else {
-       log:print("Successful!");
-   }
+    azure_eventhub:ClientEndpointConfiguration config = {
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri 
+    };
+    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+
+    map<string> brokerProps = {PartitionKey: "groupName", CorrelationId: "32119834"};
+    map<string> userProps = {Alert: "windy", warning: "true"};
+
+    azure_eventhub:BatchEvent batchEvent = {
+        events: [
+            {data: "Message1"},
+            {data: "Message2", brokerProperties: brokerProps},
+            {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
+        ]
+    };
+    var result = publisherClient->sendBatch("myeventhub", batchEvent, partitionKey = "groupName");
+    if (result is error) {
+        log:printError(result.message());
+    } else {
+        log:print("Successful!");
+    }
 }
 ```
 Note:
@@ -274,35 +280,36 @@ https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/mast
 
 ```ballerina
 import ballerinax/azure_eventhub;
-import ballerina/config;
 import ballerina/log;
- 
+
+configurable string sasKeyName = ?;
+configurable string sasKey = ?;
+configurable string resourceUri = ?;
+
 public function main() {
-   
-   azure_eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: config:getAsString("SAS_KEY_NAME"),
-       sasKey: config:getAsString("SAS_KEY"),
-       resourceUri: config:getAsString("RESOURCE_URI")
-   };
-   azure_eventhub:PublisherClient publisherClient = new (config);
- 
-   map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
-   map<string> userProps = {Alert: "windy", warning: "true"};
- 
-   azure_eventhub:BatchEvent batchEvent = {
-       events: [
-           {data: "Message1"},
-           {data: "Message2", brokerProperties: brokerProps},
-           {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
-       ]
-   };
-   var result = publisherClient->sendBatch("myhub", batchEvent, publisherId = "device-1");
-   if (result is error) {
-       
- log:printError(result.message());
-   } else {
-       log:print("Successful!");
-   }
+    azure_eventhub:ClientEndpointConfiguration config = {
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri 
+    };
+    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+
+    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
+    map<string> userProps = {Alert: "windy", warning: "true"};
+
+    azure_eventhub:BatchEvent batchEvent = {
+        events: [
+            {data: "Message1"},
+            {data: "Message2", brokerProperties: brokerProps},
+            {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
+        ]
+    };
+    var result = publisherClient->sendBatch("myeventhub", batchEvent, publisherId = "device-1");
+    if (result is error) {
+        log:printError(result.message());
+    } else {
+        log:print("Successful!");
+    }
 }
 ```
 Note:
@@ -325,27 +332,28 @@ https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/mast
 ```ballerina
  
 import ballerinax/azure_eventhub;
-import ballerina/config;
 import ballerina/log;
- 
+
+configurable string sasKeyName = ?;
+configurable string sasKey = ?;
+configurable string resourceUri = ?;
+
 public function main() {
-   
-   azure_eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: config:getAsString("SAS_KEY_NAME"),
-       sasKey: config:getAsString("SAS_KEY"),
-       resourceUri: config:getAsString("RESOURCE_URI")
-   };
-   azure_eventhub:ManagementClient managementClient = new (config);
- 
-   var result = managementClient->createEventHub("myhub");
-   if (result is error) {
-       log:printError(result.message());
-   }
-   if (result is xml) {
-       
- log:print(result.toString());
-       log:print("Successful!");
-   }
+    azure_eventhub:ClientEndpointConfiguration config = {
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri
+    };
+    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+
+    var result = managementClient->createEventHub("myhub");
+    if (result is error) {
+        log:printError(result.message());
+    }
+    if (result is xml) {
+        log:print(result.toString());
+        log:print("Successful!");
+    }
 }
 ```
 
@@ -360,27 +368,28 @@ https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/mast
 
 ```ballerina
 import ballerinax/azure_eventhub;
-import ballerina/config;
 import ballerina/log;
- 
+
+configurable string sasKeyName = ?;
+configurable string sasKey = ?;
+configurable string resourceUri = ?;
+
 public function main() {
-   
-   azure_eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: config:getAsString("SAS_KEY_NAME"),
-       sasKey: config:getAsString("SAS_KEY"),
-       resourceUri: config:getAsString("RESOURCE_URI")
-   };
-   azure_eventhub:ManagementClient managementClient = new (config);
- 
-   var result = managementClient->getEventHub("myhub");
-   if (result is error) {
-       log:printError(result.message());
-   }
-   if (result is xml) {
-       
- log:print(result.toString());
-       log:print("Successful!");
-   }
+    azure_eventhub:ClientEndpointConfiguration config = {
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri 
+    };
+    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+
+    var result = managementClient->getEventHub("myhub");
+    if (result is error) {
+        log:printError(result.message());
+    }
+    if (result is xml) {
+        log:print(result.toString());
+        log:print("Successful!");
+    }
 }
 ```
 
@@ -395,30 +404,31 @@ https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/mast
 
 ```ballerina
 import ballerinax/azure_eventhub;
-import ballerina/config;
 import ballerina/log;
- 
+
+configurable string sasKeyName = ?;
+configurable string sasKey = ?;
+configurable string resourceUri = ?;
+
 public function main() {
-   
-   azure_eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: config:getAsString("SAS_KEY_NAME"),
-       sasKey: config:getAsString("SAS_KEY"),
-       resourceUri: config:getAsString("RESOURCE_URI")
-   };
-   azure_eventhub:ManagementClient managementClient = new (config);
- 
-   azure_eventhub:EventHubDescriptionToUpdate eventHubDescriptionToUpdate = {
-       MessageRetentionInDays: 5
-   };
-   var result = managementClient->updateEventHub("myhub", eventHubDescriptionToUpdate);
-   if (result is error) {
-       log:printError(result.message());
-   }
-   if (result is xml) {
-       
- log:print(result.toString());
-       log:print("Successful!");
-   }
+    azure_eventhub:ClientEndpointConfiguration config = {
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri 
+    };
+    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+
+    azure_eventhub:EventHubDescriptionToUpdate eventHubDescriptionToUpdate = {
+        MessageRetentionInDays: 5
+    };
+    var result = managementClient->updateEventHub("myhub", eventHubDescriptionToUpdate);
+    if (result is error) {
+        log:printError(result.message());
+    }
+    if (result is xml) {
+        log:print(result.toString());
+        log:print("Successful!");
+    }
 }
 ```
 
@@ -433,27 +443,28 @@ https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/mast
 
 ```ballerina
 import ballerinax/azure_eventhub;
-import ballerina/config;
 import ballerina/log;
- 
+
+configurable string sasKeyName = ?;
+configurable string sasKey = ?;
+configurable string resourceUri = ?;
+
 public function main() {
-   
-   azure_eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: config:getAsString("SAS_KEY_NAME"),
-       sasKey: config:getAsString("SAS_KEY"),
-       resourceUri: config:getAsString("RESOURCE_URI")
-   };
-   azure_eventhub:ManagementClient managementClient = new (config);
- 
-   var result = managementClient->listEventHubs();
-   if (result is error) {
-       log:printError(result.message());
-   }
-   if (result is xml) {
-       
- log:print(result.toString());
-       log:print("listReceived");
-   }
+    azure_eventhub:ClientEndpointConfiguration config = {
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri 
+    };
+    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+
+    var result = managementClient->listEventHubs();
+    if (result is error) {
+        log:printError(result.message());
+    }
+    if (result is xml) {
+        log:print(result.toString());
+        log:print("listReceived");
+    }
 }
 ```
 
@@ -467,25 +478,26 @@ https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/mast
 
 ```ballerina
 import ballerinax/azure_eventhub;
-import ballerina/config;
 import ballerina/log;
- 
+
+configurable string sasKeyName = ?;
+configurable string sasKey = ?;
+configurable string resourceUri = ?;
+
 public function main() {
-   
-   azure_eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: config:getAsString("SAS_KEY_NAME"),
-       sasKey: config:getAsString("SAS_KEY"),
-       resourceUri: config:getAsString("RESOURCE_URI")
-   };
-   azure_eventhub:ManagementClient managementClient= new (config);
- 
-   var result = managementClient->deleteEventHub("myhub");
-   if (result is error) {
-       
- log:printError(result.message());
-   } else {
-       log:print("Successful!");
-   }
+    azure_eventhub:ClientEndpointConfiguration config = {
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri 
+    };
+    azure_eventhub:ManagementClient managementClient= checkpanic new (config);
+
+    var result = managementClient->deleteEventHub("myhub");
+    if (result is error) {
+        log:printError(result.message());
+    } else {
+        log:print("Successful!");
+    }
 }
 ```
 
@@ -500,27 +512,28 @@ https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/mast
 
 ```ballerina
 import ballerinax/azure_eventhub;
-import ballerina/config;
 import ballerina/log;
- 
+
+configurable string sasKeyName = ?;
+configurable string sasKey = ?;
+configurable string resourceUri = ?;
+
 public function main() {
-   
-   azure_eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: config:getAsString("SAS_KEY_NAME"),
-       sasKey: config:getAsString("SAS_KEY"),
-       resourceUri: config:getAsString("RESOURCE_URI")
-   };
-   azure_eventhub:ManagementClient managementClient = new (config);
- 
-   var result = managementClient->createConsumerGroup("myhub", "groupname");
-   if (result is error) {
-       log:printError(result.message());
-   }
-   if (result is xml) {
-       
- log:print(result.toString());
-       log:print("successful");
-   }
+    azure_eventhub:ClientEndpointConfiguration config = {
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri 
+    };
+    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+
+    var result = managementClient->createConsumerGroup("myeventhub", "consumerGroup1");
+    if (result is error) {
+        log:printError(result.message());
+    }
+    if (result is xml) {
+        log:print(result.toString());
+        log:print("successful");
+    }
 }
 ```
 Note:
@@ -539,27 +552,28 @@ https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/mast
 
 ```ballerina
 import ballerinax/azure_eventhub;
-import ballerina/config;
 import ballerina/log;
- 
+
+configurable string sasKeyName = ?;
+configurable string sasKey = ?;
+configurable string resourceUri = ?;
+
 public function main() {
-   
-   azure_eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: config:getAsString("SAS_KEY_NAME"),
-       sasKey: config:getAsString("SAS_KEY"),
-       resourceUri: config:getAsString("RESOURCE_URI")
-   };
-   azure_eventhub:ManagementClient managementClient = new (config);
- 
-   var result = managementClient->getConsumerGroup("myhub", "groupname");
-   if (result is error) {
-       log:printError(result.message());
-   }
-   if (result is xml) {
-       
- log:print(result.toString());
-       log:print("successful");
-   }
+    azure_eventhub:ClientEndpointConfiguration config = {
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri 
+    };
+    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+
+    var result = managementClient->getConsumerGroup("myeventhub", "consumerGroup1");
+    if (result is error) {
+        log:printError(result.message());
+    }
+    if (result is xml) {
+        log:print(result.toString());
+        log:print("successful");
+    }
 }
 ```
 Note:
@@ -578,27 +592,28 @@ https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/mast
 
 ```ballerina
 import ballerinax/azure_eventhub;
-import ballerina/config;
 import ballerina/log;
- 
+
+configurable string sasKeyName = ?;
+configurable string sasKey = ?;
+configurable string resourceUri = ?;
+
 public function main() {
-   
-   azure_eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: config:getAsString("SAS_KEY_NAME"),
-       sasKey: config:getAsString("SAS_KEY"),
-       resourceUri: config:getAsString("RESOURCE_URI")
-   };
-   azure_eventhub:ManagementClient managementClient = new (config);
- 
-   var result = managementClient->listConsumerGroups("myhub");
-   if (result is error) {
-       log:printError(result.message());
-   }
-   if (result is xml) {
-       
- log:print(result.toString());
-       log:print("successful");
-   }
+    azure_eventhub:ClientEndpointConfiguration config = {
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri 
+    };
+    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+
+    var result = managementClient->listConsumerGroups("myeventhub");
+    if (result is error) {
+        log:printError(result.message());
+    }
+    if (result is xml) {
+        log:print(result.toString());
+        log:print("successful");
+    }
 }
 ```
 Note:
@@ -614,27 +629,28 @@ https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/mast
 
 ```ballerina
 import ballerinax/azure_eventhub;
-import ballerina/config;
 import ballerina/log;
- 
+
+configurable string sasKeyName = ?;
+configurable string sasKey = ?;
+configurable string resourceUri = ?;
+
 public function main() {
-   
-   azure_eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: config:getAsString("SAS_KEY_NAME"),
-       sasKey: config:getAsString("SAS_KEY"),
-       resourceUri: config:getAsString("RESOURCE_URI")
-   };
-   azure_eventhub:ManagementClient managementClient = new (config);
- 
-   var result = managementClient->listPartitions("myhub", "groupname");
-   if (result is error) {
-       log:printError(result.message());
-   }
-   if (result is xml) {
-       
- log:print(result.toString());
-       log:print("successful");
-   }
+    azure_eventhub:ClientEndpointConfiguration config = {
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri 
+    };
+    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+
+    var result = managementClient->listPartitions("myeventhub", "consumerGroup1");
+    if (result is error) {
+        log:printError(result.message());
+    }
+    if (result is xml) {
+        log:print(result.toString());
+        log:print("successful");
+    }
 }
 ```
 Note:
@@ -650,27 +666,28 @@ https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/mast
 
 ```ballerina
 import ballerinax/azure_eventhub;
-import ballerina/config;
 import ballerina/log;
- 
+
+configurable string sasKeyName = ?;
+configurable string sasKey = ?;
+configurable string resourceUri = ?;
+
 public function main() {
-   
-   azure_eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: config:getAsString("SAS_KEY_NAME"),
-       sasKey: config:getAsString("SAS_KEY"),
-       resourceUri: config:getAsString("RESOURCE_URI")
-   };
-   azure_eventhub:ManagementClient managementClient = new (config);
- 
-   var result = managementClient->getPartition("myhub", "groupname", 1);
-   if (result is error) {
-       log:printError(result.message());
-   }
-   if (result is xml) {
-       
- log:print(result.toString());
-       log:print("successful");
-   }
+    azure_eventhub:ClientEndpointConfiguration config = {
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri 
+    };
+    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+
+    var result = managementClient->getPartition("myeventhub", "consumerGroup1", 1);
+    if (result is error) {
+        log:printError(result.message());
+    }
+    if (result is xml) {
+        log:print(result.toString());
+        log:print("successful");
+    }
 }
 ```
 Note:
@@ -689,25 +706,27 @@ https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/mast
 
 ```ballerina
 import ballerinax/azure_eventhub;
-import ballerina/config;
 import ballerina/log;
- 
+
+configurable string sasKeyName = ?;
+configurable string sasKey = ?;
+configurable string resourceUri = ?;
+
 public function main() {
-   
-   azure_eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: config:getAsString("SAS_KEY_NAME"),
-       sasKey: config:getAsString("SAS_KEY"),
-       resourceUri: config:getAsString("RESOURCE_URI")
-   };
-   azure_eventhub:ManagementClient managementClient = new (config);
- 
-   var result = managementClient->deleteConsumerGroup("myhub","groupname");
-   if (result is error) {
-       log:printError(result.message());
-   }
-   if (result is ()) {
-       log:print("successful");
-   }
+    azure_eventhub:ClientEndpointConfiguration config = {
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri 
+    };
+    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+
+    var result = managementClient->deleteConsumerGroup("myeventhub","consumerGroup1");
+    if (result is error) {
+        log:printError(result.message());
+    }
+    if (result is ()) {
+        log:print("successful");
+    }
 }
 ```
 Note:
@@ -726,28 +745,29 @@ https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/mast
 
 ```ballerina
 import ballerinax/azure_eventhub;
-import ballerina/config;
 import ballerina/log;
- 
+
+configurable string sasKeyName = ?;
+configurable string sasKey = ?;
+configurable string resourceUri = ?;
+
 public function main() {
-   
-   azure_eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: config:getAsString("SAS_KEY_NAME"),
-       sasKey: config:getAsString("SAS_KEY"),
-       resourceUri: config:getAsString("RESOURCE_URI")
-   };
-   azure_eventhub:PublisherClient publisherClient = new (config);
- 
-   var result = publisherClient->getRevokedPublishers("myeventhub");
-   if (result is error) {
-       log:printError(result.message());
-   }
-   if (result is xml) {
-       log:print("listReceived");
-       
- log:print(result.toString());
-       log:print("Successful!");
-   }
+    azure_eventhub:ClientEndpointConfiguration config = {
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri 
+    };
+    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+
+    var result = publisherClient->getRevokedPublishers("myeventhub");
+    if (result is error) {
+        log:printError(result.message());
+    }
+    if (result is xml) {
+        log:print("listReceived");
+        log:print(result.toString());
+        log:print("Successful!");
+    }
 }
 ```
 
@@ -759,16 +779,29 @@ Sample is available at:
 https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/revoke_publisher.bal
 
 ```ballerina
-import ballerinax/azure.eventhub as eventhub;
- 
+import ballerinax/azure_eventhub;
+import ballerina/log;
+
+configurable string sasKeyName = ?;
+configurable string sasKey = ?;
+configurable string resourceUri = ?;
+
 public function main() {
-  eventhub:ClientEndpointConfiguration config = {
-      sasKeyName: "<sas_key_name>",
-      sasKey: "<sas_key>",
-      resourceUri: "<resource_uri>"
-  };
-  eventhub:Client c = <eventhub:Client>new eventhub:Client(config);
-  var b = c->revokePublisher("myeventhub", "device-1");
+    azure_eventhub:ClientEndpointConfiguration config = {
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri 
+    };
+    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+
+    var result = publisherClient->revokePublisher("myeventhub", "device-1");
+    if (result is error) {
+        log:printError(result.message());
+    }
+    if (result is xml) {
+        log:print(result.toString());
+        log:print("Successful!");
+    }
 }
 ```
 
@@ -781,24 +814,26 @@ https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/mast
 
 ```ballerina
 import ballerinax/azure_eventhub;
-import ballerina/config;
 import ballerina/log;
- 
+
+configurable string sasKeyName = ?;
+configurable string sasKey = ?;
+configurable string resourceUri = ?;
+
 public function main() {
-   
-   azure_eventhub:ClientEndpointConfiguration config = {
-       sasKeyName: config:getAsString("SAS_KEY_NAME"),
-       sasKey: config:getAsString("SAS_KEY"),
-       resourceUri: config:getAsString("RESOURCE_URI")
-   };
-   azure_eventhub:PublisherClient publisherClient = new (config);
- 
-   var result = publisherClient->resumePublisher("myeventhub", "device-1");
-   if (result is error) {
-       log:printError(result.message());
-   }
-   if (result is ()) {
-       log:print("successful");
-   }
+    azure_eventhub:ClientEndpointConfiguration config = {
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri 
+    };
+    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+
+    var result = publisherClient->resumePublisher("myeventhub", "device-1");
+    if (result is error) {
+        log:printError(result.message());
+    }
+    if (result is ()) {
+        log:print("successful");
+    }
 }
 ```

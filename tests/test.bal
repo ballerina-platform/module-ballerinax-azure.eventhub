@@ -15,17 +15,16 @@
 // under the License.
 
 import ballerina/test;
-import ballerina/config;
-import ballerina/system;
+import ballerina/os;
 import ballerina/log;
 
 ClientEndpointConfiguration config = {
-    sasKeyName: getConfigValue("SAS_KEY_NAME"),
-    sasKey: getConfigValue("SAS_KEY"),
-    resourceUri: getConfigValue("RESOURCE_URI")
+    sasKeyName: os:getEnv("SAS_KEY_NAME"),
+    sasKey: os:getEnv("SAS_KEY"),
+    resourceUri: os:getEnv("RESOURCE_URI")
 };
-ManagementClient managementClient = new (config);
-PublisherClient publisherClient = new (config);
+ManagementClient managementClient = checkpanic new (config);
+PublisherClient publisherClient = checkpanic new (config);
 
 var randomString = createRandomUUIDWithoutHyphens();
 
@@ -208,7 +207,7 @@ function testCreateEventHub() {
 
 @test:Config {
     groups: ["eventHubManagment"],
-    dependsOn: ["testCreateEventHub"],
+    dependsOn: [testCreateEventHub],
     enable: true
 }
 function testGetEventHub() {
@@ -224,7 +223,7 @@ function testGetEventHub() {
 
 @test:Config {
     groups: ["eventHubManagment"],
-    dependsOn: ["testCreateEventHub"],
+    dependsOn: [testCreateEventHub],
     enable: true
 }
 function testUpdateEventHub() {
@@ -244,7 +243,7 @@ function testUpdateEventHub() {
 //TODO: Fix xml returned cannot be converted to string
 @test:Config {
     groups: ["eventHubManagment"],
-    dependsOn: ["testCreateEventHub"],
+    dependsOn: [testCreateEventHub],
     enable: true
 }
 function testListEventHubs() {
@@ -262,10 +261,10 @@ function testListEventHubs() {
 @test:Config {
     groups: ["eventHubManagment"],
     dependsOn: [
-        "testCreateEventHub",
-        "testGetEventHub",
-        "testUpdateEventHub",
-        "testListEventHubs"
+        testCreateEventHub,
+        testGetEventHub,
+        testUpdateEventHub,
+        testListEventHubs
     ],
     enable: true
 }
@@ -279,7 +278,7 @@ function testDeleteEventHub() {
 
 @test:Config {
     groups: ["eventHubManagment"],
-    dependsOn: ["testDeleteEventHub"],
+    dependsOn: [testDeleteEventHub],
     enable: true
 }
 function testCreateEventHubWithEventHubDescription() {
@@ -299,7 +298,7 @@ function testCreateEventHubWithEventHubDescription() {
 
 @test:Config {
     groups: ["eventHubManagment"],
-    dependsOn: ["testCreateEventHubWithEventHubDescription"],
+    dependsOn: [testCreateEventHubWithEventHubDescription],
     enable: true
 }
 function testDeleteEventHubWithEventHubDescription() {
@@ -312,7 +311,6 @@ function testDeleteEventHubWithEventHubDescription() {
 
 @test:Config {
     groups: ["publisher"],
-    dependsOn: ["testSendBatchEventWithPublisherID"],
     enable: true
 }
 function testRevokePublisher() {
@@ -343,7 +341,7 @@ function testSendEventWithPublisherID() {
 //TODO: xml returned cannot be converted to string
 @test:Config {
     groups: ["publisher"],
-    dependsOn: ["testRevokePublisher"],
+    dependsOn: [testRevokePublisher],
     enable: true
 }
 function testGetRevokedPublishers() {
@@ -361,8 +359,8 @@ function testGetRevokedPublishers() {
 @test:Config {
     groups: ["publisher"],
     dependsOn: [
-        "testRevokePublisher",
-        "testGetRevokedPublishers"
+        testRevokePublisher,
+        testGetRevokedPublishers
     ],
     enable: true
 }
@@ -394,7 +392,7 @@ function testCreateConsumerGroup() {
 
 @test:Config {
     groups: ["consumergroup"],
-    dependsOn: ["testCreateConsumerGroup"],
+    dependsOn: [testCreateConsumerGroup],
     enable: true
 }
 function testGetConsumerGroup() {
@@ -410,7 +408,7 @@ function testGetConsumerGroup() {
 
 @test:Config {
     groups: ["consumergroup"],
-    dependsOn: ["testCreateConsumerGroup"],
+    dependsOn: [testCreateConsumerGroup],
     enable: true
 }
 function testListConsumerGroups() {
@@ -427,7 +425,7 @@ function testListConsumerGroups() {
 
 @test:Config {
     groups: ["consumergroup"],
-    dependsOn: ["testCreateConsumerGroup"],
+    dependsOn: [testCreateConsumerGroup],
     enable: true
 }
 function testListPartitions() {
@@ -444,7 +442,7 @@ function testListPartitions() {
 
 @test:Config {
     groups: ["consumergroup"],
-    dependsOn: ["testCreateConsumerGroup"],
+    dependsOn: [testCreateConsumerGroup],
     enable: true
 }
 function testGetPartition() {
@@ -461,11 +459,11 @@ function testGetPartition() {
 @test:Config {
     groups: ["consumergroup"],
     dependsOn: [
-        "testCreateConsumerGroup",
-        "testGetConsumerGroup",
-        "testListConsumerGroups",
-        "testListPartitions",
-        "testGetPartition"
+        testCreateConsumerGroup,
+        testGetConsumerGroup,
+        testListConsumerGroups,
+        testListPartitions,
+        testGetPartition
     ],
     enable: true
 }
@@ -490,9 +488,9 @@ function afterSuiteFunc() {
     test:assertTrue(result is ());
 }
 
-# Get configuration value for the given key from ballerina.conf file.
-# 
-# + return - configuration value of the given key as a string
-isolated function getConfigValue(string key) returns string {
-    return (system:getEnv(key) != "") ? system:getEnv(key) : config:getAsString(key);
-}
+// # Get configuration value for the given key from ballerina.conf file.
+// # 
+// # + return - configuration value of the given key as a string
+// isolated function getConfigValue(string key) returns string {
+//     return (os:getEnv(key) != "") ? os:getEnv(key) : config:getAsString(key);
+// }
