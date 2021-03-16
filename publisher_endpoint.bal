@@ -15,10 +15,10 @@
 // under the License.
 
 import ballerina/http;
-import ballerina/io;
 import ballerina/mime;
 import ballerina/lang.'xml as xmllib;
-import ballerina/stringutils;
+import ballerina/regex;
+import ballerina/io;
 
 # Eventhub publisher client implementation.
 #
@@ -29,10 +29,10 @@ public client class PublisherClient {
     private string API_PREFIX = EMPTY_STRING;
     private http:Client clientEndpoint;
 
-    public function init(ClientEndpointConfiguration config) {
+    public function init(ClientEndpointConfiguration config) returns error? {
         self.config = config;
         self.API_PREFIX = TIME_OUT + config.timeout.toString() + API_VERSION + config.apiVersion;
-        self.clientEndpoint = new (HTTPS + self.config.resourceUri);
+        self.clientEndpoint = check new (HTTPS + self.config.resourceUri);
     }
 
     # Send a single event
@@ -45,7 +45,7 @@ public client class PublisherClient {
     # + publisherId - publisher ID 
     # + partitionKey - partition Key
     # + return - @error if remote API is unreachable
-    remote function send(string eventHubPath, string|xml|json|byte[]|io:ReadableByteChannel|mime:Entity[] data, 
+    remote function send(string eventHubPath, string|xml|json|byte[]|mime:Entity[]|stream<byte[], io:Error> data, 
             map<string> userProperties = {}, map<anydata> brokerProperties = {}, int partitionId = -1, 
             string publisherId = "", string partitionKey = "") returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
@@ -59,7 +59,7 @@ public client class PublisherClient {
         if (brokerProperties.length() > 0) {
             json|error props = brokerProperties.cloneWithType(json);
             if (props is error) {
-                return Error(BROKER_PROPERTIES_PARSE_ERROR, props);
+                return error Error(BROKER_PROPERTIES_PARSE_ERROR, props);
             } else {
                 req.addHeader(BROKER_PROPERTIES, props.toJsonString());
             }
@@ -127,7 +127,7 @@ public client class PublisherClient {
         http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
         if (response.statusCode == http:STATUS_OK) {
             string textPayload = check response.getTextPayload();
-            string cleanedStringXMLObject = stringutils:replaceAll(textPayload, XML_BASE, BASE);
+            string cleanedStringXMLObject = regex:replaceAll(textPayload, XML_BASE, BASE);
             xml xmlPayload = check 'xml:fromString(cleanedStringXMLObject);
             return xmlPayload;
         } 

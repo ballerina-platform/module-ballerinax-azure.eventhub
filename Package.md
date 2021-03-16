@@ -28,7 +28,7 @@ The REST APIs fall into the following categories:
 # Compatibility
 |                     |    Version          |
 |:-------------------:|:-------------------:|
-| Ballerina Language  | swan-lake-preview8  |
+| Ballerina Language  | Swan-Lake-Alpha2    |
 
 # Supported Operations
 
@@ -88,12 +88,16 @@ First, import the ballerinax/azure_eventhub module into the Ballerina project.
 You can now make the connection configuration using the shared access key name, shared access key, and the resource 
 URI to the event hub namespace.
 ```ballerina
+    configurable string sasKeyName = ?;
+    configurable string sasKey = ?;
+    configurable string resourceUri = ?;
+
     azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: config:getAsString("SAS_KEY_NAME"),
-        sasKey: config:getAsString("SAS_KEY"),
-        resourceUri: config:getAsString("RESOURCE_URI")
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = new (config);
+    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
 ```
 Note:
 You must specify the SAS key name, SAS key and the resource URI when configuring the Azure Event Hub Client connector.
@@ -137,12 +141,16 @@ First, import the ballerinax/azure_eventhub module into the Ballerina project.
 You can now make the connection configuration using the shared access key name, shared access key, and the resource URI 
 to the event hub namespace.
 ```ballerina
+    configurable string sasKeyName = ?;
+    configurable string sasKey = ?;
+    configurable string resourceUri = ?;
+
     azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: config:getAsString("SAS_KEY_NAME"),
-        sasKey: config:getAsString("SAS_KEY"),
-        resourceUri: config:getAsString("RESOURCE_URI")
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = new (config);
+    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
 ```
 Note:
 You must specify the SAS key name, SAS key and the resource URI when configuring the Azure Event Hub Client connector.
@@ -156,8 +164,7 @@ named “mytesthub”.
         log:printError(createResult.message());
     }
     if (createResult is xml) {
-        
-    log:print(createResult.toString());
+        log:print(createResult.toString());
         log:print("Successfully Created Event Hub!");
     }
 
@@ -176,8 +183,7 @@ Here we are getting all the metadata associated with the event hub named “myte
         log:printError(getEventHubResult.message());
     }
     if (getEventHubResult is xml) {
-        
-    log:print(getEventHubResult.toString());
+        log:print(getEventHubResult.toString());
         log:print("Successfully Get Event Hub!");
     }
 ```
@@ -197,8 +203,7 @@ hub named “mytesthub”.
     if (updateResult is error) {
         log:printError(updateResult.message());
     }
-    if (updateResult is xml) {
-        
+    if (updateResult is xml) {       
         log:print(updateResult.toString());
         log:print("Successfully Updated Event Hub!");
     }
@@ -217,8 +222,7 @@ in the namespace. Here we are getting all the metadata associated with the event
         log:printError(listResult.message());
     }
     if (listResult is xml) {
-        
-    log:print(listResult.toString());
+        log:print(listResult.toString());
         log:print("Successfully Listed Event Hubs!");
     }
 ```
@@ -231,8 +235,7 @@ an event hub named “mytesthub”.
 ```ballerina
     var deleteResult = managementClient->deleteEventHub("mytesthub");
     if (deleteResult is error) {
-        
-    log:printError(msg = deleteResult.message());
+        log:printError(msg = deleteResult.message());
     } else {
         log:print("Successfully Deleted Event Hub!");
     }
@@ -254,7 +257,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:PublisherClient eventHubClient = new (config);
+   eventhub:PublisherClient eventHubClient = checkpanic new (config);
    var result = eventHubClient->send("myhub", "eventData");
 }
 ```
@@ -272,7 +275,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:PublisherClient eventHubClient = new (config);
+   eventhub:PublisherClient eventHubClient = checkpanic new (config);
    map<string> brokerProps = {"CorrelationId": "32119834", "CorrelationId2": "32119834"};
    map<string> userProps = {Alert: "windy", warning: "true"};
 
@@ -292,7 +295,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:PublisherClient eventHubClient = new (config);
+   eventhub:PublisherClient eventHubClient = checkpanic new (config);
    map<string> brokerProps = {PartitionKey: "groupName1", CorrelationId: "32119834";
    map<string> userProps = {Alert: "windy", warning: "true"};
 
@@ -312,7 +315,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:PublisherClient eventHubClient = new (config);
+   eventhub:PublisherClient eventHubClient = checkpanic new (config);
    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
    map<string> userProps = {Alert: "windy", warning: "true"};
 
@@ -332,7 +335,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:PublisherClient eventHubClient = new (config);
+   eventhub:PublisherClient eventHubClient = checkpanic new (config);
    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
    map<string> userProps = {Alert: "windy", warning: "true"};
 
@@ -359,7 +362,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:PublisherClient eventHubClient = new (config);
+   eventhub:PublisherClient eventHubClient = checkpanic new (config);
    map<string> brokerProps = {PartitionKey: "groupName", CorrelationId: "32119834"};
    map<string> userProps = {Alert: "windy", warning: "true"};
 
@@ -386,7 +389,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:PublisherClient eventHubClient = new (config);
+   eventhub:PublisherClient eventHubClient = checkpanic new (config);
    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
    map<string> userProps = {Alert: "windy", warning: "true"};
 
@@ -413,7 +416,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:PublisherClient eventHubClient = new (config);
+   eventhub:PublisherClient eventHubClient = checkpanic new (config);
    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
    map<string> userProps = {Alert: "windy", warning: "true"};
 
@@ -440,7 +443,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:ManagementClient eventHubClient = new (config);
+   eventhub:ManagementClient eventHubClient = checkpanic new (config);
    var result = eventHubClient->createEventHub("myhub");
 }
 ```
@@ -457,7 +460,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:ManagementClient eventHubClient = new (config);
+   eventhub:ManagementClient eventHubClient = checkpanic new (config);
    var result = eventHubClient->getEventHub("myhub");
 }
 ```
@@ -475,7 +478,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:ManagementClient eventHubClient = new (config);
+   eventhub:ManagementClient eventHubClient = checkpanic new (config);
    var result = eventHubClient->deleteEventHub("myhub");
 }
 ```
@@ -492,7 +495,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:ManagementClient eventHubClient = new (config);
+   eventhub:ManagementClient eventHubClient = checkpanic new (config);
    var result = eventHubClient->createConsumerGroup("myhub", "groupName");
 }
 ```
@@ -509,7 +512,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:ManagementClient eventHubClient = new (config);
+   eventhub:ManagementClient eventHubClient = checkpanic new (config);
    var result = eventHubClient->getConsumerGroup("myhub", "groupName");
 }
 ```
@@ -527,7 +530,7 @@ public function main() {
        sasKey: "<sas_key>",
        resourceUri: "<resource_uri>"
    };
-   eventhub:ManagementClient eventHubClient = new (config);
+   eventhub:ManagementClient eventHubClient = checkpanic new (config);
    var result = eventHubClient->deleteConsumerGroup("myhub", "groupName");
 }
 ```

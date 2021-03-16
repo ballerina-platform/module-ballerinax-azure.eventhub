@@ -15,16 +15,19 @@
 // under the License.
 
 import ballerinax/azure_eventhub;
-import ballerina/config;
 import ballerina/log;
+
+configurable string sasKeyName = ?;
+configurable string sasKey = ?;
+configurable string resourceUri = ?;
 
 public function main() {
     azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: config:getAsString("SAS_KEY_NAME"),
-        sasKey: config:getAsString("SAS_KEY"),
-        resourceUri: config:getAsString("RESOURCE_URI") 
+        sasKeyName: sasKeyName,
+        sasKey: sasKey,
+        resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = new (config);
+    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
 
     // ------------------------------------ Event Hub Creation-----------------------------------------------
     var createResult = managementClient->createEventHub("mytesthub");
