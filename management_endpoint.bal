@@ -21,6 +21,7 @@ import ballerina/regex;
 # Eventhub management client implementation.
 #
 # + config - Client configuration
+@display {label: "Azure Event Hubs Management Client"}
 public client class ManagementClient {
 
     private ClientEndpointConfiguration config;
@@ -38,8 +39,10 @@ public client class ManagementClient {
     # + eventHubPath - event hub path
     # + eventHubDescription - event hub description
     # + return - Return XML or Error
-    remote function createEventHub(string eventHubPath, EventHubDescription eventHubDescription = {}) 
-            returns @tainted xml|error {
+    @display {label: "Create Event Hub"}
+    remote function createEventHub(@display {label: "Event hub path"} string eventHubPath, 
+                                   @display {label: "Event hub description"} EventHubDescription eventHubDescription = {}) 
+                                   returns @tainted @display {label: "Result"} xml|error {
         http:Request req = getAuthorizedRequest(self.config);
         xmllib:Element eventHubDes = <xmllib:Element> xml `<EventHubDescription 
             xmlns:i="http://www.w3.org/2001/XMLSchema-instance" 
@@ -58,7 +61,9 @@ public client class ManagementClient {
     #
     # + eventHubPath - event hub path
     # + return - Return XML or Error
-    remote function getEventHub(string eventHubPath) returns @tainted xml|error {
+    @display {label: "Get Event Hub"}
+    remote function getEventHub(@display {label: "Event hub path"} string eventHubPath) 
+                                returns @tainted @display {label: "Result"} xml|error {
         http:Request req = getAuthorizedRequest(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath;
         http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
@@ -74,8 +79,11 @@ public client class ManagementClient {
     # + eventHubPath - event hub path
     # + eventHubDescriptionToUpdate - event hub description to update
     # + return - Return XML or Error
-    remote function updateEventHub(string eventHubPath, EventHubDescriptionToUpdate eventHubDescriptionToUpdate) 
-            returns @tainted xml|error {
+    @display {label: "Update Event Hub"}
+    remote function updateEventHub(@display {label: "Event hub path"} string eventHubPath, 
+                                   @display {label: "Event hub description to update"} 
+                                   EventHubDescriptionToUpdate eventHubDescriptionToUpdate) 
+                                   returns @tainted @display {label: "Result"} xml|error {
         http:Request req = getAuthorizedRequest(self.config);
         req.addHeader(IF_MATCH, ALL);
         xmllib:Element eventHubDescription = <xmllib:Element> xml `<EventHubDescription 
@@ -94,7 +102,8 @@ public client class ManagementClient {
     # Retrieves all metadata associated with all Event Hubs within a specified Service Bus namespace
     #
     # + return - Return list of event hubs or error
-    remote function listEventHubs() returns @tainted xml|error {
+    @display {label: "List Event Hubs"}
+    remote function listEventHubs() returns @tainted @display {label: "Result"} xml|error {
         http:Request req = getAuthorizedRequest(self.config);
         string requestPath = EVENT_HUBS_PATH;
         http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
@@ -111,7 +120,9 @@ public client class ManagementClient {
     #
     # + eventHubPath - event hub path
     # + return - Return Error if unsuccessful
-    remote function deleteEventHub(string eventHubPath) returns @tainted error? {
+    @display {label: "Delete Event Hub"}
+    remote function deleteEventHub(@display {label: "Event hub path"} string eventHubPath) 
+                                   returns @tainted @display {label: "Result"} error? {
         http:Request req = getAuthorizedRequest(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath;
         http:Response response = <http:Response> check self.clientEndpoint->delete(requestPath, req);
@@ -126,7 +137,10 @@ public client class ManagementClient {
     # + eventHubPath - event hub path
     # + consumerGroupName - consumer group name
     # + return - Return partition list or error
-    remote function listPartitions(string eventHubPath, string consumerGroupName) returns @tainted xml|error {
+    @display {label: "List Partitions"}
+    remote function listPartitions(@display {label: "Event hub path"} string eventHubPath, 
+                                   @display {label: "Consumer group name"} string consumerGroupName) 
+                                   returns @tainted @display {label: "Result"} xml|error {
         http:Request req = getAuthorizedRequest(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath + CONSUMER_GROUP_PATH + consumerGroupName + PARTITIONS_PATH;
         http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
@@ -145,8 +159,11 @@ public client class ManagementClient {
     # + consumerGroupName - consumer group name
     # + partitionId - partitionId 
     # + return - Returns partition details
-    remote function getPartition(string eventHubPath, string consumerGroupName, int partitionId) 
-            returns @tainted xml|error {
+    @display {label: "Get Partition"}
+    remote function getPartition(@display {label: "Event hub path"} string eventHubPath, 
+                                 @display {label: "Consumer group name"} string consumerGroupName, 
+                                 @display {label: "Partition ID"} int partitionId) 
+                                 returns @tainted @display {label: "Result"} xml|error {
         http:Request req = getAuthorizedRequest(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath + CONSUMER_GROUP_PATH + consumerGroupName + PARTITION_PATH + 
             partitionId.toString();
@@ -164,8 +181,12 @@ public client class ManagementClient {
     # + consumerGroupName - consumer group name
     # + consumerGroupDescription - consumer group description
     # + return - Return Consumer group details or error
-    remote function createConsumerGroup(string eventHubPath, string consumerGroupName, 
-            ConsumerGroupDescription consumerGroupDescription = {}) returns @tainted xml|error {
+    @display {label: "Create Consumer Group"}
+    remote function createConsumerGroup(@display {label: "Event hub path"} string eventHubPath, 
+                                        @display {label: "Consumer group name"} string consumerGroupName, 
+                                        @display {label: "Consumer group description"} 
+                                        ConsumerGroupDescription consumerGroupDescription = {}) 
+                                        returns @tainted @display {label: "Result"} xml|error {
         http:Request req = getAuthorizedRequest(self.config);
         xmllib:Element consumerGroupDes = <xmllib:Element> xml `<ConsumerGroupDescription 
             xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
@@ -185,7 +206,10 @@ public client class ManagementClient {
     # + eventHubPath - event hub path
     # + consumerGroupName - consumer group name
     # + return - Return Consumer group details or error
-    remote function getConsumerGroup(string eventHubPath, string consumerGroupName) returns @tainted xml|error {
+    @display {label: "Get Consumer Group"}
+    remote function getConsumerGroup(@display {label: "Event hub path"} string eventHubPath, 
+                                     @display {label: "Consumer group name"} string consumerGroupName) 
+                                     returns @tainted @display {label: "Result"} xml|error {
         http:Request req = getAuthorizedRequest(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath + CONSUMER_GROUP_PATH + consumerGroupName;
         http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
@@ -201,7 +225,10 @@ public client class ManagementClient {
     # + eventHubPath - event hub path
     # + consumerGroupName - consumer group name
     # + return - Return Error if unsuccessful
-    remote function deleteConsumerGroup(string eventHubPath, string consumerGroupName) returns @tainted error? {
+    @display {label: "Delete Consumer Group"}
+    remote function deleteConsumerGroup(@display {label: "Event hub path"} string eventHubPath, 
+                                        @display {label: "Consumer group name"} string consumerGroupName) 
+                                        returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath + CONSUMER_GROUP_PATH + consumerGroupName;
         http:Response response = <http:Response> check self.clientEndpoint->delete(requestPath, req);
@@ -215,7 +242,9 @@ public client class ManagementClient {
     #
     # + eventHubPath - event hub path
     # + return - Return list of consumer group or error
-    remote function listConsumerGroups(string eventHubPath) returns @tainted xml|error {
+    @display {label: "List Consumer Groups"}
+    remote function listConsumerGroups(@display {label: "Event hub path"} string eventHubPath) 
+                                       returns @tainted @display {label: "Result"} xml|error {
         http:Request req = getAuthorizedRequest(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath + CONSUMER_GROUPS_PATH;
         http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
