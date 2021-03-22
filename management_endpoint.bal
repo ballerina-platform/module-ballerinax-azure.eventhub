@@ -21,7 +21,7 @@ import ballerina/regex;
 # Eventhub management client implementation.
 #
 # + config - Client configuration
-@display {label: "Azure Event Hubs Management Client"}
+@display {label: "Azure Event Hubs Management Client", iconPath: "AzureEventHubLogo.png"}
 public client class ManagementClient {
 
     private ClientEndpointConfiguration config;

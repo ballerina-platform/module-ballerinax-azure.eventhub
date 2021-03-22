@@ -23,7 +23,7 @@ import ballerina/io;
 # Eventhub publisher client implementation.
 #
 # + config - Client configuration
-@display {label: "Azure Event Hubs Publisher Client"}
+@display {label: "Azure Event Hubs Publisher Client", iconPath: "AzureEventHubLogo.png"}
 public client class PublisherClient {
 
     private ClientEndpointConfiguration config;
