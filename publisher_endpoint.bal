@@ -30,7 +30,7 @@ public client class PublisherClient {
     private string API_PREFIX = EMPTY_STRING;
     private http:Client clientEndpoint;
 
-    public function init(ClientEndpointConfiguration config) returns error? {
+    public isolated function init(ClientEndpointConfiguration config) returns error? {
         self.config = config;
         self.API_PREFIX = TIME_OUT + config.timeout.toString() + API_VERSION + config.apiVersion;
         self.clientEndpoint = check new (HTTPS + self.config.resourceUri);
@@ -47,7 +47,7 @@ public client class PublisherClient {
     # + partitionKey - partition Key
     # + return - @error if remote API is unreachable
     @display {label: "Send an Event"}
-    remote function send(@display {label: "Event hub path"} string eventHubPath, 
+    remote isolated function send(@display {label: "Event hub path"} string eventHubPath, 
                          @display {label: "Event data"} 
                          string|xml|json|byte[]|mime:Entity[]|stream<byte[], io:Error> data, 
                          @display {label: "User properties"} map<string> userProperties = {}, 
@@ -100,7 +100,7 @@ public client class PublisherClient {
     # + partitionKey - partition Key
     # + return - Eventhub error if unsuccessful
     @display {label: "Send Batch of Events"}
-    remote function sendBatch(@display {label: "Event hub path"} string eventHubPath, 
+    remote isolated function sendBatch(@display {label: "Event hub path"} string eventHubPath, 
                               @display {label: "Batch of events"} BatchEvent batchEvent, 
                               @display {label: "Partition ID"} int partitionId = -1, 
                               @display {label: "Publisher ID"} string publisherId = "", 
@@ -135,11 +135,11 @@ public client class PublisherClient {
     # + eventHubPath - event hub path
     # + return - Return revoke publisher or Error
     @display {label: "Get Revoked Publishers"}
-    remote function getRevokedPublishers(@display {label: "Event hub path"} string eventHubPath) 
+    remote isolated function getRevokedPublishers(@display {label: "Event hub path"} string eventHubPath) 
                                          returns @tainted @display {label: "Result"} xml|error {
-        http:Request req = getAuthorizedRequest(self.config);
+        map<string> headerMap = getAuthorizedRequestHeaderMap(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath + REVOKED_PUBLISHERS_PATH + self.API_PREFIX;
-        http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
+        http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, headerMap);
         if (response.statusCode == http:STATUS_OK) {
             string textPayload = check response.getTextPayload();
             string cleanedStringXMLObject = regex:replaceAll(textPayload, XML_BASE, BASE);
@@ -155,7 +155,7 @@ public client class PublisherClient {
     # + publisherName - publisher name 
     # + return - Return revoke publisher details or error
     @display {label: "Revoke a Publisher"}
-    remote function revokePublisher(@display {label: "Event hub path"} string eventHubPath, 
+    remote isolated function revokePublisher(@display {label: "Event hub path"} string eventHubPath, 
                                     @display {label: "Publisher name"} string publisherName) 
                                     returns @tainted @display {label: "Result"} xml|error {
         http:Request req = getAuthorizedRequest(self.config);
@@ -182,7 +182,7 @@ public client class PublisherClient {
     # + publisherName - publisher name 
     # + return - Return publisher details or error
     @display {label: "Resume a Publisher"}
-    remote function resumePublisher(@display {label: "Event hub path"} string eventHubPath, 
+    remote isolated function resumePublisher(@display {label: "Event hub path"} string eventHubPath, 
                                     @display {label: "Publisher name"} string publisherName) 
                                     returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);

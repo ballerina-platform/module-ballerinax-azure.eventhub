@@ -70,8 +70,8 @@ The REST APIs fall into the following categories:
 * Java 11 Installed
 Java Development Kit (JDK) with version 11 is required.
 
-* Ballerina SLAlpha2 Installed
-Ballerina Swan Lake Alpha 2 is required. 
+* Ballerina SLAlpha3 Installed
+Ballerina Swan Lake Alpha 3 is required. 
 
 * Connection String of the Event Hub Namespace
 We need management credentials to communicate with the Event Hubs. These credentials are available in the connection 
@@ -93,7 +93,7 @@ from the connection string.
 |                                   | Version               |
 |:---------------------------------:|:---------------------:|
 | Azure Event Hubs REST API Version | 2014-12               |
-| Ballerina Language                | Swan-Lake-Alpha2      |
+| Ballerina Language                | Swan-Lake-Alpha3      |
 | Java Development Kit (JDK)        | 11                    |
 
 ## Limitations
@@ -1160,7 +1160,7 @@ public function main() {
 
         > **Note:** Set the JAVA_HOME environment variable to the path name of the directory into which you installed JDK.
 
-2. Download and install [Ballerina Swann Lake Alpha2](https://ballerina.io/). 
+2. Download and install [Ballerina](https://ballerina.io/). 
 
 ### Building the Source
 

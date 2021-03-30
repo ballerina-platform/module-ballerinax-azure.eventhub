@@ -41,7 +41,7 @@ function beforeSuiteFunc() {
     }
     test:assertTrue(result is xml);
     if (result is xml) {
-        log:print(result.toString());
+        log:printInfo(result.toString());
     }
 }
 
@@ -169,28 +169,6 @@ function testSendBatchEventToPartition() {
 }
 
 @test:Config {
-    groups: ["publisher"],
-    enable: true
-}
-function testSendBatchEventWithPublisherID() {
-    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
-    map<string> userProps = {Alert: "windy", warning: "true"};
-
-    BatchEvent batchEvent = {
-        events: [
-            {data: "Message1"},
-            {data: "Message2", brokerProperties: brokerProps},
-            {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
-        ]
-    };
-    var result = publisherClient->sendBatch(event_hub_name1, batchEvent, publisherId = "device-1");
-    if (result is error) {
-        test:assertFail(msg = result.message());
-    }
-    test:assertTrue(result is ());
-}
-
-@test:Config {
     groups: ["eventHubManagment"],
     enable: true
 }
@@ -201,7 +179,7 @@ function testCreateEventHub() {
     }
     test:assertTrue(result is xml);
     if (result is xml) {
-        log:print(result.toString());
+        log:printInfo(result.toString());
     }
 }
 
@@ -217,7 +195,7 @@ function testGetEventHub() {
     }
     test:assertTrue(result is xml);
     if (result is xml) {
-        log:print(result.toString());
+        log:printInfo(result.toString());
     }
 }
 
@@ -236,7 +214,7 @@ function testUpdateEventHub() {
     }
     test:assertTrue(result is xml);
     if (result is xml) {
-        log:print(result.toString());
+        log:printInfo(result.toString());
     }
 }
 
@@ -253,8 +231,8 @@ function testListEventHubs() {
     }
     test:assertTrue(result is xml);
     if (result is xml) {
-        log:print("listReceived");
-        log:print(result.toString());
+        log:printInfo("listReceived");
+        log:printInfo(result.toString());
     }
 }
 
@@ -292,7 +270,7 @@ function testCreateEventHubWithEventHubDescription() {
     }
     test:assertTrue(result is xml);
     if (result is xml) {
-        log:print(result.toString());
+        log:printInfo(result.toString());
     }
 }
 
@@ -313,6 +291,28 @@ function testDeleteEventHubWithEventHubDescription() {
     groups: ["publisher"],
     enable: true
 }
+function testSendBatchEventWithPublisherID() {
+    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
+    map<string> userProps = {Alert: "windy", warning: "true"};
+
+    BatchEvent batchEvent = {
+        events: [
+            {data: "Message1"},
+            {data: "Message2", brokerProperties: brokerProps},
+            {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
+        ]
+    };
+    var result = publisherClient->sendBatch(event_hub_name1, batchEvent, publisherId = "device-1");
+    if (result is error) {
+        test:assertFail(msg = result.message());
+    }
+    test:assertTrue(result is ());
+}
+
+@test:Config {
+    groups: ["publisher"],
+    enable: true
+}
 function testRevokePublisher() {
     var result = publisherClient->revokePublisher(event_hub_name1, "device-1");
     if (result is error) {
@@ -320,7 +320,7 @@ function testRevokePublisher() {
     }
     test:assertTrue(result is xml);
     if (result is xml) {
-        log:print(result.toString());
+        log:printInfo(result.toString());
     }
 }
 
@@ -351,8 +351,8 @@ function testGetRevokedPublishers() {
     }
     test:assertTrue(result is xml);
     if (result is xml) {
-        log:print("listReceived");
-        log:print(result.toString());
+        log:printInfo("listReceived");
+        log:printInfo(result.toString());
     }
 }
 
@@ -371,7 +371,7 @@ function testResumePublisher() {
     }
     test:assertTrue(result is ());
     if (result is ()) {
-        log:print("successful");
+        log:printInfo("successful");
     }
 }
 
@@ -386,7 +386,7 @@ function testCreateConsumerGroup() {
     }
     test:assertTrue(result is xml);
     if (result is xml) {
-        log:print(result.toString());
+        log:printInfo(result.toString());
     }
 }
 
@@ -402,7 +402,7 @@ function testGetConsumerGroup() {
     }
     test:assertTrue(result is xml);
     if (result is xml) {
-        log:print(result.toString());
+        log:printInfo(result.toString());
     }
 }
 
@@ -418,8 +418,8 @@ function testListConsumerGroups() {
     }
     test:assertTrue(result is xml);
     if (result is xml) {
-        log:print("successful");
-        log:print(result.toString());
+        log:printInfo("successful");
+        log:printInfo(result.toString());
     }
 }
 
@@ -435,8 +435,8 @@ function testListPartitions() {
     }
     test:assertTrue(result is xml);
     if (result is xml) {
-        log:print("successful");
-        log:print(result.toString());
+        log:printInfo("successful");
+        log:printInfo(result.toString());
     }
 }
 
@@ -452,7 +452,7 @@ function testGetPartition() {
     }
     test:assertTrue(result is xml);
     if (result is xml) {
-        log:print(result.toString());
+        log:printInfo(result.toString());
     }
 }
 
@@ -474,7 +474,7 @@ function testDeleteConsumerGroups() {
     }
     test:assertTrue(result is ());
     if (result is ()) {
-        log:print("successful");
+        log:printInfo("successful");
     }
 }
 

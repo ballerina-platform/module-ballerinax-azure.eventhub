@@ -15,7 +15,7 @@
 // under the License.
 
 import ballerina/crypto;
-import ballerina/encoding;
+import ballerina/url;
 import ballerina/http;
 import ballerina/time;
 import ballerina/jballerina.java;
@@ -34,21 +34,35 @@ isolated function getAuthorizedRequest(ClientEndpointConfiguration config) retur
     return req;
 }
 
+isolated function getAuthorizedRequestHeaderMap(ClientEndpointConfiguration config) returns map<string> {
+    map<string> headerMap = {
+            "Authorization": getSASToken(config)
+    };
+    if (!config.enableRetry) {
+        // disable automatic retry
+        headerMap = {
+            "Authorization": getSASToken(config),
+            "x-ms-retrypolicy": NO_RETRY
+        };
+    }
+    return headerMap;
+}
+
 # Generate the SAS token
 #
 # + return - Return SAS token
 isolated function getSASToken(ClientEndpointConfiguration config) returns string {
-    time:Time time = time:currentTime();
-    int currentTimeMills = time.time / 1000;
+    time:Utc time = time:utcNow();
+    [int, decimal][epochSeconds, lastSecondFraction] = time;
     int week = 60 * 60 * 24 * 7;
-    int expiry = currentTimeMills + week;
-    string stringToSign = checkpanic encoding:encodeUriComponent(config.resourceUri, UTF8_URL_ENCODING) + "\n" + 
+    int expiry = epochSeconds + week;
+    string stringToSign = checkpanic url:encode(config.resourceUri, UTF8_URL_ENCODING) + "\n" + 
         expiry.toString();
     byte[] output = checkpanic crypto:hmacSha256(stringToSign.toBytes(), config.sasKey.toBytes());
     string signature = output.toBase64();
     string sasToken = "SharedAccessSignature sr="
-        + checkpanic encoding:encodeUriComponent(config.resourceUri, UTF8_URL_ENCODING)
-        + "&sig=" + checkpanic encoding:encodeUriComponent(signature, UTF8_URL_ENCODING)
+        + checkpanic url:encode(config.resourceUri, UTF8_URL_ENCODING)
+        + "&sig=" + checkpanic url:encode(signature, UTF8_URL_ENCODING)
         + "&se=" + expiry.toString() + "&skn=" + config.sasKeyName;
     return sasToken;
 }

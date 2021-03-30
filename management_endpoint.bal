@@ -28,7 +28,7 @@ public client class ManagementClient {
     private string API_PREFIX = EMPTY_STRING;
     private http:Client clientEndpoint;
 
-    public function init(ClientEndpointConfiguration config) returns error? {
+    public isolated function init(ClientEndpointConfiguration config) returns error? {
         self.config = config;
         self.API_PREFIX = TIME_OUT + config.timeout.toString() + API_VERSION + config.apiVersion;
         self.clientEndpoint = check new (HTTPS + self.config.resourceUri);
@@ -40,7 +40,7 @@ public client class ManagementClient {
     # + eventHubDescription - event hub description
     # + return - Return XML or Error
     @display {label: "Create Event Hub"}
-    remote function createEventHub(@display {label: "Event hub path"} string eventHubPath, 
+    remote isolated function createEventHub(@display {label: "Event hub path"} string eventHubPath, 
                                    @display {label: "Event hub description"} EventHubDescription eventHubDescription = {}) 
                                    returns @tainted @display {label: "Result"} xml|error {
         http:Request req = getAuthorizedRequest(self.config);
@@ -62,11 +62,11 @@ public client class ManagementClient {
     # + eventHubPath - event hub path
     # + return - Return XML or Error
     @display {label: "Get Event Hub"}
-    remote function getEventHub(@display {label: "Event hub path"} string eventHubPath) 
+    remote isolated function getEventHub(@display {label: "Event hub path"} string eventHubPath) 
                                 returns @tainted @display {label: "Result"} xml|error {
-        http:Request req = getAuthorizedRequest(self.config);
+        map<string> headerMap = getAuthorizedRequestHeaderMap(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath;
-        http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
+        http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, headerMap);
         if (response.statusCode == http:STATUS_OK) {
             xml xmlPayload = check response.getXmlPayload();
             return xmlPayload;
@@ -80,7 +80,7 @@ public client class ManagementClient {
     # + eventHubDescriptionToUpdate - event hub description to update
     # + return - Return XML or Error
     @display {label: "Update Event Hub"}
-    remote function updateEventHub(@display {label: "Event hub path"} string eventHubPath, 
+    remote isolated function updateEventHub(@display {label: "Event hub path"} string eventHubPath, 
                                    @display {label: "Event hub description to update"} 
                                    EventHubDescriptionToUpdate eventHubDescriptionToUpdate) 
                                    returns @tainted @display {label: "Result"} xml|error {
@@ -103,10 +103,10 @@ public client class ManagementClient {
     #
     # + return - Return list of event hubs or error
     @display {label: "List Event Hubs"}
-    remote function listEventHubs() returns @tainted @display {label: "Result"} xml|error {
-        http:Request req = getAuthorizedRequest(self.config);
+    remote isolated function listEventHubs() returns @tainted @display {label: "Result"} xml|error {
+        map<string> headerMap = getAuthorizedRequestHeaderMap(self.config);
         string requestPath = EVENT_HUBS_PATH;
-        http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
+        http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, headerMap);
         if (response.statusCode == http:STATUS_OK) {
             string textPayload = check response.getTextPayload();
             string cleanedStringXMLObject = regex:replaceAll(textPayload, XML_BASE, BASE);
@@ -121,7 +121,7 @@ public client class ManagementClient {
     # + eventHubPath - event hub path
     # + return - Return Error if unsuccessful
     @display {label: "Delete Event Hub"}
-    remote function deleteEventHub(@display {label: "Event hub path"} string eventHubPath) 
+    remote isolated function deleteEventHub(@display {label: "Event hub path"} string eventHubPath) 
                                    returns @tainted @display {label: "Result"} error? {
         http:Request req = getAuthorizedRequest(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath;
@@ -138,12 +138,12 @@ public client class ManagementClient {
     # + consumerGroupName - consumer group name
     # + return - Return partition list or error
     @display {label: "List Partitions"}
-    remote function listPartitions(@display {label: "Event hub path"} string eventHubPath, 
+    remote isolated function listPartitions(@display {label: "Event hub path"} string eventHubPath, 
                                    @display {label: "Consumer group name"} string consumerGroupName) 
                                    returns @tainted @display {label: "Result"} xml|error {
-        http:Request req = getAuthorizedRequest(self.config);
+        map<string> headerMap = getAuthorizedRequestHeaderMap(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath + CONSUMER_GROUP_PATH + consumerGroupName + PARTITIONS_PATH;
-        http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
+        http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, headerMap);
         if (response.statusCode == http:STATUS_OK) {
             string textPayload = check response.getTextPayload();
             string cleanedStringXMLObject = regex:replaceAll(textPayload, XML_BASE, BASE);
@@ -160,14 +160,14 @@ public client class ManagementClient {
     # + partitionId - partitionId 
     # + return - Returns partition details
     @display {label: "Get Partition"}
-    remote function getPartition(@display {label: "Event hub path"} string eventHubPath, 
+    remote isolated function getPartition(@display {label: "Event hub path"} string eventHubPath, 
                                  @display {label: "Consumer group name"} string consumerGroupName, 
                                  @display {label: "Partition ID"} int partitionId) 
                                  returns @tainted @display {label: "Result"} xml|error {
-        http:Request req = getAuthorizedRequest(self.config);
+        map<string> headerMap = getAuthorizedRequestHeaderMap(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath + CONSUMER_GROUP_PATH + consumerGroupName + PARTITION_PATH + 
             partitionId.toString();
-        http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
+        http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, headerMap);
         if (response.statusCode == http:STATUS_OK) {
             xml xmlPayload = check response.getXmlPayload();
             return xmlPayload;
@@ -182,7 +182,7 @@ public client class ManagementClient {
     # + consumerGroupDescription - consumer group description
     # + return - Return Consumer group details or error
     @display {label: "Create Consumer Group"}
-    remote function createConsumerGroup(@display {label: "Event hub path"} string eventHubPath, 
+    remote isolated function createConsumerGroup(@display {label: "Event hub path"} string eventHubPath, 
                                         @display {label: "Consumer group name"} string consumerGroupName, 
                                         @display {label: "Consumer group description"} 
                                         ConsumerGroupDescription consumerGroupDescription = {}) 
@@ -207,12 +207,12 @@ public client class ManagementClient {
     # + consumerGroupName - consumer group name
     # + return - Return Consumer group details or error
     @display {label: "Get Consumer Group"}
-    remote function getConsumerGroup(@display {label: "Event hub path"} string eventHubPath, 
+    remote isolated function getConsumerGroup(@display {label: "Event hub path"} string eventHubPath, 
                                      @display {label: "Consumer group name"} string consumerGroupName) 
                                      returns @tainted @display {label: "Result"} xml|error {
-        http:Request req = getAuthorizedRequest(self.config);
+        map<string> headerMap = getAuthorizedRequestHeaderMap(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath + CONSUMER_GROUP_PATH + consumerGroupName;
-        http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
+        http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, headerMap);
         if (response.statusCode == http:STATUS_OK) {
             xml xmlPayload = check response.getXmlPayload();
             return xmlPayload;
@@ -226,7 +226,7 @@ public client class ManagementClient {
     # + consumerGroupName - consumer group name
     # + return - Return Error if unsuccessful
     @display {label: "Delete Consumer Group"}
-    remote function deleteConsumerGroup(@display {label: "Event hub path"} string eventHubPath, 
+    remote isolated function deleteConsumerGroup(@display {label: "Event hub path"} string eventHubPath, 
                                         @display {label: "Consumer group name"} string consumerGroupName) 
                                         returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
@@ -243,11 +243,11 @@ public client class ManagementClient {
     # + eventHubPath - event hub path
     # + return - Return list of consumer group or error
     @display {label: "List Consumer Groups"}
-    remote function listConsumerGroups(@display {label: "Event hub path"} string eventHubPath) 
+    remote isolated function listConsumerGroups(@display {label: "Event hub path"} string eventHubPath) 
                                        returns @tainted @display {label: "Result"} xml|error {
-        http:Request req = getAuthorizedRequest(self.config);
+        map<string> headerMap = getAuthorizedRequestHeaderMap(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath + CONSUMER_GROUPS_PATH;
-        http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
+        http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, headerMap);
         if (response.statusCode == http:STATUS_OK) {
             string textPayload = check response.getTextPayload();
             string cleanedStringXMLObject = regex:replaceAll(textPayload, XML_BASE, BASE);
