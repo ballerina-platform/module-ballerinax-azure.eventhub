@@ -167,7 +167,7 @@ the partition key “groupName”.
     if (sendResult is error) {
             log:printError(sendResult.message());
     } else {
-            log:print("Successfully Send Event to Event Hub!");
+            log:printInfo("Successfully Send Event to Event Hub!");
     }
 ```
 Note:
@@ -230,8 +230,8 @@ named “mytesthub”.
         log:printError(createResult.message());
     }
     if (createResult is xml) {
-        log:print(createResult.toString());
-        log:print("Successfully Created Event Hub!");
+        log:printInfo(createResult.toString());
+        log:printInfo("Successfully Created Event Hub!");
     }
 
 ```
@@ -249,8 +249,8 @@ Here we are getting all the metadata associated with the event hub named “myte
         log:printError(getEventHubResult.message());
     }
     if (getEventHubResult is xml) {
-        log:print(getEventHubResult.toString());
-        log:print("Successfully Get Event Hub!");
+        log:printInfo(getEventHubResult.toString());
+        log:printInfo("Successfully Get Event Hub!");
     }
 ```
 Note:
@@ -270,8 +270,8 @@ hub named “mytesthub”.
         log:printError(updateResult.message());
     }
     if (updateResult is xml) {       
-        log:print(updateResult.toString());
-        log:print("Successfully Updated Event Hub!");
+        log:printInfo(updateResult.toString());
+        log:printInfo("Successfully Updated Event Hub!");
     }
 ```
 Note:
@@ -288,8 +288,8 @@ in the namespace. Here we are getting all the metadata associated with the event
         log:printError(listResult.message());
     }
     if (listResult is xml) {
-        log:print(listResult.toString());
-        log:print("Successfully Listed Event Hubs!");
+        log:printInfo(listResult.toString());
+        log:printInfo("Successfully Listed Event Hubs!");
     }
 ```
 Note:
@@ -303,7 +303,7 @@ an event hub named “mytesthub”.
     if (deleteResult is error) {
         log:printError(msg = deleteResult.message());
     } else {
-        log:print("Successfully Deleted Event Hub!");
+        log:printInfo("Successfully Deleted Event Hub!");
     }
 ```
 Note:
@@ -345,7 +345,7 @@ public function main() {
     if (result is error) {
         log:printError(msg = result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -384,7 +384,7 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -427,7 +427,7 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -467,7 +467,7 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -516,7 +516,7 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -567,7 +567,7 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -620,7 +620,7 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -662,8 +662,8 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print(result.toString());
-        log:print("Successful!");
+        log:printInfo(result.toString());
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -698,8 +698,8 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print(result.toString());
-        log:print("Successful!");
+        log:printInfo(result.toString());
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -737,8 +737,8 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print(result.toString());
-        log:print("Successful!");
+        log:printInfo(result.toString());
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -773,8 +773,8 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print(result.toString());
-        log:print("listReceived");
+        log:printInfo(result.toString());
+        log:printInfo("listReceived");
     }
 }
 ```
@@ -807,7 +807,7 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -842,8 +842,8 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print(result.toString());
-        log:print("successful");
+        log:printInfo(result.toString());
+        log:printInfo("successful");
     }
 }
 ```
@@ -882,8 +882,8 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print(result.toString());
-        log:print("successful");
+        log:printInfo(result.toString());
+        log:printInfo("successful");
     }
 }
 ```
@@ -922,8 +922,8 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print(result.toString());
-        log:print("successful");
+        log:printInfo(result.toString());
+        log:printInfo("successful");
     }
 }
 ```
@@ -959,8 +959,8 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print(result.toString());
-        log:print("successful");
+        log:printInfo(result.toString());
+        log:printInfo("successful");
     }
 }
 ```
@@ -996,8 +996,8 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print(result.toString());
-        log:print("successful");
+        log:printInfo(result.toString());
+        log:printInfo("successful");
     }
 }
 ```
@@ -1036,7 +1036,7 @@ public function main() {
         log:printError(result.message());
     }
     if (result is ()) {
-        log:print("successful");
+        log:printInfo("successful");
     }
 }
 ```
@@ -1075,9 +1075,9 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print("listReceived");
-        log:print(result.toString());
-        log:print("Successful!");
+        log:printInfo("listReceived");
+        log:printInfo(result.toString());
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -1110,8 +1110,8 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print(result.toString());
-        log:print("Successful!");
+        log:printInfo(result.toString());
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -1144,7 +1144,7 @@ public function main() {
         log:printError(result.message());
     }
     if (result is ()) {
-        log:print("successful");
+        log:printInfo("successful");
     }
 }
 ```
@@ -1168,12 +1168,12 @@ Execute the commands below to build from the source after installing Ballerina S
 
 1. To build the library:
 ```shell script
-    ballerina build
+    bal build
 ```
 
 2. To build the module without the tests:
 ```shell script
-    ballerina build --skip-tests
+    bal build -c --skip-tests
 ```
 
 ## Contributing to Ballerina

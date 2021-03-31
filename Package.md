@@ -119,7 +119,7 @@ the partition key “groupName”.
     if (sendResult is error) {
             log:printError(sendResult.message());
     } else {
-            log:print("Successfully Send Event to Event Hub!");
+            log:printInfo("Successfully Send Event to Event Hub!");
     }
 ```
 Note:
@@ -164,8 +164,8 @@ named “mytesthub”.
         log:printError(createResult.message());
     }
     if (createResult is xml) {
-        log:print(createResult.toString());
-        log:print("Successfully Created Event Hub!");
+        log:printInfo(createResult.toString());
+        log:printInfo("Successfully Created Event Hub!");
     }
 
 ```
@@ -183,8 +183,8 @@ Here we are getting all the metadata associated with the event hub named “myte
         log:printError(getEventHubResult.message());
     }
     if (getEventHubResult is xml) {
-        log:print(getEventHubResult.toString());
-        log:print("Successfully Get Event Hub!");
+        log:printInfo(getEventHubResult.toString());
+        log:printInfo("Successfully Get Event Hub!");
     }
 ```
 Note:
@@ -204,8 +204,8 @@ hub named “mytesthub”.
         log:printError(updateResult.message());
     }
     if (updateResult is xml) {       
-        log:print(updateResult.toString());
-        log:print("Successfully Updated Event Hub!");
+        log:printInfo(updateResult.toString());
+        log:printInfo("Successfully Updated Event Hub!");
     }
 ```
 Note:
@@ -222,8 +222,8 @@ in the namespace. Here we are getting all the metadata associated with the event
         log:printError(listResult.message());
     }
     if (listResult is xml) {
-        log:print(listResult.toString());
-        log:print("Successfully Listed Event Hubs!");
+        log:printInfo(listResult.toString());
+        log:printInfo("Successfully Listed Event Hubs!");
     }
 ```
 Note:
@@ -237,7 +237,7 @@ an event hub named “mytesthub”.
     if (deleteResult is error) {
         log:printError(msg = deleteResult.message());
     } else {
-        log:print("Successfully Deleted Event Hub!");
+        log:printInfo("Successfully Deleted Event Hub!");
     }
 ```
 Note:
