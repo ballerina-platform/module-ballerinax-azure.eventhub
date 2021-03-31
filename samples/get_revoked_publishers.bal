@@ -34,8 +34,8 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print("listReceived");
-        log:print(result.toString());
-        log:print("Successful!");
+        log:printInfo("listReceived");
+        log:printInfo(result.toString());
+        log:printInfo("Successful!");
     }
 }

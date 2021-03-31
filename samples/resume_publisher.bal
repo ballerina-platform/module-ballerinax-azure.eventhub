@@ -34,6 +34,6 @@ public function main() {
         log:printError(result.message());
     }
     if (result is ()) {
-        log:print("successful");
+        log:printInfo("successful");
     }
 }

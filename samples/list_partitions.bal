@@ -34,7 +34,7 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print(result.toString());
-        log:print("successful");
+        log:printInfo(result.toString());
+        log:printInfo("successful");
     }
 }

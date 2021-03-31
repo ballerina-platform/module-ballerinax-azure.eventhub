@@ -33,7 +33,7 @@ public function main() {
     if (result is error) {
         log:printError(msg = result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -72,7 +72,7 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -115,7 +115,7 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -155,7 +155,7 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -204,7 +204,7 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -255,7 +255,7 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -308,7 +308,7 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -351,8 +351,8 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print(result.toString());
-        log:print("Successful!");
+        log:printInfo(result.toString());
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -387,8 +387,8 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print(result.toString());
-        log:print("Successful!");
+        log:printInfo(result.toString());
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -426,8 +426,8 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print(result.toString());
-        log:print("Successful!");
+        log:printInfo(result.toString());
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -462,8 +462,8 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print(result.toString());
-        log:print("listReceived");
+        log:printInfo(result.toString());
+        log:printInfo("listReceived");
     }
 }
 ```
@@ -496,7 +496,7 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -531,8 +531,8 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print(result.toString());
-        log:print("successful");
+        log:printInfo(result.toString());
+        log:printInfo("successful");
     }
 }
 ```
@@ -571,8 +571,8 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print(result.toString());
-        log:print("successful");
+        log:printInfo(result.toString());
+        log:printInfo("successful");
     }
 }
 ```
@@ -611,8 +611,8 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print(result.toString());
-        log:print("successful");
+        log:printInfo(result.toString());
+        log:printInfo("successful");
     }
 }
 ```
@@ -648,8 +648,8 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print(result.toString());
-        log:print("successful");
+        log:printInfo(result.toString());
+        log:printInfo("successful");
     }
 }
 ```
@@ -685,8 +685,8 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print(result.toString());
-        log:print("successful");
+        log:printInfo(result.toString());
+        log:printInfo("successful");
     }
 }
 ```
@@ -725,7 +725,7 @@ public function main() {
         log:printError(result.message());
     }
     if (result is ()) {
-        log:print("successful");
+        log:printInfo("successful");
     }
 }
 ```
@@ -764,9 +764,9 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print("listReceived");
-        log:print(result.toString());
-        log:print("Successful!");
+        log:printInfo("listReceived");
+        log:printInfo(result.toString());
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -799,8 +799,8 @@ public function main() {
         log:printError(result.message());
     }
     if (result is xml) {
-        log:print(result.toString());
-        log:print("Successful!");
+        log:printInfo(result.toString());
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -833,7 +833,7 @@ public function main() {
         log:printError(result.message());
     }
     if (result is ()) {
-        log:print("successful");
+        log:printInfo("successful");
     }
 }
 ```

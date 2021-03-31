@@ -35,8 +35,8 @@ public function main() {
         log:printError(createResult.message());
     }
     if (createResult is xml) {
-        log:print(createResult.toString());
-        log:print("Successfully Created Event Hub!");
+        log:printInfo(createResult.toString());
+        log:printInfo("Successfully Created Event Hub!");
     }
 
     // ----------------------------------- Get Event Hub -----------------------------------------------------
@@ -45,8 +45,8 @@ public function main() {
         log:printError(getEventHubResult.message());
     }
     if (getEventHubResult is xml) {
-        log:print(getEventHubResult.toString());
-        log:print("Successfully Get Event Hub!");
+        log:printInfo(getEventHubResult.toString());
+        log:printInfo("Successfully Get Event Hub!");
     } 
 
     // --------------------------------- Update Event Hub --------------------------------------------------
@@ -58,8 +58,8 @@ public function main() {
         log:printError(updateResult.message());
     }
     if (updateResult is xml) {
-        log:print(updateResult.toString());
-        log:print("Successfully Updated Event Hub!");
+        log:printInfo(updateResult.toString());
+        log:printInfo("Successfully Updated Event Hub!");
     }
 
     // ---------------------------------- List Event Hubs -----------------------------------------------------
@@ -68,8 +68,8 @@ public function main() {
         log:printError(listResult.message());
     }
     if (listResult is xml) {
-        log:print(listResult.toString());
-        log:print("Successfully Listed Event Hubs!");
+        log:printInfo(listResult.toString());
+        log:printInfo("Successfully Listed Event Hubs!");
     }
 
     // --------------------------------- Delete Event Hub ----------------------------------------------------
@@ -77,6 +77,6 @@ public function main() {
     if (deleteResult is error) {
         log:printError(msg = deleteResult.message());
     } else {
-        log:print("Successfully Deleted Event Hub!");
+        log:printInfo("Successfully Deleted Event Hub!");
     }    
 }
