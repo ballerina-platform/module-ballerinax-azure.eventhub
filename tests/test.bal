@@ -311,6 +311,7 @@ function testSendBatchEventWithPublisherID() {
 
 @test:Config {
     groups: ["publisher"],
+    dependsOn: [testSendBatchEventWithPublisherID],
     enable: true
 }
 function testRevokePublisher() {
