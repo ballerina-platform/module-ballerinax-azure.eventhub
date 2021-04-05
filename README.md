@@ -70,8 +70,8 @@ The REST APIs fall into the following categories:
 * Java 11 Installed
 Java Development Kit (JDK) with version 11 is required.
 
-* Ballerina SLAlpha3 Installed
-Ballerina Swan Lake Alpha 3 is required. 
+* Ballerina SLAlpha4-SNAPSHOT Installed
+Ballerina Swan Lake Alpha 4 SNAPSHOT is required. 
 
 * Connection String of the Event Hub Namespace
 We need management credentials to communicate with the Event Hubs. These credentials are available in the connection 
@@ -93,7 +93,7 @@ from the connection string.
 |                                   | Version               |
 |:---------------------------------:|:---------------------:|
 | Azure Event Hubs REST API Version | 2014-12               |
-| Ballerina Language                | Swan-Lake-Alpha3      |
+| Ballerina Language                | Swan-Lake-Alpha4-SNAP |
 | Java Development Kit (JDK)        | 11                    |
 
 ## Limitations

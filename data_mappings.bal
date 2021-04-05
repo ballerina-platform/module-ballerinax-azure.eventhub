@@ -48,7 +48,7 @@ isolated function getBatchEventJson(BatchEvent batchEvent) returns json {
 isolated function getDescriptionProperties(EventHubDescription|EventHubDescriptionToUpdate|ConsumerGroupDescription
     |RevokePublisherDescription descriptionProperties, xmllib:Element description) returns xml {
     json descriptionJson = checkpanic descriptionProperties.cloneWithType(json);
-    xml eventHubDescriptionXml = checkpanic xmldata:fromJson(descriptionJson);
+    xml eventHubDescriptionXml = <xml> checkpanic xmldata:fromJson(descriptionJson);
     xmllib:Element entry = <xmllib:Element> xml `<entry xmlns='http://www.w3.org/2005/Atom'/>`;
     xmllib:Element content = <xmllib:Element> xml `<content type='application/xml'/>`;
     description.setChildren(eventHubDescriptionXml);

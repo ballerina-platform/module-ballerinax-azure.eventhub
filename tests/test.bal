@@ -18,10 +18,14 @@ import ballerina/test;
 import ballerina/os;
 import ballerina/log;
 
+configurable string sasKeyName = os:getEnv("SAS_KEY_NAME");
+configurable string sasKey = os:getEnv("SAS_KEY");
+configurable string resourceUri = os:getEnv("RESOURCE_URI");
+
 ClientEndpointConfiguration config = {
-    sasKeyName: os:getEnv("SAS_KEY_NAME"),
-    sasKey: os:getEnv("SAS_KEY"),
-    resourceUri: os:getEnv("RESOURCE_URI")
+    sasKeyName: sasKeyName,
+    sasKey: sasKey,
+    resourceUri: resourceUri 
 };
 ManagementClient managementClient = checkpanic new (config);
 PublisherClient publisherClient = checkpanic new (config);
