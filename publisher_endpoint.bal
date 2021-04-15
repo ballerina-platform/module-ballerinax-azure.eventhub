@@ -23,6 +23,7 @@ import ballerina/io;
 # Eventhub publisher client implementation.
 #
 # + config - Client configuration
+@display {label: "Azure Event Hubs Publisher Client", iconPath: "AzureEventHubLogo.png"}
 public client class PublisherClient {
 
     private ClientEndpointConfiguration config;
@@ -45,9 +46,16 @@ public client class PublisherClient {
     # + publisherId - publisher ID 
     # + partitionKey - partition Key
     # + return - @error if remote API is unreachable
-    remote function send(string eventHubPath, string|xml|json|byte[]|mime:Entity[]|stream<byte[], io:Error> data, 
-            map<string> userProperties = {}, map<anydata> brokerProperties = {}, int partitionId = -1, 
-            string publisherId = "", string partitionKey = "") returns @tainted error? {
+    @display {label: "Send an Event"}
+    remote function send(@display {label: "Event hub path"} string eventHubPath, 
+                         @display {label: "Event data"} 
+                         string|xml|json|byte[]|mime:Entity[]|stream<byte[], io:Error> data, 
+                         @display {label: "User properties"} map<string> userProperties = {}, 
+                         @display {label: "Broker properties"} map<anydata> brokerProperties = {}, 
+                         @display {label: "Partition ID"} int partitionId = -1, 
+                         @display {label: "Publisher ID"} string publisherId = "", 
+                         @display {label: "Partition Key"} string partitionKey = "") 
+                         returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
         check req.setContentType(CONTENT_TYPE_SEND);
         foreach var [header, value] in userProperties.entries() {
@@ -91,8 +99,13 @@ public client class PublisherClient {
     # + publisherId - publisher ID
     # + partitionKey - partition Key
     # + return - Eventhub error if unsuccessful
-    remote function sendBatch(string eventHubPath, BatchEvent batchEvent, int partitionId = -1, string publisherId = "", 
-            string partitionKey = "") returns @tainted error? {
+    @display {label: "Send Batch of Events"}
+    remote function sendBatch(@display {label: "Event hub path"} string eventHubPath, 
+                              @display {label: "Batch of events"} BatchEvent batchEvent, 
+                              @display {label: "Partition ID"} int partitionId = -1, 
+                              @display {label: "Publisher ID"} string publisherId = "", 
+                              @display {label: "Partition Key"} string partitionKey = "") 
+                              returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
         check req.setContentType(CONTENT_TYPE_SEND_BATCH);
         if (partitionKey != "") {
@@ -121,7 +134,9 @@ public client class PublisherClient {
     #
     # + eventHubPath - event hub path
     # + return - Return revoke publisher or Error
-    remote function getRevokedPublishers(string eventHubPath) returns @tainted xml|error {
+    @display {label: "Get Revoked Publishers"}
+    remote function getRevokedPublishers(@display {label: "Event hub path"} string eventHubPath) 
+                                         returns @tainted @display {label: "Result"} xml|error {
         http:Request req = getAuthorizedRequest(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath + REVOKED_PUBLISHERS_PATH + self.API_PREFIX;
         http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, req);
@@ -139,7 +154,10 @@ public client class PublisherClient {
     # + eventHubPath - event hub path
     # + publisherName - publisher name 
     # + return - Return revoke publisher details or error
-    remote function revokePublisher(string eventHubPath, string publisherName) returns @tainted xml|error {
+    @display {label: "Revoke a Publisher"}
+    remote function revokePublisher(@display {label: "Event hub path"} string eventHubPath, 
+                                    @display {label: "Publisher name"} string publisherName) 
+                                    returns @tainted @display {label: "Result"} xml|error {
         http:Request req = getAuthorizedRequest(self.config);
         RevokePublisherDescription revokePublisherDescription = {
             Name: publisherName
@@ -163,7 +181,10 @@ public client class PublisherClient {
     # + eventHubPath - event hub path
     # + publisherName - publisher name 
     # + return - Return publisher details or error
-    remote function resumePublisher(string eventHubPath, string publisherName) returns @tainted error? {
+    @display {label: "Resume a Publisher"}
+    remote function resumePublisher(@display {label: "Event hub path"} string eventHubPath, 
+                                    @display {label: "Publisher name"} string publisherName) 
+                                    returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath + REVOKED_PUBLISHER_PATH + publisherName;
         http:Response response = <http:Response> check self.clientEndpoint->delete(requestPath, req);
