@@ -1,8 +1,6 @@
-name: Deployment
+name: CI_pull_request
 
-on:
-  release:
-    types: [published]
+on: [pull_request]
 
 jobs:
   build:
@@ -15,15 +13,8 @@ jobs:
         uses: ballerina-platform/ballerina-action/@master
         with:
           args:
-            build -c --skip-tests
+            build -c
         env: 
           SAS_KEY_NAME: ${{ secrets.SAS_KEY_NAME }}
           SAS_KEY: ${{ secrets.SAS_KEY }}
           RESOURCE_URI: ${{ secrets.RESOURCE_URI }}
-      - name: Ballerina Push
-        uses: ballerina-platform/ballerina-action/@master
-        with:
-          args:
-            push
-        env:
-          BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BALLERINA_CENTRAL_ACCESS_TOKEN }}
