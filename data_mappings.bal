@@ -87,21 +87,11 @@ isolated function mapToEventHubStream(xml xmlPayload) returns stream<EventHub>|e
 isolated function mapXmlToEventHubRecord(xml xmlContent) returns EventHub|error {
     xmlns "http://www.w3.org/2005/Atom";
     EventHub eventHub = {};
-    json idElementEH = check xmldata:toJson(xmlContent/<id>);
-    json idEH = check idElementEH.id.id; 
-    eventHub.id = idEH.toString();
-    json titleElementEH = check xmldata:toJson(xmlContent/<title>);
-    json titleEH = check titleElementEH.title.title; 
-    eventHub.title = titleEH.toString();
-    json publishedElementEH = check xmldata:toJson(xmlContent/<published>);
-    json publishedEH = check publishedElementEH.published.published;
-    eventHub.published = publishedEH.toString();
-    json updatedElementEH = check xmldata:toJson(xmlContent/<updated>);
-    json updatedEH = check updatedElementEH.updated.updated;
-    eventHub.updated = updatedEH.toString();
-    json authorElementEH = check xmldata:toJson(xmlContent/<author>/<name>);
-    json authorEH = check authorElementEH.name.name;
-    eventHub.authorName = authorEH.toString();
+    eventHub.id = (xmlContent/<id>/*).toString();
+    eventHub.title = (xmlContent/<title>/*).toString();
+    eventHub.published = (xmlContent/<published>/*).toString();
+    eventHub.updated = (xmlContent/<updated>/*).toString();
+    eventHub.authorName = (xmlContent/<author>/<name>/*).toString();
     xml content = xmlContent/<content>;
     EventHubDescription eventHubDescription = {};
     eventHubDescription = check mapXmlToEventHubDescriptionRecord(content);
@@ -117,15 +107,10 @@ isolated function mapXmlToEventHubDescriptionRecord(xml xmlContent) returns Even
     xmlns "http://schemas.microsoft.com/netservices/2010/10/servicebus/connect";
     xml description = xmlContent/<EventHubDescription>;
     EventHubDescription eventHubDescription = {};
-    json MessageRetentionInDaysElement = check xmldata:toJson(description/<MessageRetentionInDays>);
-    json MessageRetention = check MessageRetentionInDaysElement.MessageRetentionInDays.MessageRetentionInDays;
-    eventHubDescription.MessageRetentionInDays = check int:fromString(MessageRetention.toString());
-    json StatusElement = check xmldata:toJson(description/<Status>);
-    json Status = check StatusElement.Status.Status;
-    eventHubDescription.Status = Status.toString();
-    json PartitionCountElement = check xmldata:toJson(description/<PartitionCount>);
-    json PartitionCount = check PartitionCountElement.PartitionCount.PartitionCount;
-    eventHubDescription.PartitionCount = check int:fromString(PartitionCount.toString());
+    eventHubDescription.MessageRetentionInDays = 
+        check int:fromString((description/<MessageRetentionInDays>/*).toString());
+    eventHubDescription.Status = (description/<Status>/*).toString();
+    eventHubDescription.PartitionCount = check int:fromString((description/<PartitionCount>/*).toString());
     return eventHubDescription;
 }
 
@@ -136,18 +121,10 @@ isolated function mapXmlToEventHubDescriptionRecord(xml xmlContent) returns Even
 isolated function mapXmlToUpdatedEventHubRecord(xml xmlContent) returns EventHub|error {
     xmlns "http://www.w3.org/2005/Atom";
     EventHub eventHub = {};
-    json idElementEH = check xmldata:toJson(xmlContent/<id>);
-    json idEH = check idElementEH.id.id; 
-    eventHub.id = idEH.toString();
-    json titleElementEH = check xmldata:toJson(xmlContent/<title>);
-    json titleEH = check titleElementEH.title.title; 
-    eventHub.title = titleEH.toString();
-    json updatedElementEH = check xmldata:toJson(xmlContent/<updated>);
-    json updatedEH = check updatedElementEH.updated.updated;
-    eventHub.updated = updatedEH.toString();
-    json authorElementEH = check xmldata:toJson(xmlContent/<author>/<name>);
-    json authorEH = check authorElementEH.name.name;
-    eventHub.authorName = authorEH.toString();
+    eventHub.id = (xmlContent/<id>/*).toString();
+    eventHub.title = (xmlContent/<title>/*).toString();
+    eventHub.updated = (xmlContent/<updated>/*).toString();
+    eventHub.authorName = (xmlContent/<author>/<name>/*).toString();
     xml content = xmlContent/<content>;
     EventHubDescription eventHubDescription = {};
     eventHubDescription = check mapXmlToEventHubDescriptionRecord(content);
@@ -178,15 +155,9 @@ isolated function mapToRevokePublisherStream(xml xmlPayload) returns stream<Revo
 isolated function mapXmlToRevokePublisherRecord(xml xmlContent) returns RevokePublisher|error {
     xmlns "http://www.w3.org/2005/Atom";
     RevokePublisher revokePublisher = {};
-    json idElementEH = check xmldata:toJson(xmlContent/<id>);
-    json idEH = check idElementEH.id.id; 
-    revokePublisher.id = idEH.toString();
-    json titleElementEH = check xmldata:toJson(xmlContent/<title>);
-    json titleEH = check titleElementEH.title.title; 
-    revokePublisher.title = titleEH.toString();
-    json updatedElementEH = check xmldata:toJson(xmlContent/<updated>);
-    json updatedEH = check updatedElementEH.updated.updated;
-    revokePublisher.updated = updatedEH.toString();
+    revokePublisher.id = (xmlContent/<id>/*).toString();
+    revokePublisher.title = (xmlContent/<title>/*).toString();
+    revokePublisher.updated = (xmlContent/<updated>/*).toString();
     xml content = xmlContent/<content>;
     RevokePublisherDescription revokePublisherDescription = {};
     revokePublisherDescription = check mapXmlToRevokePublisherDescriptionRecord(content);
@@ -202,9 +173,7 @@ isolated function mapXmlToRevokePublisherDescriptionRecord(xml xmlContent) retur
     xmlns "http://schemas.microsoft.com/netservices/2010/10/servicebus/connect";
     xml description = xmlContent/<RevokedPublisherDescription>;
     RevokePublisherDescription revokePublisherDescription = {};
-    json NameElement = check xmldata:toJson(description/<Name>);
-    json Name = check NameElement.Name.Name;
-    revokePublisherDescription.Name = Name.toString();
+    revokePublisherDescription.Name = (description/<Name>/*).toString();
     return revokePublisherDescription;
 }
 
@@ -231,18 +200,10 @@ isolated function mapToConsumerGroupStream(xml xmlPayload) returns stream<Consum
 isolated function mapXmlToConsumerGroupRecord(xml xmlContent) returns ConsumerGroup|error {
     xmlns "http://www.w3.org/2005/Atom";
     ConsumerGroup consumerGroup = {};
-    json idElementEH = check xmldata:toJson(xmlContent/<id>);
-    json idEH = check idElementEH.id.id; 
-    consumerGroup.id = idEH.toString();
-    json titleElementEH = check xmldata:toJson(xmlContent/<title>);
-    json titleEH = check titleElementEH.title.title; 
-    consumerGroup.title = titleEH.toString();
-    json publishedElementEH = check xmldata:toJson(xmlContent/<published>);
-    json publishedEH = check publishedElementEH.published.published;
-    consumerGroup.published = publishedEH.toString();
-    json updatedElementEH = check xmldata:toJson(xmlContent/<updated>);
-    json updatedEH = check updatedElementEH.updated.updated;
-    consumerGroup.updated = updatedEH.toString();
+    consumerGroup.id = (xmlContent/<id>/*).toString();
+    consumerGroup.title = (xmlContent/<title>/*).toString();
+    consumerGroup.published = (xmlContent/<published>/*).toString();
+    consumerGroup.updated = (xmlContent/<updated>/*).toString();
     return consumerGroup;
 }
 
@@ -269,18 +230,10 @@ isolated function mapToPartitionStream(xml xmlPayload) returns stream<Partition>
 isolated function mapXmlToPartitionRecord(xml xmlContent) returns Partition|error {
     xmlns "http://www.w3.org/2005/Atom";
     Partition partition = {};
-    json idElementEH = check xmldata:toJson(xmlContent/<id>);
-    json idEH = check idElementEH.id.id; 
-    partition.id = idEH.toString();
-    json titleElementEH = check xmldata:toJson(xmlContent/<title>);
-    json titleEH = check titleElementEH.title.title; 
-    partition.title = titleEH.toString();
-    json publishedElementEH = check xmldata:toJson(xmlContent/<published>);
-    json publishedEH = check publishedElementEH.published.published;
-    partition.published = publishedEH.toString();
-    json updatedElementEH = check xmldata:toJson(xmlContent/<updated>);
-    json updatedEH = check updatedElementEH.updated.updated;
-    partition.updated = updatedEH.toString();
+    partition.id = (xmlContent/<id>/*).toString();
+    partition.title = (xmlContent/<title>/*).toString();
+    partition.published = (xmlContent/<published>/*).toString();
+    partition.updated = (xmlContent/<updated>/*).toString();
     xml content = xmlContent/<content>;
     PartitionDescription partitionDescription = {};
     partitionDescription = check mapXmlToPartitionDescriptionRecord(content);
@@ -296,20 +249,12 @@ isolated function mapXmlToPartitionDescriptionRecord(xml xmlContent) returns Par
     xmlns "http://schemas.microsoft.com/netservices/2010/10/servicebus/connect";
     xml description = xmlContent/<PartitionDescription>;
     PartitionDescription partitionDescription = {};
-    json SizeInBytesElement = check xmldata:toJson(description/<SizeInBytes>);
-    json SizeInBytes = check SizeInBytesElement.SizeInBytes.SizeInBytes;
-    partitionDescription.SizeInBytes = check int:fromString(SizeInBytes.toString());
-    json BeginSequenceNumberElement = check xmldata:toJson(description/<BeginSequenceNumber>);
-    json BeginSequenceNumber = check BeginSequenceNumberElement.BeginSequenceNumber.BeginSequenceNumber;
-    partitionDescription.BeginSequenceNumber = check int:fromString(BeginSequenceNumber.toString());
-    json EndSequenceNumberElement = check xmldata:toJson(description/<EndSequenceNumber>);
-    json EndSequenceNumber = check EndSequenceNumberElement.EndSequenceNumber.EndSequenceNumber;
-    partitionDescription.EndSequenceNumber = check int:fromString(EndSequenceNumber.toString());
-    json IncomingBytesPerSecondElement = check xmldata:toJson(description/<IncomingBytesPerSecond>);
-    json IncomingBytesPerSecond = check IncomingBytesPerSecondElement.IncomingBytesPerSecond.IncomingBytesPerSecond;
-    partitionDescription.IncomingBytesPerSecond = check int:fromString(IncomingBytesPerSecond.toString());
-    json OutgoingBytesPerSecondElement = check xmldata:toJson(description/<OutgoingBytesPerSecond>);
-    json OutgoingBytesPerSecond = check OutgoingBytesPerSecondElement.OutgoingBytesPerSecond.OutgoingBytesPerSecond;
-    partitionDescription.OutgoingBytesPerSecond = check int:fromString(OutgoingBytesPerSecond.toString());
+    partitionDescription.SizeInBytes = check int:fromString((description/<SizeInBytes>/*).toString());
+    partitionDescription.BeginSequenceNumber = check int:fromString((description/<BeginSequenceNumber>/*).toString());
+    partitionDescription.EndSequenceNumber = check int:fromString((description/<EndSequenceNumber>/*).toString());
+    partitionDescription.IncomingBytesPerSecond = 
+        check int:fromString((description/<IncomingBytesPerSecond>/*).toString());
+    partitionDescription.OutgoingBytesPerSecond = 
+        check int:fromString((description/<OutgoingBytesPerSecond>/*).toString());
     return partitionDescription;
 }
