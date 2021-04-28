@@ -27,8 +27,9 @@ ClientEndpointConfiguration config = {
     sasKey: sasKey,
     resourceUri: resourceUri 
 };
-ManagementClient managementClient = checkpanic new (config);
-PublisherClient publisherClient = checkpanic new (config);
+
+Client managementClient = checkpanic new (config);
+Client publisherClient = checkpanic new (config);
 
 var randomString = createRandomUUIDWithoutHyphens();
 
@@ -43,8 +44,8 @@ function beforeSuiteFunc() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
+    test:assertTrue(result is EventHub);
+    if (result is EventHub) {
         log:printInfo(result.toString());
     }
 }
@@ -181,8 +182,8 @@ function testCreateEventHub() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
+    test:assertTrue(result is EventHub);
+    if (result is EventHub) {
         log:printInfo(result.toString());
     }
 }
@@ -197,8 +198,8 @@ function testGetEventHub() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
+    test:assertTrue(result is EventHub);
+    if (result is EventHub) {
         log:printInfo(result.toString());
     }
 }
@@ -216,8 +217,8 @@ function testUpdateEventHub() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
+    test:assertTrue(result is EventHub);
+    if (result is EventHub) {
         log:printInfo(result.toString());
     }
 }
@@ -233,10 +234,12 @@ function testListEventHubs() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
+    test:assertTrue(result is stream<EventHub>);
+    if (result is stream<EventHub>) {
         log:printInfo("listReceived");
-        log:printInfo(result.toString());
+        _ = result.forEach(isolated function (EventHub eventHub) {
+                log:printInfo(eventHub.toString());
+            });
     }
 }
 
@@ -272,8 +275,8 @@ function testCreateEventHubWithEventHubDescription() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
+    test:assertTrue(result is EventHub);
+    if (result is EventHub) {
         log:printInfo(result.toString());
     }
 }
@@ -323,8 +326,8 @@ function testRevokePublisher() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
+    test:assertTrue(result is RevokePublisher);
+    if (result is RevokePublisher) {
         log:printInfo(result.toString());
     }
 }
@@ -354,10 +357,12 @@ function testGetRevokedPublishers() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
+    test:assertTrue(result is stream<RevokePublisher>);
+    if (result is stream<RevokePublisher>) {
         log:printInfo("listReceived");
-        log:printInfo(result.toString());
+        _ = result.forEach(isolated function (RevokePublisher revokePublisher) {
+                log:printInfo(revokePublisher.toString());
+            });
     }
 }
 
@@ -389,8 +394,8 @@ function testCreateConsumerGroup() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
+    test:assertTrue(result is ConsumerGroup);
+    if (result is ConsumerGroup) {
         log:printInfo(result.toString());
     }
 }
@@ -405,8 +410,8 @@ function testGetConsumerGroup() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
+    test:assertTrue(result is ConsumerGroup);
+    if (result is ConsumerGroup) {
         log:printInfo(result.toString());
     }
 }
@@ -421,10 +426,12 @@ function testListConsumerGroups() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
+    test:assertTrue(result is stream<ConsumerGroup>);
+    if (result is stream<ConsumerGroup>) {
         log:printInfo("successful");
-        log:printInfo(result.toString());
+        _ = result.forEach(isolated function (ConsumerGroup consumerGroup) {
+                log:printInfo(consumerGroup.toString());
+            });
     }
 }
 
@@ -438,10 +445,12 @@ function testListPartitions() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
+    test:assertTrue(result is stream<Partition>);
+    if (result is stream<Partition>) {
         log:printInfo("successful");
-        log:printInfo(result.toString());
+        _ = result.forEach(isolated function (Partition partition) {
+                log:printInfo(partition.toString());
+            });
     }
 }
 
@@ -455,8 +464,8 @@ function testGetPartition() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
+    test:assertTrue(result is Partition);
+    if (result is Partition) {
         log:printInfo(result.toString());
     }
 }
