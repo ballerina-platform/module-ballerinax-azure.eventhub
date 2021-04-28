@@ -31,7 +31,7 @@ public type ClientEndpointConfiguration record {|
     boolean enableRetry = true;
 |};
 
-# Batch Message Record
+# Batch Message Record.
 #
 # + data - event data 
 # + brokerProperties - brokerProperties 
@@ -42,14 +42,14 @@ public type BatchMessage record {|
     map<json> userProperties?;
 |};
 
-# Batch Event Record
+# Batch Event Record.
 #
 # + events - set of BatchMessages
 public type BatchEvent record {|
     BatchMessage[] events;
 |};
 
-# EventHub Description Record
+# EventHub Description Record.
 #
 # + MessageRetentionInDays - retention time of the event data
 # + Authorization - authorization rules
@@ -64,26 +64,101 @@ public type EventHubDescription record {|
     int PartitionCount?;
 |};
 
-# EventHub Description to Update Record
+# EventHub Description to Update Record.
 #
 # + MessageRetentionInDays - event data
 public type EventHubDescriptionToUpdate record {|
     int MessageRetentionInDays;
 |};
 
-# Consumer group Description Record
+# Consumer group Description Record.
 #
 # + userMetadata - user metadata
 public type ConsumerGroupDescription record {|
     string userMetadata?;
 |};
 
-# RevokePublisher Description Record
+# RevokePublisher Description Record.
 #
 # + Name - The name of the revoked publisher
 public type RevokePublisherDescription record {|
     string Name?;
 |};
+
+# Partition Description representation.
+#
+# + SizeInBytes - Size in bytes 
+# + BeginSequenceNumber - Begin sequence number
+# + EndSequenceNumber - End sequence number
+# + IncomingBytesPerSecond - Incoming bytes per second 
+# + OutgoingBytesPerSecond - Outgoing bytes per second
+public type PartitionDescription record {
+    int SizeInBytes?;
+    int BeginSequenceNumber?;
+    int EndSequenceNumber?;
+    int IncomingBytesPerSecond?;
+    int OutgoingBytesPerSecond?;
+};
+
+# Even Hub representation.
+#
+# + id - Identifier of the event hub  
+# + title - Name of the event hub 
+# + published - Published time  
+# + updated - Updated time 
+# + authorName - Name of the author(name of the namespace)
+# + eventHubDescription - Even Hub description representation 
+public type EventHub record {
+    string id?;
+    string title?;
+    string published?;
+    string updated?;
+    string authorName?;
+    EventHubDescription eventHubDescription?;
+};
+
+# Consumer Group representation.
+#
+# + id - Identifier of the consumer group 
+# + title - Name of the consumer group
+# + published - Published time
+# + updated - Updated time
+# + consumerGroupDescription - Consumer Group description representation 
+public type ConsumerGroup record {
+    string id?;
+    string title?;
+    string published?;
+    string updated?;
+    ConsumerGroupDescription consumerGroupDescription?;
+};
+
+# Revoked Publisher representation.
+#
+# + id - Identifier of the revoked publisher  
+# + title - Name of the revoked publisher
+# + updated - Updated time
+# + revokePublisherDescription - Revoked Publisher description representation 
+public type RevokePublisher record {
+    string id?;
+    string title?;
+    string updated?;
+    RevokePublisherDescription revokePublisherDescription?;
+};
+
+# Partition representation.
+#
+# + id - Identifier of the partition 
+# + title - Title of the partition
+# + published - Published time
+# + updated - Updated time
+# + partitionDescription - Partition description representation
+public type Partition record {
+    string id?;
+    string title?;
+    string published?;
+    string updated?;
+    PartitionDescription partitionDescription?;
+};
 
 # Represents the Eventhub error type.
 public type Error distinct error;
