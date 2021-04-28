@@ -27,7 +27,7 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
     
     var result = publisherClient->send("myeventhub", "eventData");
     if (result is error) {
@@ -63,7 +63,7 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
     map<string> brokerProps = {"CorrelationId": "32119834", "CorrelationId2": "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
@@ -105,7 +105,7 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
     map<string> brokerProps = {PartitionKey: "groupName1", CorrelationId: "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
@@ -146,7 +146,7 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
@@ -188,7 +188,7 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
@@ -239,7 +239,7 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
     map<string> brokerProps = {PartitionKey: "groupName", CorrelationId: "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
@@ -292,7 +292,7 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
@@ -342,15 +342,19 @@ public function main() {
     azure_eventhub:ClientEndpointConfiguration config = {
         sasKeyName: sasKeyName,
         sasKey: sasKey,
-        resourceUri: resourceUri
+        resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
-    var result = managementClient->createEventHub("myhub");
+    azure_eventhub:EventHubDescription eventHubDescription = {
+        MessageRetentionInDays: 3,
+        PartitionCount: 8
+    };
+    var result = managementClient->createEventHub("myhubnew", eventHubDescription);
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
+    if (result is azure_eventhub:EventHub) {
         log:printInfo(result.toString());
         log:printInfo("Successful!");
     }
@@ -380,13 +384,13 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     var result = managementClient->getEventHub("myhub");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
+    if (result is azure_eventhub:EventHub) {
         log:printInfo(result.toString());
         log:printInfo("Successful!");
     }
@@ -416,7 +420,7 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     azure_eventhub:EventHubDescriptionToUpdate eventHubDescriptionToUpdate = {
         MessageRetentionInDays: 5
@@ -425,7 +429,7 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
+    if (result is azure_eventhub:EventHub) {
         log:printInfo(result.toString());
         log:printInfo("Successful!");
     }
@@ -455,14 +459,16 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     var result = managementClient->listEventHubs();
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
-        log:printInfo(result.toString());
+    if (result is stream<azure_eventhub:EventHub>) {
+        _ = result.forEach(isolated function (azure_eventhub:EventHub eventHub) {
+                log:printInfo(eventHub.toString());
+            });
         log:printInfo("listReceived");
     }
 }
@@ -490,7 +496,7 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient= checkpanic new (config);
+    azure_eventhub:Client managementClient= checkpanic new (config);
 
     var result = managementClient->deleteEventHub("myhub");
     if (result is error) {
@@ -524,13 +530,13 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     var result = managementClient->createConsumerGroup("myeventhub", "consumerGroup1");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
+    if (result is azure_eventhub:ConsumerGroup) {
         log:printInfo(result.toString());
         log:printInfo("successful");
     }
@@ -564,13 +570,13 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     var result = managementClient->getConsumerGroup("myeventhub", "consumerGroup1");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
+    if (result is azure_eventhub:ConsumerGroup) {
         log:printInfo(result.toString());
         log:printInfo("successful");
     }
@@ -604,14 +610,16 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     var result = managementClient->listConsumerGroups("myeventhub");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
-        log:printInfo(result.toString());
+    if (result is stream<azure_eventhub:ConsumerGroup>) {
+        _ = result.forEach(isolated function (azure_eventhub:ConsumerGroup consumerGroup) {
+                log:printInfo(consumerGroup.toString());
+            });
         log:printInfo("successful");
     }
 }
@@ -641,14 +649,16 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     var result = managementClient->listPartitions("myeventhub", "consumerGroup1");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
-        log:printInfo(result.toString());
+    if (result is stream<azure_eventhub:Partition>) {
+        _ = result.forEach(isolated function (azure_eventhub:Partition partition) {
+                log:printInfo(partition.toString());
+            });
         log:printInfo("successful");
     }
 }
@@ -678,13 +688,13 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     var result = managementClient->getPartition("myeventhub", "consumerGroup1", 1);
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
+    if (result is azure_eventhub:Partition) {
         log:printInfo(result.toString());
         log:printInfo("successful");
     }
@@ -718,7 +728,7 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     var result = managementClient->deleteConsumerGroup("myeventhub","consumerGroup1");
     if (result is error) {
@@ -757,15 +767,17 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
     var result = publisherClient->getRevokedPublishers("myeventhub");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
+    if (result is stream<azure_eventhub:RevokePublisher>) {
         log:printInfo("listReceived");
-        log:printInfo(result.toString());
+        _ = result.forEach(isolated function (azure_eventhub:RevokePublisher revokePublisher) {
+                log:printInfo(revokePublisher.toString());
+            });
         log:printInfo("Successful!");
     }
 }
@@ -792,13 +804,13 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
     var result = publisherClient->revokePublisher("myeventhub", "device-1");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
+    if (result is azure_eventhub:RevokePublisher) {
         log:printInfo(result.toString());
         log:printInfo("Successful!");
     }
@@ -826,7 +838,7 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
     var result = publisherClient->resumePublisher("myeventhub", "device-1");
     if (result is error) {
