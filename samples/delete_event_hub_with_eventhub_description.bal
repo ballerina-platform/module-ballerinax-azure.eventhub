@@ -27,7 +27,7 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     var result = managementClient->deleteEventHub("myhubnew");
     if (result is error) {

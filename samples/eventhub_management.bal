@@ -27,14 +27,14 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     // ------------------------------------ Event Hub Creation-----------------------------------------------
     var createResult = managementClient->createEventHub("mytesthub");
     if (createResult is error) {
         log:printError(createResult.message());
     }
-    if (createResult is xml) {
+    if (createResult is azure_eventhub:EventHub) {
         log:printInfo(createResult.toString());
         log:printInfo("Successfully Created Event Hub!");
     }
@@ -44,7 +44,7 @@ public function main() {
     if (getEventHubResult is error) {
         log:printError(getEventHubResult.message());
     }
-    if (getEventHubResult is xml) {
+    if (getEventHubResult is azure_eventhub:EventHub) {
         log:printInfo(getEventHubResult.toString());
         log:printInfo("Successfully Get Event Hub!");
     } 
@@ -57,7 +57,7 @@ public function main() {
     if (updateResult is error) {
         log:printError(updateResult.message());
     }
-    if (updateResult is xml) {
+    if (updateResult is azure_eventhub:EventHub) {
         log:printInfo(updateResult.toString());
         log:printInfo("Successfully Updated Event Hub!");
     }
@@ -67,8 +67,10 @@ public function main() {
     if (listResult is error) {
         log:printError(listResult.message());
     }
-    if (listResult is xml) {
-        log:printInfo(listResult.toString());
+    if (listResult is stream<azure_eventhub:EventHub>) {
+        _ = listResult.forEach(isolated function (azure_eventhub:EventHub eventHub) {
+                log:printInfo(eventHub.toString());
+            });
         log:printInfo("Successfully Listed Event Hubs!");
     }
 

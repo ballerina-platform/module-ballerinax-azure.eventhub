@@ -27,8 +27,8 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
     // ------------------------------------ Event Hub Creation-----------------------------------------------
     azure_eventhub:EventHubDescription eventHubDescription = {
@@ -39,7 +39,7 @@ public function main() {
     if (createResult is error) {
         log:printError(createResult.message());
     }
-    if (createResult is xml) {
+    if (createResult is azure_eventhub:EventHub) {
         log:printInfo(createResult.toString());
         log:printInfo("Successfully Created Event Hub!");
     }

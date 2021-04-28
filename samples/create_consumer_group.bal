@@ -27,13 +27,13 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     var result = managementClient->createConsumerGroup("myeventhub", "consumerGroup1");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
+    if (result is azure_eventhub:ConsumerGroup) {
         log:printInfo(result.toString());
         log:printInfo("successful");
     }
