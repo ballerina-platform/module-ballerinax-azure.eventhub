@@ -27,15 +27,17 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
     var result = publisherClient->getRevokedPublishers("myeventhub");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
-        log:print("listReceived");
-        log:print(result.toString());
-        log:print("Successful!");
+    if (result is stream<azure_eventhub:RevokePublisher>) {
+        log:printInfo("listReceived");
+        _ = result.forEach(isolated function (azure_eventhub:RevokePublisher revokePublisher) {
+                log:printInfo(revokePublisher.toString());
+            });
+        log:printInfo("Successful!");
     }
 }

@@ -18,13 +18,18 @@ import ballerina/test;
 import ballerina/os;
 import ballerina/log;
 
+configurable string sasKeyName = os:getEnv("SAS_KEY_NAME");
+configurable string sasKey = os:getEnv("SAS_KEY");
+configurable string resourceUri = os:getEnv("RESOURCE_URI");
+
 ClientEndpointConfiguration config = {
-    sasKeyName: os:getEnv("SAS_KEY_NAME"),
-    sasKey: os:getEnv("SAS_KEY"),
-    resourceUri: os:getEnv("RESOURCE_URI")
+    sasKeyName: sasKeyName,
+    sasKey: sasKey,
+    resourceUri: resourceUri 
 };
-ManagementClient managementClient = checkpanic new (config);
-PublisherClient publisherClient = checkpanic new (config);
+
+Client managementClient = checkpanic new (config);
+Client publisherClient = checkpanic new (config);
 
 var randomString = createRandomUUIDWithoutHyphens();
 
@@ -39,9 +44,9 @@ function beforeSuiteFunc() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
-        log:print(result.toString());
+    test:assertTrue(result is EventHub);
+    if (result is EventHub) {
+        log:printInfo(result.toString());
     }
 }
 
@@ -169,28 +174,6 @@ function testSendBatchEventToPartition() {
 }
 
 @test:Config {
-    groups: ["publisher"],
-    enable: true
-}
-function testSendBatchEventWithPublisherID() {
-    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
-    map<string> userProps = {Alert: "windy", warning: "true"};
-
-    BatchEvent batchEvent = {
-        events: [
-            {data: "Message1"},
-            {data: "Message2", brokerProperties: brokerProps},
-            {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
-        ]
-    };
-    var result = publisherClient->sendBatch(event_hub_name1, batchEvent, publisherId = "device-1");
-    if (result is error) {
-        test:assertFail(msg = result.message());
-    }
-    test:assertTrue(result is ());
-}
-
-@test:Config {
     groups: ["eventHubManagment"],
     enable: true
 }
@@ -199,9 +182,9 @@ function testCreateEventHub() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
-        log:print(result.toString());
+    test:assertTrue(result is EventHub);
+    if (result is EventHub) {
+        log:printInfo(result.toString());
     }
 }
 
@@ -215,9 +198,9 @@ function testGetEventHub() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
-        log:print(result.toString());
+    test:assertTrue(result is EventHub);
+    if (result is EventHub) {
+        log:printInfo(result.toString());
     }
 }
 
@@ -234,9 +217,9 @@ function testUpdateEventHub() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
-        log:print(result.toString());
+    test:assertTrue(result is EventHub);
+    if (result is EventHub) {
+        log:printInfo(result.toString());
     }
 }
 
@@ -251,10 +234,12 @@ function testListEventHubs() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
-        log:print("listReceived");
-        log:print(result.toString());
+    test:assertTrue(result is stream<EventHub>);
+    if (result is stream<EventHub>) {
+        log:printInfo("listReceived");
+        _ = result.forEach(isolated function (EventHub eventHub) {
+                log:printInfo(eventHub.toString());
+            });
     }
 }
 
@@ -290,9 +275,9 @@ function testCreateEventHubWithEventHubDescription() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
-        log:print(result.toString());
+    test:assertTrue(result is EventHub);
+    if (result is EventHub) {
+        log:printInfo(result.toString());
     }
 }
 
@@ -313,14 +298,37 @@ function testDeleteEventHubWithEventHubDescription() {
     groups: ["publisher"],
     enable: true
 }
+function testSendBatchEventWithPublisherID() {
+    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
+    map<string> userProps = {Alert: "windy", warning: "true"};
+
+    BatchEvent batchEvent = {
+        events: [
+            {data: "Message1"},
+            {data: "Message2", brokerProperties: brokerProps},
+            {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
+        ]
+    };
+    var result = publisherClient->sendBatch(event_hub_name1, batchEvent, publisherId = "device-1");
+    if (result is error) {
+        test:assertFail(msg = result.message());
+    }
+    test:assertTrue(result is ());
+}
+
+@test:Config {
+    groups: ["publisher"],
+    dependsOn: [testSendBatchEventWithPublisherID],
+    enable: true
+}
 function testRevokePublisher() {
     var result = publisherClient->revokePublisher(event_hub_name1, "device-1");
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
-        log:print(result.toString());
+    test:assertTrue(result is RevokePublisher);
+    if (result is RevokePublisher) {
+        log:printInfo(result.toString());
     }
 }
 
@@ -349,10 +357,12 @@ function testGetRevokedPublishers() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
-        log:print("listReceived");
-        log:print(result.toString());
+    test:assertTrue(result is stream<RevokePublisher>);
+    if (result is stream<RevokePublisher>) {
+        log:printInfo("listReceived");
+        _ = result.forEach(isolated function (RevokePublisher revokePublisher) {
+                log:printInfo(revokePublisher.toString());
+            });
     }
 }
 
@@ -371,7 +381,7 @@ function testResumePublisher() {
     }
     test:assertTrue(result is ());
     if (result is ()) {
-        log:print("successful");
+        log:printInfo("successful");
     }
 }
 
@@ -384,9 +394,9 @@ function testCreateConsumerGroup() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
-        log:print(result.toString());
+    test:assertTrue(result is ConsumerGroup);
+    if (result is ConsumerGroup) {
+        log:printInfo(result.toString());
     }
 }
 
@@ -400,9 +410,9 @@ function testGetConsumerGroup() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
-        log:print(result.toString());
+    test:assertTrue(result is ConsumerGroup);
+    if (result is ConsumerGroup) {
+        log:printInfo(result.toString());
     }
 }
 
@@ -416,10 +426,12 @@ function testListConsumerGroups() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
-        log:print("successful");
-        log:print(result.toString());
+    test:assertTrue(result is stream<ConsumerGroup>);
+    if (result is stream<ConsumerGroup>) {
+        log:printInfo("successful");
+        _ = result.forEach(isolated function (ConsumerGroup consumerGroup) {
+                log:printInfo(consumerGroup.toString());
+            });
     }
 }
 
@@ -433,10 +445,12 @@ function testListPartitions() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
-        log:print("successful");
-        log:print(result.toString());
+    test:assertTrue(result is stream<Partition>);
+    if (result is stream<Partition>) {
+        log:printInfo("successful");
+        _ = result.forEach(isolated function (Partition partition) {
+                log:printInfo(partition.toString());
+            });
     }
 }
 
@@ -450,9 +464,9 @@ function testGetPartition() {
     if (result is error) {
         test:assertFail(msg = result.message());
     }
-    test:assertTrue(result is xml);
-    if (result is xml) {
-        log:print(result.toString());
+    test:assertTrue(result is Partition);
+    if (result is Partition) {
+        log:printInfo(result.toString());
     }
 }
 
@@ -474,7 +488,7 @@ function testDeleteConsumerGroups() {
     }
     test:assertTrue(result is ());
     if (result is ()) {
-        log:print("successful");
+        log:printInfo("successful");
     }
 }
 

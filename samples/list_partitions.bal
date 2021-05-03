@@ -27,14 +27,16 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     var result = managementClient->listPartitions("myeventhub", "consumerGroup1");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
-        log:print(result.toString());
-        log:print("successful");
+    if (result is stream<azure_eventhub:Partition>) {
+        _ = result.forEach(isolated function (azure_eventhub:Partition partition) {
+                log:printInfo(partition.toString());
+            });
+        log:printInfo("successful");
     }
 }

@@ -27,14 +27,14 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
     var result = publisherClient->revokePublisher("myeventhub", "device-1");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
-        log:print(result.toString());
-        log:print("Successful!");
+    if (result is azure_eventhub:RevokePublisher) {
+        log:printInfo(result.toString());
+        log:printInfo("Successful!");
     }
 }

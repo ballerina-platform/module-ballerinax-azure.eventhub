@@ -27,7 +27,7 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
@@ -43,6 +43,6 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }

@@ -27,7 +27,7 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     azure_eventhub:EventHubDescriptionToUpdate eventHubDescriptionToUpdate = {
         MessageRetentionInDays: 5
@@ -36,8 +36,8 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
-        log:print(result.toString());
-        log:print("Successful!");
+    if (result is azure_eventhub:EventHub) {
+        log:printInfo(result.toString());
+        log:printInfo("Successful!");
     }
 }

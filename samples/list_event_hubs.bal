@@ -27,14 +27,16 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     var result = managementClient->listEventHubs();
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
-        log:print(result.toString());
-        log:print("listReceived");
+    if (result is stream<azure_eventhub:EventHub>) {
+        _ = result.forEach(isolated function (azure_eventhub:EventHub eventHub) {
+                log:printInfo(eventHub.toString());
+            });
+        log:printInfo("listReceived");
     }
 }

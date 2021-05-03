@@ -70,8 +70,8 @@ The REST APIs fall into the following categories:
 * Java 11 Installed
 Java Development Kit (JDK) with version 11 is required.
 
-* Ballerina SLAlpha2 Installed
-Ballerina Swan Lake Alpha 2 is required. 
+* Ballerina SLAlpha4 Installed
+Ballerina Swan Lake Alpha 4 is required. 
 
 * Connection String of the Event Hub Namespace
 We need management credentials to communicate with the Event Hubs. These credentials are available in the connection 
@@ -93,7 +93,7 @@ from the connection string.
 |                                   | Version               |
 |:---------------------------------:|:---------------------:|
 | Azure Event Hubs REST API Version | 2014-12               |
-| Ballerina Language                | Swan-Lake-Alpha2      |
+| Ballerina Language                | Swan-Lake-Alpha4      |
 | Java Development Kit (JDK)        | 11                    |
 
 ## Limitations
@@ -145,7 +145,7 @@ URI to the event hub namespace.
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 ```
 Note:
 You must specify the SAS key name, SAS key and the resource URI when configuring the Azure Event Hub Client connector.
@@ -167,7 +167,7 @@ the partition key “groupName”.
     if (sendResult is error) {
             log:printError(sendResult.message());
     } else {
-            log:print("Successfully Send Event to Event Hub!");
+            log:printInfo("Successfully Send Event to Event Hub!");
     }
 ```
 Note:
@@ -216,7 +216,7 @@ to the event hub namespace.
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 ```
 Note:
 You must specify the SAS key name, SAS key and the resource URI when configuring the Azure Event Hub Client connector.
@@ -229,9 +229,9 @@ named “mytesthub”.
     if (createResult is error) {
         log:printError(createResult.message());
     }
-    if (createResult is xml) {
-        log:print(createResult.toString());
-        log:print("Successfully Created Event Hub!");
+    if (createResult is azure_eventhub:EventHub) {
+        log:printInfo(createResult.toString());
+        log:printInfo("Successfully Created Event Hub!");
     }
 
 ```
@@ -248,9 +248,9 @@ Here we are getting all the metadata associated with the event hub named “myte
     if (getEventHubResult is error) {
         log:printError(getEventHubResult.message());
     }
-    if (getEventHubResult is xml) {
-        log:print(getEventHubResult.toString());
-        log:print("Successfully Get Event Hub!");
+    if (getEventHubResult is azure_eventhub:EventHub) {
+        log:printInfo(getEventHubResult.toString());
+        log:printInfo("Successfully Get Event Hub!");
     }
 ```
 Note:
@@ -269,9 +269,9 @@ hub named “mytesthub”.
     if (updateResult is error) {
         log:printError(updateResult.message());
     }
-    if (updateResult is xml) {       
-        log:print(updateResult.toString());
-        log:print("Successfully Updated Event Hub!");
+    if (updateResult is azure_eventhub:EventHub) {       
+        log:printInfo(updateResult.toString());
+        log:printInfo("Successfully Updated Event Hub!");
     }
 ```
 Note:
@@ -287,9 +287,11 @@ in the namespace. Here we are getting all the metadata associated with the event
     if (listResult is error) {
         log:printError(listResult.message());
     }
-    if (listResult is xml) {
-        log:print(listResult.toString());
-        log:print("Successfully Listed Event Hubs!");
+    if (listResult is stream<azure_eventhub:EventHub>) {
+        _ = listResult.forEach(isolated function (azure_eventhub:EventHub eventHub) {
+                log:printInfo(eventHub.toString());
+            });
+        log:printInfo("Successfully Listed Event Hubs!");
     }
 ```
 Note:
@@ -303,7 +305,7 @@ an event hub named “mytesthub”.
     if (deleteResult is error) {
         log:printError(msg = deleteResult.message());
     } else {
-        log:print("Successfully Deleted Event Hub!");
+        log:printInfo("Successfully Deleted Event Hub!");
     }
 ```
 Note:
@@ -316,7 +318,7 @@ This operation will return a ballerina error if the operation failed.
 The Event Hub Ballerina Connector enables you to access the Event Hubs service to perform operations on event hubs. 
 They have <namespaceName>.servicebus.windows.net/ in the request URI.
 
-### Send Event
+1. Send Event
 This section shows how to use the ballerina connector to send events to an event hub. We must specify the event hub path 
 and the event data in string/xml/json/byte[] array etc. formats as parameters to the send operation. This is the basic 
 scenario of sending an event with string data “eventData” to the event hub path named “myhub”. It returns an eventhub 
@@ -339,18 +341,18 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
     
     var result = publisherClient->send("myeventhub", "eventData");
     if (result is error) {
         log:printError(msg = result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
 
-### Send an event with broker properties and user properties
+2. Send an event with broker properties and user properties
 This section shows how to use the ballerina connector to send events to an event hub with specified broker properties 
 and user properties. We must specify the event hub path and the event data in string/xml/json/byte[] array etc. 
 formats as parameters to the send operation. Additionally we can specify user properties and broker properties as a map 
@@ -375,7 +377,7 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
     map<string> brokerProps = {"CorrelationId": "32119834", "CorrelationId2": "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
@@ -384,12 +386,12 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
 
-### Send event with partition key
+3. Send event with partition key
 This section shows how to use the ballerina connector to send events to an event hub with broker properties, 
 user properties and specified partition ID. We must specify the event hub path and the event data in 
 string/xml/json/byte[] array etc. formats as parameters to the send operation. Additionally we can specify user 
@@ -417,7 +419,7 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
     map<string> brokerProps = {PartitionKey: "groupName1", CorrelationId: "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
@@ -427,12 +429,12 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
 
-### Send partition event
+4. Send partition event
 This section shows how to use the ballerina connector to send events to an event hub with broker properties, 
 user properties and specified partition ID. We must specify the event hub path and the event data in 
 string/xml/json/byte[] array etc. formats as parameters to the send operation. Additionally we can specify user 
@@ -458,7 +460,7 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
@@ -467,7 +469,7 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -475,7 +477,7 @@ Note:
 You can specify the event hub path and the event data as parameters of the send method.
 This operation will return a ballerina error if the operation failed.
 
-### Send batch events
+5. Send batch events
 This section shows how to use the ballerina connector to send batch events to an event hub. We must specify the event 
 hub path and the event data in string/xml/json/byte[] array etc. formats as parameters to the send operation. 
 Additionally we can specify user properties and broker properties as a map which is optional. Events are specified as 
@@ -500,7 +502,7 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
@@ -516,7 +518,7 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -525,7 +527,7 @@ You can specify the event hub path, the batch event of record type BatchEvent an
 send method.
 This operation will return a ballerina error if the operation failed.
 
-### Send batch event with partition key
+6. Send batch event with partition key
 This section shows how to use the ballerina connector to send batch events to an event hub with broker properties, 
 user properties and specified partition key. We must specify the event hub path and the event data in 
 string/xml/json/byte[] array etc. formats as parameters to the send operation. Additionally we can specify user 
@@ -551,7 +553,7 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
     map<string> brokerProps = {PartitionKey: "groupName", CorrelationId: "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
@@ -567,7 +569,7 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -577,7 +579,7 @@ send method.
 This operation will return a ballerina error if the operation failed.
 
 
-### Send batch event with publisher ID
+7. Send batch event with publisher ID
 This section shows how to use the ballerina connector to send batch events to an event hub with broker properties, 
 user properties and specified publisher ID. We must specify the event hub path and the event data in 
 string/xml/json/byte[] array etc. formats as parameters to the send operation. Additionally we can specify user 
@@ -604,7 +606,7 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
@@ -620,7 +622,7 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
@@ -633,7 +635,7 @@ This operation will return a ballerina error if the operation failed.
 
 The Event Hub Ballerina Connector enables you to perform management operations on Event Hubs.
 
-### Create a new event hub
+1. Create a new event hub
 This section shows how to use the ballerina connector to create a new event hub. We must specify the event hub name as 
 a parameter to create a new event hub. This is the basic scenario of creating an event hub named “myhub”. It returns 
 an eventhub error if the operation is unsuccessful.
@@ -642,6 +644,7 @@ Sample is available at:
 https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/samples/create_event_hub.bal
 
 ```ballerina
+ 
 import ballerinax/azure_eventhub;
 import ballerina/log;
 
@@ -653,22 +656,26 @@ public function main() {
     azure_eventhub:ClientEndpointConfiguration config = {
         sasKeyName: sasKeyName,
         sasKey: sasKey,
-        resourceUri: resourceUri
+        resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
-    var result = managementClient->createEventHub("myhub");
+    azure_eventhub:EventHubDescription eventHubDescription = {
+        MessageRetentionInDays: 3,
+        PartitionCount: 8
+    };
+    var result = managementClient->createEventHub("myhubnew", eventHubDescription);
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
-        log:print(result.toString());
-        log:print("Successful!");
+    if (result is azure_eventhub:EventHub) {
+        log:printInfo(result.toString());
+        log:printInfo("Successful!");
     }
 }
 ```
 
-### Get an event hub
+2. Get an event hub
 This section shows how to use the ballerina connector to get all the metadata associated with the specified event hub. 
 We must specify the event hub name as a parameter to get all the metadata associated with the specified event hub. 
 This is the basic scenario of getting all the metadata associated with the event hub named “myhub”. It returns 
@@ -691,20 +698,20 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     var result = managementClient->getEventHub("myhub");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
-        log:print(result.toString());
-        log:print("Successful!");
+    if (result is azure_eventhub:EventHub) {
+        log:printInfo(result.toString());
+        log:printInfo("Successful!");
     }
 }
 ```
 
-### Update an event hub
+3. Update an event hub
 This section shows how to use the ballerina connector to update the properties of an event hub. We must specify the 
 event hub name as a parameter and EventHubDecsriptionToUpdate record with message retention in days property to update 
 the properties of the event hub. This is the basic scenario of updating the properties associated with the event hub 
@@ -727,7 +734,7 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     azure_eventhub:EventHubDescriptionToUpdate eventHubDescriptionToUpdate = {
         MessageRetentionInDays: 5
@@ -736,14 +743,14 @@ public function main() {
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
-        log:print(result.toString());
-        log:print("Successful!");
+    if (result is azure_eventhub:EventHub) {
+        log:printInfo(result.toString());
+        log:printInfo("Successful!");
     }
 }
 ```
 
-### List Event Hubs
+4. List Event Hubs
 This section shows how to use the ballerina connector to get all the metadata associated with the event hubs in a 
 specified namespace. We must specify the event hub name as a parameter to get all the metadata associated with the 
 specified event hubs in the namespace. This is the basic scenario of getting all the metadata associated with the 
@@ -766,20 +773,22 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     var result = managementClient->listEventHubs();
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
-        log:print(result.toString());
-        log:print("listReceived");
+    if (result is stream<azure_eventhub:EventHub>) {
+        _ = result.forEach(isolated function (azure_eventhub:EventHub eventHub) {
+                log:printInfo(eventHub.toString());
+            });
+        log:printInfo("listReceived");
     }
 }
 ```
 
-### Delete an event hub
+5. Delete an event hub
 This section shows how to use the ballerina connector to delete an event hub. We must specify the event hub name as a 
 parameter to delete an event hub. This is the basic scenario of deleting an event hub named “myhub”. It returns an 
 eventhub error if the operation is unsuccessful.
@@ -801,18 +810,18 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient= checkpanic new (config);
+    azure_eventhub:Client managementClient= checkpanic new (config);
 
     var result = managementClient->deleteEventHub("myhub");
     if (result is error) {
         log:printError(result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }
 ```
 
-### Create a new consumer group
+6. Create a new consumer group
 This section shows how to use the ballerina connector to create a new consumer group for an event hub. We must specify 
 the consumer group name as a parameter to create a new consumer group for an event hub. This is the basic scenario of 
 creating a consumer group named “groupname” in the event hub named “myhub”. It returns an eventhub error if the 
@@ -835,15 +844,15 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     var result = managementClient->createConsumerGroup("myeventhub", "consumerGroup1");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
-        log:print(result.toString());
-        log:print("successful");
+    if (result is azure_eventhub:ConsumerGroup) {
+        log:printInfo(result.toString());
+        log:printInfo("successful");
     }
 }
 ```
@@ -851,7 +860,7 @@ Note:
 You can specify the event hub path and consumer group name as parameters of the createConsumerGroup method.
 This operation will return a ballerina error if the operation failed.
 
-### Get consumer group
+7. Get consumer group
 This section shows how to use the ballerina connector to get all the metadata associated with the specified consumer 
 group. We must specify the consumer group name as a parameter to  get all the metadata associated with the specified 
 consumer group in the given event hub. This is the basic scenario of getting all the metadata associated with the 
@@ -875,15 +884,15 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     var result = managementClient->getConsumerGroup("myeventhub", "consumerGroup1");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
-        log:print(result.toString());
-        log:print("successful");
+    if (result is azure_eventhub:ConsumerGroup) {
+        log:printInfo(result.toString());
+        log:printInfo("successful");
     }
 }
 ```
@@ -891,7 +900,7 @@ Note:
 You can specify the event hub path and consumer group name as parameters of the getConsumerGroup method.
 This operation will return a ballerina error if the operation failed.
 
-### List consumer groups
+8. List consumer groups
 This section shows how to use the ballerina connector to get all the consumer groups associated with the specified event 
 hub. We must specify the event hub name as a parameter to  get all the metadata associated with all the consumer groups 
 associated with the specified event hub. This is the basic scenario of get all the metadata associated with all the 
@@ -915,15 +924,17 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     var result = managementClient->listConsumerGroups("myeventhub");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
-        log:print(result.toString());
-        log:print("successful");
+    if (result is stream<azure_eventhub:ConsumerGroup>) {
+        _ = result.forEach(isolated function (azure_eventhub:ConsumerGroup consumerGroup) {
+                log:printInfo(consumerGroup.toString());
+            });
+        log:printInfo("successful");
     }
 }
 ```
@@ -931,7 +942,7 @@ Note:
 You can specify the event hub path as a parameter of the listConsumerGroups method.
 This operation will return a ballerina error if the operation failed.
 
-### List partitions
+9. List partitions
 This section shows how to use the ballerina connector to get all the metadata associated with the partitions of a 
 specified consumer group.
 
@@ -952,15 +963,17 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     var result = managementClient->listPartitions("myeventhub", "consumerGroup1");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
-        log:print(result.toString());
-        log:print("successful");
+    if (result is stream<azure_eventhub:Partition>) {
+        _ = result.forEach(isolated function (azure_eventhub:Partition partition) {
+                log:printInfo(partition.toString());
+            });
+        log:printInfo("successful");
     }
 }
 ```
@@ -968,7 +981,7 @@ Note:
 You can specify the event hub path and consumer group name as parameters of the listPartitions method.
 This operation will return a ballerina error if the operation failed.
 
-### Get partition
+10. Get partition
 This section shows how to use the ballerina connector to get the metadata associated with the specified partition of a 
 consumer group.
 
@@ -989,15 +1002,15 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     var result = managementClient->getPartition("myeventhub", "consumerGroup1", 1);
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
-        log:print(result.toString());
-        log:print("successful");
+    if (result is azure_eventhub:Partition) {
+        log:printInfo(result.toString());
+        log:printInfo("successful");
     }
 }
 ```
@@ -1006,7 +1019,7 @@ You can specify the event hub path, consumer group name and partition ID as para
 This operation will return a ballerina error if the operation failed.
 
 
-### Delete a consumer group
+11. Delete a consumer group
 This section shows how to use the ballerina connector to delete a consumer group from an event hub. We must specify the 
 consumer group name as a parameter to delete a consumer group from an event hub. This is the basic scenario of deleting 
 a consumer group named “groupname” in the event hub named “myhub”. It returns an eventhub error if the operation is 
@@ -1029,14 +1042,14 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     var result = managementClient->deleteConsumerGroup("myeventhub","consumerGroup1");
     if (result is error) {
         log:printError(result.message());
     }
     if (result is ()) {
-        log:print("successful");
+        log:printInfo("successful");
     }
 }
 ```
@@ -1048,7 +1061,7 @@ This operation will return a ballerina error if the operation failed.
 
 The Event Hub Ballerina Connector enables you to perform publisher policy operations on event hubs.
 
-### Get Revoked Publishers
+1. Get Revoked Publishers
 This section shows how to use the ballerina connector to retrieve all revoked publishers within the specified event hub.
 
 Sample is available at:
@@ -1068,21 +1081,23 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
     var result = publisherClient->getRevokedPublishers("myeventhub");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
-        log:print("listReceived");
-        log:print(result.toString());
-        log:print("Successful!");
+    if (result is stream<azure_eventhub:RevokePublisher>) {
+        log:printInfo("listReceived");
+        _ = result.forEach(isolated function (azure_eventhub:RevokePublisher revokePublisher) {
+                log:printInfo(revokePublisher.toString());
+            });
+        log:printInfo("Successful!");
     }
 }
 ```
 
-### Revoke Publisher
+2. Revoke Publisher
 This section shows how to use the ballerina connector to revoke a publisher so that a revoked publisher may encounter 
 errors when sending events to the event hub.
 
@@ -1103,20 +1118,20 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
     var result = publisherClient->revokePublisher("myeventhub", "device-1");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is xml) {
-        log:print(result.toString());
-        log:print("Successful!");
+    if (result is azure_eventhub:RevokePublisher) {
+        log:printInfo(result.toString());
+        log:printInfo("Successful!");
     }
 }
 ```
 
-### Resume Publisher
+3. Resume Publisher
 This section shows how to use the ballerina connector to resume a revoked publisher so that the publisher can resume 
 sending events to the event hub.
 
@@ -1137,17 +1152,18 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
     var result = publisherClient->resumePublisher("myeventhub", "device-1");
     if (result is error) {
         log:printError(result.message());
     }
     if (result is ()) {
-        log:print("successful");
+        log:printInfo("successful");
     }
 }
 ```
+
 ## Building from the Source
 
 ### Setting Up the Prerequisites
@@ -1160,7 +1176,7 @@ public function main() {
 
         > **Note:** Set the JAVA_HOME environment variable to the path name of the directory into which you installed JDK.
 
-2. Download and install [Ballerina Swann Lake Alpha2](https://ballerina.io/). 
+2. Download and install [Ballerina](https://ballerina.io/). 
 
 ### Building the Source
 
@@ -1168,12 +1184,12 @@ Execute the commands below to build from the source after installing Ballerina S
 
 1. To build the library:
 ```shell script
-    ballerina build
+    bal build
 ```
 
 2. To build the module without the tests:
 ```shell script
-    ballerina build --skip-tests
+    bal build -c --skip-tests
 ```
 
 ## Contributing to Ballerina

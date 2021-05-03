@@ -27,12 +27,12 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
     
     var result = publisherClient->send("myeventhub", "eventData");
     if (result is error) {
         log:printError(msg = result.message());
     } else {
-        log:print("Successful!");
+        log:printInfo("Successful!");
     }
 }

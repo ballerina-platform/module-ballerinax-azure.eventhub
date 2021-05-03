@@ -27,8 +27,8 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
-    azure_eventhub:PublisherClient publisherClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
     // ------------------------------------ Event Hub Creation-----------------------------------------------
     azure_eventhub:EventHubDescription eventHubDescription = {
@@ -39,9 +39,9 @@ public function main() {
     if (createResult is error) {
         log:printError(createResult.message());
     }
-    if (createResult is xml) {
-        log:print(createResult.toString());
-        log:print("Successfully Created Event Hub!");
+    if (createResult is azure_eventhub:EventHub) {
+        log:printInfo(createResult.toString());
+        log:printInfo("Successfully Created Event Hub!");
     }
 
     // ----------------------------------------- Send Event ------------------------------------------------
@@ -53,7 +53,7 @@ public function main() {
     if (sendResult is error) {
         log:printError(sendResult.message());
     } else {
-        log:print("Successfully Send Event to Event Hub!");
+        log:printInfo("Successfully Send Event to Event Hub!");
     }
 
     // ------------------------------- Send Batch Event with Partition Key -----------------------------------------
@@ -68,7 +68,7 @@ public function main() {
     if (sendBatchResult is error) {
         log:printError(sendBatchResult.message());
     } else {
-        log:print("Successfully Send Batch Event to Event Hub!");
+        log:printInfo("Successfully Send Batch Event to Event Hub!");
     } 
 
     // --------------------------------- Delete Event Hub ----------------------------------------------------
@@ -76,6 +76,6 @@ public function main() {
     if (deleteResult is error) {
         log:printError(msg = deleteResult.message());
     } else {
-        log:print("Successfully Deleted Event Hub!");
+        log:printInfo("Successfully Deleted Event Hub!");
     }    
 }

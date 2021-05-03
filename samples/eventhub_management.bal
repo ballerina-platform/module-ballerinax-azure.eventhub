@@ -27,16 +27,16 @@ public function main() {
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:ManagementClient managementClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
     // ------------------------------------ Event Hub Creation-----------------------------------------------
     var createResult = managementClient->createEventHub("mytesthub");
     if (createResult is error) {
         log:printError(createResult.message());
     }
-    if (createResult is xml) {
-        log:print(createResult.toString());
-        log:print("Successfully Created Event Hub!");
+    if (createResult is azure_eventhub:EventHub) {
+        log:printInfo(createResult.toString());
+        log:printInfo("Successfully Created Event Hub!");
     }
 
     // ----------------------------------- Get Event Hub -----------------------------------------------------
@@ -44,9 +44,9 @@ public function main() {
     if (getEventHubResult is error) {
         log:printError(getEventHubResult.message());
     }
-    if (getEventHubResult is xml) {
-        log:print(getEventHubResult.toString());
-        log:print("Successfully Get Event Hub!");
+    if (getEventHubResult is azure_eventhub:EventHub) {
+        log:printInfo(getEventHubResult.toString());
+        log:printInfo("Successfully Get Event Hub!");
     } 
 
     // --------------------------------- Update Event Hub --------------------------------------------------
@@ -57,9 +57,9 @@ public function main() {
     if (updateResult is error) {
         log:printError(updateResult.message());
     }
-    if (updateResult is xml) {
-        log:print(updateResult.toString());
-        log:print("Successfully Updated Event Hub!");
+    if (updateResult is azure_eventhub:EventHub) {
+        log:printInfo(updateResult.toString());
+        log:printInfo("Successfully Updated Event Hub!");
     }
 
     // ---------------------------------- List Event Hubs -----------------------------------------------------
@@ -67,9 +67,11 @@ public function main() {
     if (listResult is error) {
         log:printError(listResult.message());
     }
-    if (listResult is xml) {
-        log:print(listResult.toString());
-        log:print("Successfully Listed Event Hubs!");
+    if (listResult is stream<azure_eventhub:EventHub>) {
+        _ = listResult.forEach(isolated function (azure_eventhub:EventHub eventHub) {
+                log:printInfo(eventHub.toString());
+            });
+        log:printInfo("Successfully Listed Event Hubs!");
     }
 
     // --------------------------------- Delete Event Hub ----------------------------------------------------
@@ -77,6 +79,6 @@ public function main() {
     if (deleteResult is error) {
         log:printError(msg = deleteResult.message());
     } else {
-        log:print("Successfully Deleted Event Hub!");
+        log:printInfo("Successfully Deleted Event Hub!");
     }    
 }
