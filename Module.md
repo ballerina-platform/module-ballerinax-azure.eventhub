@@ -28,7 +28,7 @@ The REST APIs fall into the following categories:
 # Compatibility
 |                     |    Version          |
 |:-------------------:|:-------------------:|
-| Ballerina Language  | Swan-Lake-Alpha4    |
+| Ballerina Language  | Swan-Lake-Alpha5    |
 
 # Supported Operations
 
