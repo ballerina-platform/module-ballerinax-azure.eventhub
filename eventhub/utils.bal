@@ -22,7 +22,8 @@ import ballerina/jballerina.java;
 import ballerina/regex;
 
 # Get request with common headers
-#
+# 
+# + config - Client endpoint configuration
 # + return - Return a http request with authorization header
 isolated function getAuthorizedRequest(ClientEndpointConfiguration config) returns http:Request {
     http:Request req = new;
@@ -49,7 +50,8 @@ isolated function getAuthorizedRequestHeaderMap(ClientEndpointConfiguration conf
 }
 
 # Generate the SAS token
-#
+# 
+# + config - Client endpoint configuration
 # + return - Return SAS token
 isolated function getSASToken(ClientEndpointConfiguration config) returns string {
     time:Utc time = time:utcNow();
