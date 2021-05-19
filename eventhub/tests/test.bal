@@ -17,6 +17,7 @@
 import ballerina/test;
 import ballerina/os;
 import ballerina/log;
+import ballerina/lang.runtime;
 
 configurable string sasKeyName = os:getEnv("SAS_KEY_NAME");
 configurable string sasKey = os:getEnv("SAS_KEY");
@@ -296,7 +297,7 @@ function testDeleteEventHubWithEventHubDescription() {
 
 @test:Config {
     groups: ["publisher"],
-    enable: true
+    enable: false
 }
 function testSendBatchEventWithPublisherID() {
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
@@ -310,6 +311,7 @@ function testSendBatchEventWithPublisherID() {
         ]
     };
     var result = publisherClient->sendBatch(event_hub_name1, batchEvent, publisherId = "device-1");
+    runtime:sleep(5);
     if (result is error) {
         test:assertFail(msg = result.message());
     }
@@ -318,7 +320,6 @@ function testSendBatchEventWithPublisherID() {
 
 @test:Config {
     groups: ["publisher"],
-    dependsOn: [testSendBatchEventWithPublisherID],
     enable: true
 }
 function testRevokePublisher() {
