@@ -10,10 +10,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Ballerina Build
-        uses: ballerina-platform/ballerina-action/@master
+        uses: ballerina-platform/ballerina-action/@nightly
         with:
           args:
-            build -c
+            build -c ./eventhub
         env: 
           SAS_KEY_NAME: ${{ secrets.SAS_KEY_NAME }}
           SAS_KEY: ${{ secrets.SAS_KEY }}

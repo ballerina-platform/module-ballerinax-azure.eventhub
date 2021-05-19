@@ -15,7 +15,7 @@ jobs:
         uses: ballerina-platform/ballerina-action/@master
         with:
           args:
-            build -c
+            build -c ./eventhub
         env: 
           SAS_KEY_NAME: ${{ secrets.SAS_KEY_NAME }}
           SAS_KEY: ${{ secrets.SAS_KEY }}

@@ -45,6 +45,7 @@ isolated function getBatchEventJson(BatchEvent batchEvent) returns json {
 # Convert eventhub description to xml
 #
 # + descriptionProperties - eventhub or consumer group description
+# + description - Body of the description
 # + return - Return eventhub formatted json
 isolated function getDescriptionProperties(EventHubDescription|EventHubDescriptionToUpdate|ConsumerGroupDescription|
                                            RevokePublisherDescription? descriptionProperties, 
