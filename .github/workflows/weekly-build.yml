@@ -1,9 +1,9 @@
-name: Daily build
+name: Weekly build
 
 # Controls when the action will run.
 on: 
   schedule:
-    - cron: '30 2 * * *'
+    - cron: '15 2 * * 1'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -40,17 +40,9 @@ jobs:
               uses: ballerina-platform/ballerina-action/@nightly
               with:
                   args:
-                      build -c --skip-tests ./eventhub
+                      build -c ./eventhub
               env:
                 JAVA_HOME: /usr/lib/jvm/default-jvm
                 SAS_KEY_NAME: ${{ secrets.SAS_KEY_NAME }}
                 SAS_KEY: ${{ secrets.SAS_KEY }}
                 RESOURCE_URI: ${{ secrets.RESOURCE_URI }}
-            # Publish Github Package
-            - name: Publish Github Package
-              env:
-                publishUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
-                publishPAT: ${{ secrets.CONNECTOR_PUBLISH_PAT }}
-                JAVA_OPTS: -DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true
-              run: |
-                ./gradlew publish
