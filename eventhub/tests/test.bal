@@ -17,7 +17,6 @@
 import ballerina/test;
 import ballerina/os;
 import ballerina/log;
-import ballerina/lang.runtime;
 
 configurable string sasKeyName = os:getEnv("SAS_KEY_NAME");
 configurable string sasKey = os:getEnv("SAS_KEY");
@@ -311,7 +310,6 @@ function testSendBatchEventWithPublisherID() {
         ]
     };
     var result = publisherClient->sendBatch(event_hub_name1, batchEvent, publisherId = "device-1");
-    runtime:sleep(5);
     if (result is error) {
         test:assertFail(msg = result.message());
     }

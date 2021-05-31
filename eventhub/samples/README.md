@@ -167,7 +167,7 @@ This operation will return a ballerina error if the operation failed.
 This section shows how to use the ballerina connector to send batch events to an event hub. We must specify the event 
 hub path and the event data in string/xml/json/byte[] array etc. formats as parameters to the send operation. 
 Additionally we can specify user properties and broker properties as a map which is optional. Events are specified as 
-an array of BatchMessage records and each BatchMessage includes event data, and optional user properties and broker 
+an array of Event records and each Event includes event data, and optional user properties and broker 
 properties. This is the basic scenario of sending an event with batch event to the event hub path named “myhub” with 
 BatchEvent. It returns an eventhub error if the operation is unsuccessful.
 
@@ -217,8 +217,8 @@ This operation will return a ballerina error if the operation failed.
 This section shows how to use the ballerina connector to send batch events to an event hub with broker properties, 
 user properties and specified partition key. We must specify the event hub path and the event data in 
 string/xml/json/byte[] array etc. formats as parameters to the send operation. Additionally we can specify user 
-properties and broker properties as a map which is optional. Events are specified as an array of BatchMessage records 
-and each BatchMessage includes event data, and optional user properties and broker properties. This is the basic 
+properties and broker properties as a map which is optional. Events are specified as an array of Event records 
+and each Event includes event data, and optional user properties and broker properties. This is the basic 
 scenario of sending an event with batch event to the event hub path named “myhub” with BatchEvent and partition key as 
 “groupName”. It returns an eventhub error if the operation is unsuccessful.
 
@@ -270,7 +270,7 @@ This section shows how to use the ballerina connector to send batch events to an
 user properties and specified publisher ID. We must specify the event hub path and the event data in 
 string/xml/json/byte[] array etc. formats as parameters to the send operation. Additionally we can specify user 
 properties and broker properties as a map which is optional. We can also include publisher name as publisher ID. 
-Events are specified as an array of BatchMessage records and each BatchMessage includes event data, and optional 
+Events are specified as an array of Event records and each Event includes event data, and optional 
 user properties and broker properties. This is the basic scenario of sending an event with batch event to the event hub 
 path named “myhub” with BatchEvent and publisher ID as “device-1”. It returns an eventhub error if the operation is 
 unsuccessful.
