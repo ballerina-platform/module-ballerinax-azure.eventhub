@@ -20,15 +20,13 @@
 # + sasKey - shared access service key 
 # + resourceUri - resource URI
 # + timeout - timeout
-# + apiVersion - apiVersion 
 # + enableRetry - enableRetry
 public type ClientEndpointConfiguration record {|
     string sasKeyName;
     string sasKey;
     string resourceUri;
-    int timeout = 60;
-    string apiVersion = "2014-01";
-    boolean enableRetry = true;
+    int timeout?;
+    boolean enableRetry?;
 |};
 
 # Batch Message Record.

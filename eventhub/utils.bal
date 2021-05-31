@@ -28,7 +28,7 @@ import ballerina/regex;
 isolated function getAuthorizedRequest(ClientEndpointConfiguration config) returns http:Request {
     http:Request req = new;
     req.addHeader(AUTHORIZATION_HEADER, getSASToken(config));
-    if (!config.enableRetry) {
+    if (config?.enableRetry == false) {
         // disable automatic retry
         req.addHeader(RETRY_POLICY, NO_RETRY);
     }
@@ -39,7 +39,7 @@ isolated function getAuthorizedRequestHeaderMap(ClientEndpointConfiguration conf
     map<string> headerMap = {
             "Authorization": getSASToken(config)
     };
-    if (!config.enableRetry) {
+    if (config?.enableRetry == false) {
         // disable automatic retry
         headerMap = {
             "Authorization": getSASToken(config),
