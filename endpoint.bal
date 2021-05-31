@@ -32,7 +32,11 @@ public client class Client {
 
     public isolated function init(ClientEndpointConfiguration config) returns error? {
         self.config = config;
-        self.API_PREFIX = TIME_OUT + config.timeout.toString() + API_VERSION + config.apiVersion;
+        if (config?.timeout == ()) {
+            self.API_PREFIX = API_VERSION_ONLY;
+        } else {
+            self.API_PREFIX = TIME_OUT + config?.timeout.toString() + API_VERSION;
+        }
         self.clientEndpoint = check new (HTTPS + self.config.resourceUri);
     }
 
@@ -425,8 +429,14 @@ public client class Client {
             xmlns:i="http://www.w3.org/2001/XMLSchema-instance" 
             xmlns="http://schemas.microsoft.com/netservices/2010/10/servicebus/connect"/>`;
         req.setXmlPayload(getDescriptionProperties(revokePublisherDescription, revPubDes));
-        string requestPath = FORWARD_SLASH + eventHubPath + REVOKED_PUBLISHER_PATH + publisherName + 
-            TIME_OUT_AND_API_VERSION;
+        string requestPath = "";
+        if (self.config?.timeout == ()) {
+            requestPath = FORWARD_SLASH + eventHubPath + REVOKED_PUBLISHER_PATH + publisherName + 
+                API_VERSION_ONLY_REVOKE_PUBLISHER;
+        } else {
+            requestPath = FORWARD_SLASH + eventHubPath + REVOKED_PUBLISHER_PATH + publisherName + 
+                TIME_OUT + self.config?.timeout.toString() + API_VERSION_REVOKE_PUBLISHER;
+        }
         http:Response response = <http:Response> check self.clientEndpoint->put(requestPath, req);
         if (response.statusCode == http:STATUS_CREATED) {
             xml xmlPayload = check response.getXmlPayload();

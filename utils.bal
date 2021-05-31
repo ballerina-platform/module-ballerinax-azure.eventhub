@@ -23,11 +23,12 @@ import ballerina/regex;
 
 # Get request with common headers
 #
+# + config - Client endpoint configuration
 # + return - Return a http request with authorization header
 isolated function getAuthorizedRequest(ClientEndpointConfiguration config) returns http:Request {
     http:Request req = new;
     req.addHeader(AUTHORIZATION_HEADER, getSASToken(config));
-    if (!config.enableRetry) {
+    if (config?.enableRetry == false) {
         // disable automatic retry
         req.addHeader(RETRY_POLICY, NO_RETRY);
     }
@@ -38,7 +39,7 @@ isolated function getAuthorizedRequestHeaderMap(ClientEndpointConfiguration conf
     map<string> headerMap = {
             "Authorization": getSASToken(config)
     };
-    if (!config.enableRetry) {
+    if (config?.enableRetry == false) {
         // disable automatic retry
         headerMap = {
             "Authorization": getSASToken(config),
@@ -50,6 +51,7 @@ isolated function getAuthorizedRequestHeaderMap(ClientEndpointConfiguration conf
 
 # Generate the SAS token
 #
+# + config - Client endpoint configuration
 # + return - Return SAS token
 isolated function getSASToken(ClientEndpointConfiguration config) returns string {
     time:Utc time = time:utcNow();

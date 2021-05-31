@@ -42,9 +42,11 @@ const string CONSUMER_GROUP_PATH = "/consumergroups/";
 
 // URL suffixes and prefixes
 const string TIME_OUT = "?timeout=";
-const string API_VERSION = "&api-version=";
+const string API_VERSION = "&api-version=2014-01";
+const string API_VERSION_ONLY = "?api-version=2014-01";
+const string API_VERSION_REVOKE_PUBLISHER = "&api-version=2014-05";
+const string API_VERSION_ONLY_REVOKE_PUBLISHER = "?api-version=2014-05";
 const string HTTPS = "https://";
-const string TIME_OUT_AND_API_VERSION = "?timeout=60&api-version=2014-05";
 
 // Broker Properties
 const string PARTITION_KEY = "PartitionKey";
