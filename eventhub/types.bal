@@ -16,87 +16,115 @@
 
 # The Client endpoint configuration for Azure Event Hubs.
 #
-# + sasKeyName - shared access service key name
-# + sasKey - shared access service key 
-# + resourceUri - resource URI
-# + timeout - timeout
-# + apiVersion - apiVersion 
-# + enableRetry - enableRetry
+# + sasKeyName - Shared access service key name
+# + sasKey - Shared access service key 
+# + resourceUri - Resource URI. This is in the format {eventhubname}.servicebus.windows.net
+# + timeout - Operation timeout
+# + enableRetry - Make it false to disable automatic retry on send operations when transient errors occur
+@display {label: "Connection Config"}
 public type ClientEndpointConfiguration record {|
+    @display {label: "SAS Key Name"}
     string sasKeyName;
+    @display {label: "SAS Key"}
     string sasKey;
+    @display {label: "Resource Uri"}
     string resourceUri;
-    int timeout = 60;
-    string apiVersion = "2014-01";
-    boolean enableRetry = true;
+    @display {label: "Timeout"}
+    int timeout?;
+    @display {label: "Enable Retry"}
+    boolean enableRetry?;
 |};
 
-# Batch Message Record.
+# Represents a single event in a batch of events.
 #
-# + data - event data 
-# + brokerProperties - brokerProperties 
-# + userProperties - userProperties 
-public type BatchMessage record {|
+# + data - Event data
+# + brokerProperties - Map of broker properties 
+# + userProperties - Map of custom properties 
+@display {label: "Event"}
+public type Event record {|
+    @display {label: "Event Data"}
     anydata data;
+    @display {label: "Broker Properties"}
     map<json> brokerProperties?;
+    @display {label: "User Properties"}
     map<json> userProperties?;
 |};
 
-# Batch Event Record.
+# Represents a batch of events.
 #
-# + events - set of BatchMessages
+# + events - Array of Event records
+@display {label: "Batch Event"}
 public type BatchEvent record {|
-    BatchMessage[] events;
+    @display {label: "Events"}
+    Event[] events;
 |};
 
-# EventHub Description Record.
+# Represents the metadata description of an Event Hub.
 #
-# + MessageRetentionInDays - retention time of the event data
-# + Authorization - authorization rules
-# + Status - status of the event hub
-# + UserMetadata - user metadata
-# + PartitionCount - number of subscriptions on the Event Hub
+# + MessageRetentionInDays - Number of days to retain the events for this Event Hub
+# + Authorization - Authorization rules
+# + Status - Current status of the Event Hub
+# + UserMetadata - User metadata
+# + PartitionCount - Current number of shards on the Event Hub
+@display {label: "Event Hub Description"}
 public type EventHubDescription record {|
+    @display {label: "Message Retention (Days)"}
     int MessageRetentionInDays?;
+    @display {label: "Authorization"}
     string Authorization?;
+    @display {label: "User Metadata"}
     string UserMetadata?;
+    @display {label: "Status"}
     string Status?;
+    @display {label: "Partition Count"}
     int PartitionCount?;
 |};
 
-# EventHub Description to Update Record.
+# Represents the metadata description to update in an Event Hub.
 #
-# + MessageRetentionInDays - event data
+# + MessageRetentionInDays - Number of days to retain the events for this Event Hub
+@display {label: "Event Hub Description To Update"}
 public type EventHubDescriptionToUpdate record {|
+    @display {label: "Message Retention (Days)"}
     int MessageRetentionInDays;
 |};
 
-# Consumer group Description Record.
+# Represents a description of the consumer group.
 #
-# + userMetadata - user metadata
+# + userMetadata - User metadata
+@display {label: "Consumer Group Description"}
 public type ConsumerGroupDescription record {|
+    @display {label: "User Metadata"}
     string userMetadata?;
 |};
 
-# RevokePublisher Description Record.
+# Represents a description of the revoked publisher.
 #
 # + Name - The name of the revoked publisher
+@display {label: "Revoke Publisher Description"}
 public type RevokePublisherDescription record {|
+    @display {label: "Revoke Publisher Name"}
     string Name?;
 |};
 
-# Partition Description representation.
+# Represents the metadata and approximate runtime information for a logical partition of an Event Hub.
 #
 # + SizeInBytes - Size in bytes 
 # + BeginSequenceNumber - Begin sequence number
 # + EndSequenceNumber - End sequence number
 # + IncomingBytesPerSecond - Incoming bytes per second 
 # + OutgoingBytesPerSecond - Outgoing bytes per second
+@display {label: "Partition Description"}
 public type PartitionDescription record {
+    @display {label: "Size In Bytes"}
     int SizeInBytes?;
+    @display {label: "Start Seq Num"}
     int BeginSequenceNumber?;
+    @display {label: "End Seq Num"}
     int EndSequenceNumber?;
+    @display {label: "Incoming Bytes (Per Sec)"}
     int IncomingBytesPerSecond?;
+    @display {label: "Outgoing Bytes (Per Sec)"}
     int OutgoingBytesPerSecond?;
 };
 
@@ -108,11 +136,17 @@ public type PartitionDescription record {
 # + updated - Updated time 
 # + authorName - Name of the author(name of the namespace)
 # + eventHubDescription - Even Hub description representation 
+@display {label: "Event Hub"}
 public type EventHub record {
+    @display {label: "Id"}
     string id?;
+    @display {label: "Title"}
     string title?;
+    @display {label: "Published"}
     string published?;
+    @display {label: "Updated"}
     string updated?;
+    @display {label: "Author Name"}
     string authorName?;
     EventHubDescription eventHubDescription?;
 };
@@ -124,10 +158,15 @@ public type EventHub record {
 # + published - Published time
 # + updated - Updated time
 # + consumerGroupDescription - Consumer Group description representation 
+@display {label: "Consumer Group"}
 public type ConsumerGroup record {
+    @display {label: "Id"}
     string id?;
+    @display {label: "Title"}
     string title?;
+    @display {label: "Published"}
     string published?;
+    @display {label: "Updated"}
     string updated?;
     ConsumerGroupDescription consumerGroupDescription?;
 };
@@ -138,9 +177,13 @@ public type ConsumerGroup record {
 # + title - Name of the revoked publisher
 # + updated - Updated time
 # + revokePublisherDescription - Revoked Publisher description representation 
+@display {label: "Revoked Publisher"}
 public type RevokePublisher record {
+    @display {label: "Id"}
     string id?;
+    @display {label: "Title"}
     string title?;
+    @display {label: "Updated"}
     string updated?;
     RevokePublisherDescription revokePublisherDescription?;
 };
@@ -152,10 +195,15 @@ public type RevokePublisher record {
 # + published - Published time
 # + updated - Updated time
 # + partitionDescription - Partition description representation
+@display {label: "Partition"}
 public type Partition record {
+    @display {label: "Id"}
     string id?;
+    @display {label: "Title"}
     string title?;
+    @display {label: "Published"}
     string published?;
+    @display {label: "Updated"}
     string updated?;
     PartitionDescription partitionDescription?;
 };
