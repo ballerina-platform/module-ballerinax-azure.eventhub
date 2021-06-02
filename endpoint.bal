@@ -45,11 +45,11 @@ public client class Client {
     # Create a new Event Hub.
     #
     # + eventHubPath - Event Hub path (Event Hub name)
-    # + eventHubDescription - EventHubDescription record with properties to set
+    # + eventHubDescription - EventHubDescription record with properties to set (Optional)
     # + return - EventHub record on success, else returns an error
     @display {label: "Create Event Hub"}
     remote isolated function createEventHub(@display {label: "Event Hub Path"} string eventHubPath, 
-                                            @display {label: "Event Hub Description (Optional)"} 
+                                            @display {label: "Event Hub Description"} 
                                             EventHubDescription? eventHubDescription = ()) 
                                             returns @tainted @display {label: "EventHub"} EventHub|error {
         http:Request req = getAuthorizedRequest(self.config);
@@ -93,7 +93,7 @@ public client class Client {
     # + return - EventHub record on success, else returns an error
     @display {label: "Update Event Hub"}
     remote isolated function updateEventHub(@display {label: "Event Hub Path"} string eventHubPath, 
-                                            @display {label: "Event Hub Description to Update"} 
+                                            @display {label: "Update Description"} 
                                             EventHubDescriptionToUpdate eventHubDescriptionToUpdate) 
                                             returns @tainted @display {label: "EventHub"} EventHub|error {
         http:Request req = getAuthorizedRequest(self.config);
@@ -199,12 +199,12 @@ public client class Client {
     #
     # + eventHubPath - Event Hub path (Event Hub name)
     # + consumerGroupName - Consumer group name
-    # + consumerGroupDescription - ConsumerGroupDescription record with properties to set 
+    # + consumerGroupDescription - ConsumerGroupDescription record with properties to set (Optional)
     # + return - ConsumerGroup record on success, else returns an error
     @display {label: "Create Consumer Group"}
     remote isolated function createConsumerGroup(@display {label: "Event Hub Path"} string eventHubPath, 
                                                  @display {label: "Consumer Group Name"} string consumerGroupName, 
-                                                 @display {label: "Consumer Group Description (Optional)"} 
+                                                 @display {label: "Consumer Group Description"} 
                                                  ConsumerGroupDescription? consumerGroupDescription = ()) 
                                                  returns @tainted @display {label: "ConsumerGroup"} 
                                                  ConsumerGroup|error {
@@ -289,21 +289,21 @@ public client class Client {
     #
     # + eventHubPath - Event Hub path (Event Hub name)
     # + data - Event data in string|xml|json|byte[] format
-    # + userProperties - Map of custom properties
-    # + brokerProperties - Map of broker properties
-    # + partitionId - Partition Id
-    # + publisherId - Publisher Id 
-    # + partitionKey - Partition Key
+    # + userProperties - Map of custom properties (Optional)
+    # + brokerProperties - Map of broker properties (Optional)
+    # + partitionId - Partition Id (Optional)
+    # + publisherId - Publisher Id (Optional)
+    # + partitionKey - Partition Key (Optional)
     # + return - Nil on success, else returns an error if remote API is unreachable
     @display {label: "Send an Event"}
     remote isolated function send(@display {label: "Event Hub Path"} string eventHubPath, 
                                   @display {label: "Event Data"} 
                                   string|xml|json|byte[]|mime:Entity[]|stream<byte[], io:Error> data, 
-                                  @display {label: "User Properties (Optional)"} map<string>? userProperties = (), 
-                                  @display {label: "Broker Properties (Optional)"} map<anydata>? brokerProperties = (), 
-                                  @display {label: "Partition Id (Optional)"} int? partitionId = (), 
-                                  @display {label: "Publisher Id (Optional)"} string? publisherId = (), 
-                                  @display {label: "Partition Key (Optional)"} string? partitionKey = ()) 
+                                  @display {label: "User Properties"} map<string>? userProperties = (), 
+                                  @display {label: "Broker Properties"} map<anydata>? brokerProperties = (), 
+                                  @display {label: "Partition Id"} int? partitionId = (), 
+                                  @display {label: "Publisher Id"} string? publisherId = (), 
+                                  @display {label: "Partition Key"} string? partitionKey = ()) 
                                   returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
         check req.setContentType(CONTENT_TYPE_SEND);
@@ -355,16 +355,16 @@ public client class Client {
     #
     # + eventHubPath - Event Hub path (Event Hub name)
     # + batchEvent - BatchEvent record that represents batch of events
-    # + partitionId - Partition Id
-    # + publisherId - Publisher Id
-    # + partitionKey - Partition Key
+    # + partitionId - Partition Id (Optional)
+    # + publisherId - Publisher Id (Optional)
+    # + partitionKey - Partition Key (Optional)
     # + return - Nil on success, else returns an error
     @display {label: "Send Batch of Events"}
     remote isolated function sendBatch(@display {label: "Event Hub Path"} string eventHubPath, 
                                        @display {label: "Batch of Events"} BatchEvent batchEvent, 
-                                       @display {label: "Partition Id (Optional)"} int? partitionId = (), 
-                                       @display {label: "Publisher Id (Optional)"} string? publisherId = (), 
-                                       @display {label: "Partition Key (Optional)"} string? partitionKey = ()) 
+                                       @display {label: "Partition Id"} int? partitionId = (), 
+                                       @display {label: "Publisher Id"} string? publisherId = (), 
+                                       @display {label: "Partition Key"} string? partitionKey = ()) 
                                        returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
         check req.setContentType(CONTENT_TYPE_SEND_BATCH);
