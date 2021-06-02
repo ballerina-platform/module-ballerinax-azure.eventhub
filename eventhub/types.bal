@@ -68,7 +68,7 @@ public type BatchEvent record {|
 # + PartitionCount - Current number of shards on the Event Hub
 @display {label: "Event Hub Description"}
 public type EventHubDescription record {|
-    @display {label: "Message Retention In Days"}
+    @display {label: "Message Retention (Days)"}
     int MessageRetentionInDays?;
     @display {label: "Authorization"}
     string Authorization?;
@@ -85,7 +85,7 @@ public type EventHubDescription record {|
 # + MessageRetentionInDays - Number of days to retain the events for this Event Hub
 @display {label: "Event Hub Description To Update"}
 public type EventHubDescriptionToUpdate record {|
-    @display {label: "Message Retention In Days"}
+    @display {label: "Message Retention (Days)"}
     int MessageRetentionInDays;
 |};
 
@@ -118,13 +118,13 @@ public type RevokePublisherDescription record {|
 public type PartitionDescription record {
     @display {label: "Size In Bytes"}
     int SizeInBytes?;
-    @display {label: "Begin Sequence Number"}
+    @display {label: "Start Seq Num"}
     int BeginSequenceNumber?;
-    @display {label: "End Sequence Number"}
+    @display {label: "End Seq Num"}
     int EndSequenceNumber?;
-    @display {label: "Incoming Bytes Per Second"}
+    @display {label: "Incoming Bytes (Per Sec)"}
     int IncomingBytesPerSecond?;
-    @display {label: "Outgoing Bytes Per Second"}
+    @display {label: "Outgoing Bytes (Per Sec)"}
     int OutgoingBytesPerSecond?;
 };
 
