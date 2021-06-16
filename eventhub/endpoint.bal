@@ -51,7 +51,7 @@ public client class Client {
     remote isolated function createEventHub(@display {label: "Event Hub Path"} string eventHubPath, 
                                             @display {label: "Event Hub Description"} 
                                             EventHubDescription? eventHubDescription = ()) 
-                                            returns @tainted @display {label: "EventHub"} EventHub|error {
+                                            returns @tainted @display {label: "Event Hub"} EventHub|error {
         http:Request req = getAuthorizedRequest(self.config);
         xmllib:Element eventHubDes = <xmllib:Element> xml `<EventHubDescription 
             xmlns:i="http://www.w3.org/2001/XMLSchema-instance" 
@@ -74,7 +74,7 @@ public client class Client {
     # + return - EventHub record on success, else returns an error
     @display {label: "Get Event Hub"}
     remote isolated function getEventHub(@display {label: "Event Hub Path"} string eventHubPath) 
-                                         returns @tainted @display {label: "EventHub"} EventHub|error {
+                                         returns @tainted @display {label: "Event Hub"} EventHub|error {
         map<string> headerMap = getAuthorizedRequestHeaderMap(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath;
         http:Response response = <http:Response> check self.clientEndpoint->get(requestPath, headerMap);
@@ -95,7 +95,7 @@ public client class Client {
     remote isolated function updateEventHub(@display {label: "Event Hub Path"} string eventHubPath, 
                                             @display {label: "Update Description"} 
                                             EventHubDescriptionToUpdate eventHubDescriptionToUpdate) 
-                                            returns @tainted @display {label: "EventHub"} EventHub|error {
+                                            returns @tainted @display {label: "Event Hub"} EventHub|error {
         http:Request req = getAuthorizedRequest(self.config);
         req.addHeader(IF_MATCH, ALL);
         xmllib:Element eventHubDescription = <xmllib:Element> xml `<EventHubDescription 
@@ -117,7 +117,7 @@ public client class Client {
     #
     # + return - Stream of EventHub records on success, else returns an error
     @display {label: "List Event Hubs"}
-    remote isolated function listEventHubs() returns @tainted @display {label: "Stream of EventHubs"} 
+    remote isolated function listEventHubs() returns @tainted @display {label: "Stream of Event Hubs"} 
                                              stream<EventHub>|error {
         map<string> headerMap = getAuthorizedRequestHeaderMap(self.config);
         string requestPath = EVENT_HUBS_PATH;
@@ -176,12 +176,12 @@ public client class Client {
     #
     # + eventHubPath - Event Hub path (Event Hub name)
     # + consumerGroupName - Consumer group name
-    # + partitionId - Partition Id 
+    # + partitionId - Partition ID 
     # + return - Partition record on success, else returns an error
     @display {label: "Get Partition"}
     remote isolated function getPartition(@display {label: "Event Hub Path"} string eventHubPath, 
                                           @display {label: "Consumer Group Name"} string consumerGroupName, 
-                                          @display {label: "Partition Id"} int partitionId) 
+                                          @display {label: "Partition ID"} int partitionId) 
                                           returns @tainted @display {label: "Partition"} Partition|error {
         map<string> headerMap = getAuthorizedRequestHeaderMap(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath + CONSUMER_GROUP_PATH + consumerGroupName + PARTITION_PATH + 
@@ -197,7 +197,7 @@ public client class Client {
 
     # Creates a new consumer group. 
     #
-    # + eventHubPath - Event Hub path (Event Hub name)
+    # + eventHubPath - Event Hub name
     # + consumerGroupName - Consumer group name
     # + consumerGroupDescription - ConsumerGroupDescription record with properties to set (Optional)
     # + return - ConsumerGroup record on success, else returns an error
@@ -206,7 +206,7 @@ public client class Client {
                                                  @display {label: "Consumer Group Name"} string consumerGroupName, 
                                                  @display {label: "Consumer Group Description"} 
                                                  ConsumerGroupDescription? consumerGroupDescription = ()) 
-                                                 returns @tainted @display {label: "ConsumerGroup"} 
+                                                 returns @tainted @display {label: "Consumer Group"} 
                                                  ConsumerGroup|error {
         http:Request req = getAuthorizedRequest(self.config);
         xmllib:Element consumerGroupDes = <xmllib:Element> xml `<ConsumerGroupDescription 
@@ -291,8 +291,8 @@ public client class Client {
     # + data - Event data in string|xml|json|byte[] format
     # + userProperties - Map of custom properties (Optional)
     # + brokerProperties - Map of broker properties (Optional)
-    # + partitionId - Partition Id (Optional)
-    # + publisherId - Publisher Id (Optional)
+    # + partitionId - Partition ID (Optional)
+    # + publisherId - Publisher ID (Optional)
     # + partitionKey - Partition Key (Optional)
     # + return - Nil on success, else returns an error if remote API is unreachable 
     @display {label: "Send an Event"}
@@ -301,8 +301,8 @@ public client class Client {
                                   string|xml|json|byte[]|mime:Entity[]|stream<byte[], io:Error> data, 
                                   @display {label: "User Properties"} map<string>? userProperties = (), 
                                   @display {label: "Broker Properties"} map<anydata>? brokerProperties = (), 
-                                  @display {label: "Partition Id"} int? partitionId = (), 
-                                  @display {label: "Publisher Id"} string? publisherId = (), 
+                                  @display {label: "Partition ID"} int? partitionId = (), 
+                                  @display {label: "Publisher ID"} string? publisherId = (), 
                                   @display {label: "Partition Key"} string? partitionKey = ()) 
                                   returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
@@ -335,11 +335,11 @@ public client class Client {
         req.setPayload(data);
         string postResource = FORWARD_SLASH + eventHubPath;
         if (partitionId is int) {
-            //append partition Id
+            //append partition ID
             postResource = postResource + PARTITION_PATH + partitionId.toString();
         }
         if (publisherId is string) {
-            //append publisher Id
+            //append publisher ID
             postResource = postResource + PUBLISHER_PATH + publisherId;
         }
         postResource = postResource + MESSAGES_PATH;
@@ -355,15 +355,15 @@ public client class Client {
     #
     # + eventHubPath - Event Hub path (Event Hub name)
     # + batchEvent - BatchEvent record that represents batch of events
-    # + partitionId - Partition Id (Optional)
-    # + publisherId - Publisher Id (Optional)
+    # + partitionId - Partition ID (Optional)
+    # + publisherId - Publisher ID (Optional)
     # + partitionKey - Partition Key (Optional)
     # + return - Nil on success, else returns an error
     @display {label: "Send Batch of Events"}
     remote isolated function sendBatch(@display {label: "Event Hub Path"} string eventHubPath, 
                                        @display {label: "Batch of Events"} BatchEvent batchEvent, 
-                                       @display {label: "Partition Id"} int? partitionId = (), 
-                                       @display {label: "Publisher Id"} string? publisherId = (), 
+                                       @display {label: "Partition ID"} int? partitionId = (), 
+                                       @display {label: "Publisher ID"} string? publisherId = (), 
                                        @display {label: "Partition Key"} string? partitionKey = ()) 
                                        returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
@@ -418,9 +418,9 @@ public client class Client {
     # + publisherName - Publisher name 
     # + return - RevokedPublisher record on success, else returns an error
     @display {label: "Revoke a Publisher"}
-    remote isolated function revokePublisher(@display {label: "Event hub path"} string eventHubPath, 
-                                             @display {label: "Publisher name"} string publisherName) 
-                                             returns @tainted @display {label: "RevokedPublisher"} 
+    remote isolated function revokePublisher(@display {label: "Event Hub Path"} string eventHubPath, 
+                                             @display {label: "Publisher Name"} string publisherName) 
+                                             returns @tainted @display {label: "Revoked Publisher"} 
                                              RevokePublisher|error {
         http:Request req = getAuthorizedRequest(self.config);
         RevokePublisherDescription revokePublisherDescription = {
@@ -454,8 +454,8 @@ public client class Client {
     # + publisherName - Publisher name 
     # + return - Nil on success, else returns an error
     @display {label: "Resume a Publisher"}
-    remote isolated function resumePublisher(@display {label: "Event hub path"} string eventHubPath, 
-                                             @display {label: "Publisher name"} string publisherName) 
+    remote isolated function resumePublisher(@display {label: "Event Hub Path"} string eventHubPath, 
+                                             @display {label: "Publisher Name"} string publisherName) 
                                              returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
         string requestPath = FORWARD_SLASH + eventHubPath + REVOKED_PUBLISHER_PATH + publisherName;
