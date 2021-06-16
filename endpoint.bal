@@ -17,8 +17,6 @@
 import ballerina/http;
 import ballerina/lang.'xml as xmllib;
 import ballerina/regex;
-import ballerina/mime;
-import ballerina/io;
 
 # Client for Azure Event Hub connector.
 #
@@ -288,7 +286,7 @@ public client class Client {
     # Send a single event to an Event Hub.
     #
     # + eventHubPath - Event Hub path (Event Hub name)
-    # + data - Event data in string|xml|json|byte[] format
+    # + data - Event data in json format
     # + userProperties - Map of custom properties (Optional)
     # + brokerProperties - Map of broker properties (Optional)
     # + partitionId - Partition ID (Optional)
@@ -297,25 +295,24 @@ public client class Client {
     # + return - Nil on success, else returns an error if remote API is unreachable
     @display {label: "Send an Event"}
     remote isolated function send(@display {label: "Event Hub Path"} string eventHubPath, 
-                                  @display {label: "Event Data"} 
-                                  string|xml|json|byte[]|mime:Entity[]|stream<byte[], io:Error> data, 
-                                  @display {label: "User Properties"} map<string>? userProperties = (), 
-                                  @display {label: "Broker Properties"} map<anydata>? brokerProperties = (), 
+                                  @display {label: "Event Data"} json data, 
+                                  @display {label: "User Properties"} map<json>? userProperties = (), 
+                                  @display {label: "Broker Properties"} map<json>? brokerProperties = (), 
                                   @display {label: "Partition ID"} int? partitionId = (), 
                                   @display {label: "Publisher ID"} string? publisherId = (), 
                                   @display {label: "Partition Key"} string? partitionKey = ()) 
                                   returns @tainted error? {
         http:Request req = getAuthorizedRequest(self.config);
         check req.setContentType(CONTENT_TYPE_SEND);
-        if (userProperties is map<string>) {
+        if (userProperties is map<json>) {
             foreach var [header, value] in userProperties.entries() {
-            req.addHeader(header, value.toString());
+            req.addHeader(header, value.toJsonString());
         }
         }
-        if (partitionKey is string && brokerProperties is map<anydata>) {
+        if (partitionKey is string && brokerProperties is map<json>) {
             brokerProperties[PARTITION_KEY] = partitionKey;
         } else if (partitionKey is string && brokerProperties is ()) {
-            map<anydata> properties = {};
+            map<json> properties = {};
             properties[PARTITION_KEY] = partitionKey;
             json|error props = properties.cloneWithType(json);
             if (props is error) {
@@ -324,7 +321,7 @@ public client class Client {
                 req.addHeader(BROKER_PROPERTIES, props.toJsonString());
             }
         }
-        if (brokerProperties is map<anydata>) {
+        if (brokerProperties is map<json>) {
             json|error props = brokerProperties.cloneWithType(json);
             if (props is error) {
                 return error Error(BROKER_PROPERTIES_PARSE_ERROR, props);
