@@ -25,16 +25,15 @@ import ballerina/xmldata;
 isolated function getBatchEventJson(BatchEvent batchEvent) returns json {
     json[] message = [];
     foreach var item in batchEvent.events {
-        json data = checkpanic item.data.cloneWithType(json);
         json jsonMessage = {
-            Body: data
+            Body: item.data
         };
         if (!(item["userProperties"] is ())) {
-            json userProperties = {UserProperties:checkpanic item["userProperties"].cloneWithType(json)};
+            json userProperties = {UserProperties: checkpanic item["userProperties"].cloneWithType(json)};
             jsonMessage = checkpanic jsonMessage.mergeJson(userProperties);
         }
         if (!(item["brokerProperties"] is ())) {
-            json brokerProperties = {BrokerProperties:checkpanic item["brokerProperties"].cloneWithType(json)};
+            json brokerProperties = {BrokerProperties: checkpanic item["brokerProperties"].cloneWithType(json)};
             jsonMessage = checkpanic jsonMessage.mergeJson(brokerProperties);
         }
         message.push(jsonMessage);
