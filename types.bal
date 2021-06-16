@@ -27,7 +27,7 @@ public type ClientEndpointConfiguration record {|
     string sasKeyName;
     @display {label: "SAS Key"}
     string sasKey;
-    @display {label: "Resource Uri"}
+    @display {label: "Resource URI"}
     string resourceUri;
     @display {label: "Timeout"}
     int timeout?;
