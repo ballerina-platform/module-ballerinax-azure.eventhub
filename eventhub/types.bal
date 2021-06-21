@@ -43,7 +43,7 @@ public type ClientEndpointConfiguration record {|
 @display {label: "Event"}
 public type Event record {|
     @display {label: "Event Data"}
-    anydata data;
+    json data;
     @display {label: "Broker Properties"}
     map<json> brokerProperties?;
     @display {label: "User Properties"}
