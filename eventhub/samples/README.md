@@ -2,7 +2,7 @@
 
 ## Event Hubs Service Operations
 The Event Hub Ballerina Connector enables you to access the Event Hubs service to perform operations on event hubs. 
-They have <namespaceName>.servicebus.windows.net/ in the request URI.
+They have "<Namespace_Name>.servicebus.windows.net/" in the request URI.
 
 1. Send Event
 
@@ -13,31 +13,6 @@ error if the operation is unsuccessful.
 
 Sample is available at:
 https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples/send_event.bal
-
-```ballerina
-import ballerinax/azure_eventhub;
-import ballerina/log;
-
-configurable string sasKeyName = ?;
-configurable string sasKey = ?;
-configurable string resourceUri = ?;
-
-public function main() {
-    azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: sasKeyName,
-        sasKey: sasKey,
-        resourceUri: resourceUri 
-    };
-    azure_eventhub:Client publisherClient = checkpanic new (config);
-    
-    var result = publisherClient->send("myeventhub", "eventData");
-    if (result is error) {
-        log:printError(msg = result.message());
-    } else {
-        log:printInfo("Successful!");
-    }
-}
-```
 
 2. Send an event with broker properties and user properties
 
@@ -50,34 +25,6 @@ unsuccessful.
 
 Sample is available at:
 https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples/send_event_with_broker_and_user_properties.bal
-
-```ballerina
-import ballerinax/azure_eventhub;
-import ballerina/log;
-
-configurable string sasKeyName = ?;
-configurable string sasKey = ?;
-configurable string resourceUri = ?;
-
-public function main() {
-    azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: sasKeyName,
-        sasKey: sasKey,
-        resourceUri: resourceUri 
-    };
-    azure_eventhub:Client publisherClient = checkpanic new (config);
-
-    map<string> brokerProps = {"CorrelationId": "32119834", "CorrelationId2": "32119834"};
-    map<string> userProps = {Alert: "windy", warning: "true"};
-
-    var result = publisherClient->send("myeventhub", "eventData", userProps, brokerProps);
-    if (result is error) {
-        log:printError(result.message());
-    } else {
-        log:printInfo("Successful!");
-    }
-}
-```
 
 3. Send event with partition key
 
@@ -93,36 +40,6 @@ an eventhub error if the operation is unsuccessful.
 Sample is available at:
 https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples/send_event_with_partition_key.bal
 
-
-```ballerina
-import ballerinax/azure_eventhub;
-import ballerina/log;
-
-configurable string sasKeyName = ?;
-configurable string sasKey = ?;
-configurable string resourceUri = ?;
-
-public function main() {
-    azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: sasKeyName,
-        sasKey: sasKey,
-        resourceUri: resourceUri 
-    };
-    azure_eventhub:Client publisherClient = checkpanic new (config);
-
-    map<string> brokerProps = {PartitionKey: "groupName1", CorrelationId: "32119834"};
-    map<string> userProps = {Alert: "windy", warning: "true"};
-
-    // partition key used as the parameter is prioritized over the partition key provided in the brokerProperties
-    var result = publisherClient->send("myeventhub", "data", userProps, brokerProps, partitionKey = "groupName");
-    if (result is error) {
-        log:printError(result.message());
-    } else {
-        log:printInfo("Successful!");
-    }
-}
-```
-
 4. Send partition event
 
 This section shows how to use the ballerina connector to send events to an event hub with broker properties, 
@@ -136,33 +53,6 @@ the eventhub named “myhub”. It returns an eventhub error if the operation is
 Sample is available at:
 https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples/send_partition_event.bal
 
-```ballerina
-import ballerinax/azure_eventhub;
-import ballerina/log;
-
-configurable string sasKeyName = ?;
-configurable string sasKey = ?;
-configurable string resourceUri = ?;
-
-public function main() {
-    azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: sasKeyName,
-        sasKey: sasKey,
-        resourceUri: resourceUri 
-    };
-    azure_eventhub:Client publisherClient = checkpanic new (config);
-
-    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
-    map<string> userProps = {Alert: "windy", warning: "true"};
-
-    var result = publisherClient->send("myeventhub", "data", userProps, brokerProps, partitionId = 1);
-    if (result is error) {
-        log:printError(result.message());
-    } else {
-        log:printInfo("Successful!");
-    }
-}
-```
 Note:
 You can specify the event hub path and the event data as parameters of the send method.
 This operation will return a ballerina error if the operation failed.
@@ -179,40 +69,6 @@ BatchEvent. It returns an eventhub error if the operation is unsuccessful.
 Sample is available at:
 https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples/send_batch_event.bal
 
-```ballerina
-import ballerinax/azure_eventhub;
-import ballerina/log;
-
-configurable string sasKeyName = ?;
-configurable string sasKey = ?;
-configurable string resourceUri = ?;
-
-public function main() {
-    azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: sasKeyName,
-        sasKey: sasKey,
-        resourceUri: resourceUri 
-    };
-    azure_eventhub:Client publisherClient = checkpanic new (config);
-
-    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
-    map<string> userProps = {Alert: "windy", warning: "true"};
-
-    azure_eventhub:BatchEvent batchEvent = {
-        events: [
-            {data: "Message1"},
-            {data: "Message2", brokerProperties: brokerProps},
-            {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
-        ]
-    };
-    var result = publisherClient->sendBatch("myeventhub", batchEvent);
-    if (result is error) {
-        log:printError(result.message());
-    } else {
-        log:printInfo("Successful!");
-    }
-}
-```
 Note:
 You can specify the event hub path, the batch event of record type BatchEvent and publisher ID as parameters of the 
 send method.
@@ -231,45 +87,10 @@ scenario of sending an event with batch event to the event hub path named “myh
 Sample is available at:
 https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples/send_batch_event_with_partition_key.bal
 
-```ballerina
-import ballerinax/azure_eventhub;
-import ballerina/log;
-
-configurable string sasKeyName = ?;
-configurable string sasKey = ?;
-configurable string resourceUri = ?;
-
-public function main() {
-    azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: sasKeyName,
-        sasKey: sasKey,
-        resourceUri: resourceUri 
-    };
-    azure_eventhub:Client publisherClient = checkpanic new (config);
-
-    map<string> brokerProps = {PartitionKey: "groupName", CorrelationId: "32119834"};
-    map<string> userProps = {Alert: "windy", warning: "true"};
-
-    azure_eventhub:BatchEvent batchEvent = {
-        events: [
-            {data: "Message1"},
-            {data: "Message2", brokerProperties: brokerProps},
-            {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
-        ]
-    };
-    var result = publisherClient->sendBatch("myeventhub", batchEvent, partitionKey = "groupName");
-    if (result is error) {
-        log:printError(result.message());
-    } else {
-        log:printInfo("Successful!");
-    }
-}
-```
 Note:
 You can specify the event hub path, the batch event of record type BatchEvent and partition key as parameters of the 
 send method.
 This operation will return a ballerina error if the operation failed.
-
 
 7. Send batch event with publisher ID
 
@@ -285,40 +106,6 @@ unsuccessful.
 Sample is available at:
 https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples/send_batch_event_with_publisherId.bal
 
-```ballerina
-import ballerinax/azure_eventhub;
-import ballerina/log;
-
-configurable string sasKeyName = ?;
-configurable string sasKey = ?;
-configurable string resourceUri = ?;
-
-public function main() {
-    azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: sasKeyName,
-        sasKey: sasKey,
-        resourceUri: resourceUri 
-    };
-    azure_eventhub:Client publisherClient = checkpanic new (config);
-
-    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
-    map<string> userProps = {Alert: "windy", warning: "true"};
-
-    azure_eventhub:BatchEvent batchEvent = {
-        events: [
-            {data: "Message1"},
-            {data: "Message2", brokerProperties: brokerProps},
-            {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
-        ]
-    };
-    var result = publisherClient->sendBatch("myeventhub", batchEvent, publisherId = "device-1");
-    if (result is error) {
-        log:printError(result.message());
-    } else {
-        log:printInfo("Successful!");
-    }
-}
-```
 Note:
 You can specify the event hub path, the batch event of record type BatchEvent and publisher ID as parameters of the 
 send method.
@@ -337,38 +124,6 @@ an eventhub error if the operation is unsuccessful.
 Sample is available at:
 https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples/create_event_hub.bal
 
-```ballerina
- 
-import ballerinax/azure_eventhub;
-import ballerina/log;
-
-configurable string sasKeyName = ?;
-configurable string sasKey = ?;
-configurable string resourceUri = ?;
-
-public function main() {
-    azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: sasKeyName,
-        sasKey: sasKey,
-        resourceUri: resourceUri 
-    };
-    azure_eventhub:Client managementClient = checkpanic new (config);
-
-    azure_eventhub:EventHubDescription eventHubDescription = {
-        MessageRetentionInDays: 3,
-        PartitionCount: 8
-    };
-    var result = managementClient->createEventHub("myhubnew", eventHubDescription);
-    if (result is error) {
-        log:printError(result.message());
-    }
-    if (result is azure_eventhub:EventHub) {
-        log:printInfo(result.toString());
-        log:printInfo("Successful!");
-    }
-}
-```
-
 2. Get an event hub
 
 This section shows how to use the ballerina connector to get all the metadata associated with the specified event hub. 
@@ -378,33 +133,6 @@ an eventhub error if the operation is unsuccessful.
 
 Sample is available at:
 https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples/get_event_hub.bal
-
-```ballerina
-import ballerinax/azure_eventhub;
-import ballerina/log;
-
-configurable string sasKeyName = ?;
-configurable string sasKey = ?;
-configurable string resourceUri = ?;
-
-public function main() {
-    azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: sasKeyName,
-        sasKey: sasKey,
-        resourceUri: resourceUri 
-    };
-    azure_eventhub:Client managementClient = checkpanic new (config);
-
-    var result = managementClient->getEventHub("myhub");
-    if (result is error) {
-        log:printError(result.message());
-    }
-    if (result is azure_eventhub:EventHub) {
-        log:printInfo(result.toString());
-        log:printInfo("Successful!");
-    }
-}
-```
 
 3. Update an event hub
 
@@ -416,36 +144,6 @@ named “myhub”. It returns an eventhub error if the operation is unsuccessful
 Sample is available at:
 https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples/update_event_hub.bal
 
-```ballerina
-import ballerinax/azure_eventhub;
-import ballerina/log;
-
-configurable string sasKeyName = ?;
-configurable string sasKey = ?;
-configurable string resourceUri = ?;
-
-public function main() {
-    azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: sasKeyName,
-        sasKey: sasKey,
-        resourceUri: resourceUri 
-    };
-    azure_eventhub:Client managementClient = checkpanic new (config);
-
-    azure_eventhub:EventHubDescriptionToUpdate eventHubDescriptionToUpdate = {
-        MessageRetentionInDays: 5
-    };
-    var result = managementClient->updateEventHub("myhub", eventHubDescriptionToUpdate);
-    if (result is error) {
-        log:printError(result.message());
-    }
-    if (result is azure_eventhub:EventHub) {
-        log:printInfo(result.toString());
-        log:printInfo("Successful!");
-    }
-}
-```
-
 4. List Event Hubs
 
 This section shows how to use the ballerina connector to get all the metadata associated with the event hubs in a 
@@ -456,35 +154,6 @@ event hubs in the specified namespace. It returns an eventhub error if the opera
 Sample is available at:
 https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples/list_event_hubs.bal
 
-```ballerina
-import ballerinax/azure_eventhub;
-import ballerina/log;
-
-configurable string sasKeyName = ?;
-configurable string sasKey = ?;
-configurable string resourceUri = ?;
-
-public function main() {
-    azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: sasKeyName,
-        sasKey: sasKey,
-        resourceUri: resourceUri 
-    };
-    azure_eventhub:Client managementClient = checkpanic new (config);
-
-    var result = managementClient->listEventHubs();
-    if (result is error) {
-        log:printError(result.message());
-    }
-    if (result is stream<azure_eventhub:EventHub>) {
-        _ = result.forEach(isolated function (azure_eventhub:EventHub eventHub) {
-                log:printInfo(eventHub.toString());
-            });
-        log:printInfo("listReceived");
-    }
-}
-```
-
 5. Delete an event hub
 
 This section shows how to use the ballerina connector to delete an event hub. We must specify the event hub name as a 
@@ -493,31 +162,6 @@ eventhub error if the operation is unsuccessful.
 
 Sample is available at:
 https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples/delete_event_hub.bal
-
-```ballerina
-import ballerinax/azure_eventhub;
-import ballerina/log;
-
-configurable string sasKeyName = ?;
-configurable string sasKey = ?;
-configurable string resourceUri = ?;
-
-public function main() {
-    azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: sasKeyName,
-        sasKey: sasKey,
-        resourceUri: resourceUri 
-    };
-    azure_eventhub:Client managementClient= checkpanic new (config);
-
-    var result = managementClient->deleteEventHub("myhub");
-    if (result is error) {
-        log:printError(result.message());
-    } else {
-        log:printInfo("Successful!");
-    }
-}
-```
 
 6. Create a new consumer group
 
@@ -529,32 +173,6 @@ operation is unsuccessful.
 Sample is available at:
 https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples/create_consumer_group.bal
 
-```ballerina
-import ballerinax/azure_eventhub;
-import ballerina/log;
-
-configurable string sasKeyName = ?;
-configurable string sasKey = ?;
-configurable string resourceUri = ?;
-
-public function main() {
-    azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: sasKeyName,
-        sasKey: sasKey,
-        resourceUri: resourceUri 
-    };
-    azure_eventhub:Client managementClient = checkpanic new (config);
-
-    var result = managementClient->createConsumerGroup("myeventhub", "consumerGroup1");
-    if (result is error) {
-        log:printError(result.message());
-    }
-    if (result is azure_eventhub:ConsumerGroup) {
-        log:printInfo(result.toString());
-        log:printInfo("successful");
-    }
-}
-```
 Note:
 You can specify the event hub path and consumer group name as parameters of the createConsumerGroup method.
 This operation will return a ballerina error if the operation failed.
@@ -570,32 +188,6 @@ operation is unsuccessful.
 Sample is available at:
 https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples/get_consumer_group.bal
 
-```ballerina
-import ballerinax/azure_eventhub;
-import ballerina/log;
-
-configurable string sasKeyName = ?;
-configurable string sasKey = ?;
-configurable string resourceUri = ?;
-
-public function main() {
-    azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: sasKeyName,
-        sasKey: sasKey,
-        resourceUri: resourceUri 
-    };
-    azure_eventhub:Client managementClient = checkpanic new (config);
-
-    var result = managementClient->getConsumerGroup("myeventhub", "consumerGroup1");
-    if (result is error) {
-        log:printError(result.message());
-    }
-    if (result is azure_eventhub:ConsumerGroup) {
-        log:printInfo(result.toString());
-        log:printInfo("successful");
-    }
-}
-```
 Note:
 You can specify the event hub path and consumer group name as parameters of the getConsumerGroup method.
 This operation will return a ballerina error if the operation failed.
@@ -611,34 +203,6 @@ unsuccessful.
 Sample is available at:
 https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples/list_consumer_groups.bal
 
-```ballerina
-import ballerinax/azure_eventhub;
-import ballerina/log;
-
-configurable string sasKeyName = ?;
-configurable string sasKey = ?;
-configurable string resourceUri = ?;
-
-public function main() {
-    azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: sasKeyName,
-        sasKey: sasKey,
-        resourceUri: resourceUri 
-    };
-    azure_eventhub:Client managementClient = checkpanic new (config);
-
-    var result = managementClient->listConsumerGroups("myeventhub");
-    if (result is error) {
-        log:printError(result.message());
-    }
-    if (result is stream<azure_eventhub:ConsumerGroup>) {
-        _ = result.forEach(isolated function (azure_eventhub:ConsumerGroup consumerGroup) {
-                log:printInfo(consumerGroup.toString());
-            });
-        log:printInfo("successful");
-    }
-}
-```
 Note:
 You can specify the event hub path as a parameter of the listConsumerGroups method.
 This operation will return a ballerina error if the operation failed.
@@ -651,34 +215,6 @@ specified consumer group.
 Sample is available at:
 https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples/list_partitions.bal
 
-```ballerina
-import ballerinax/azure_eventhub;
-import ballerina/log;
-
-configurable string sasKeyName = ?;
-configurable string sasKey = ?;
-configurable string resourceUri = ?;
-
-public function main() {
-    azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: sasKeyName,
-        sasKey: sasKey,
-        resourceUri: resourceUri 
-    };
-    azure_eventhub:Client managementClient = checkpanic new (config);
-
-    var result = managementClient->listPartitions("myeventhub", "consumerGroup1");
-    if (result is error) {
-        log:printError(result.message());
-    }
-    if (result is stream<azure_eventhub:Partition>) {
-        _ = result.forEach(isolated function (azure_eventhub:Partition partition) {
-                log:printInfo(partition.toString());
-            });
-        log:printInfo("successful");
-    }
-}
-```
 Note:
 You can specify the event hub path and consumer group name as parameters of the listPartitions method.
 This operation will return a ballerina error if the operation failed.
@@ -691,32 +227,6 @@ consumer group.
 Sample is available at:
 https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples/get_partition.bal
 
-```ballerina
-import ballerinax/azure_eventhub;
-import ballerina/log;
-
-configurable string sasKeyName = ?;
-configurable string sasKey = ?;
-configurable string resourceUri = ?;
-
-public function main() {
-    azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: sasKeyName,
-        sasKey: sasKey,
-        resourceUri: resourceUri 
-    };
-    azure_eventhub:Client managementClient = checkpanic new (config);
-
-    var result = managementClient->getPartition("myeventhub", "consumerGroup1", 1);
-    if (result is error) {
-        log:printError(result.message());
-    }
-    if (result is azure_eventhub:Partition) {
-        log:printInfo(result.toString());
-        log:printInfo("successful");
-    }
-}
-```
 Note:
 You can specify the event hub path, consumer group name and partition ID as parameters of the getPartition method.
 This operation will return a ballerina error if the operation failed.
@@ -732,31 +242,6 @@ unsuccessful.
 Sample is available at:
 https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples/delete_consumer_groups.bal
 
-```ballerina
-import ballerinax/azure_eventhub;
-import ballerina/log;
-
-configurable string sasKeyName = ?;
-configurable string sasKey = ?;
-configurable string resourceUri = ?;
-
-public function main() {
-    azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: sasKeyName,
-        sasKey: sasKey,
-        resourceUri: resourceUri 
-    };
-    azure_eventhub:Client managementClient = checkpanic new (config);
-
-    var result = managementClient->deleteConsumerGroup("myeventhub","consumerGroup1");
-    if (result is error) {
-        log:printError(result.message());
-    }
-    if (result is ()) {
-        log:printInfo("successful");
-    }
-}
-```
 Note:
 You can specify the event hub path and consumer group name as parameters of the createConsumerGroup method.
 This operation will return a ballerina error if the operation failed.
@@ -772,36 +257,6 @@ This section shows how to use the ballerina connector to retrieve all revoked pu
 Sample is available at:
 https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples/get_revoked_publishers.bal
 
-```ballerina
-import ballerinax/azure_eventhub;
-import ballerina/log;
-
-configurable string sasKeyName = ?;
-configurable string sasKey = ?;
-configurable string resourceUri = ?;
-
-public function main() {
-    azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: sasKeyName,
-        sasKey: sasKey,
-        resourceUri: resourceUri 
-    };
-    azure_eventhub:Client publisherClient = checkpanic new (config);
-
-    var result = publisherClient->getRevokedPublishers("myeventhub");
-    if (result is error) {
-        log:printError(result.message());
-    }
-    if (result is stream<azure_eventhub:RevokePublisher>) {
-        log:printInfo("listReceived");
-        _ = result.forEach(isolated function (azure_eventhub:RevokePublisher revokePublisher) {
-                log:printInfo(revokePublisher.toString());
-            });
-        log:printInfo("Successful!");
-    }
-}
-```
-
 2. Revoke Publisher
 
 This section shows how to use the ballerina connector to revoke a publisher so that a revoked publisher may encounter 
@@ -810,33 +265,6 @@ errors when sending events to the event hub.
 Sample is available at:
 https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples/revoke_publisher.bal
 
-```ballerina
-import ballerinax/azure_eventhub;
-import ballerina/log;
-
-configurable string sasKeyName = ?;
-configurable string sasKey = ?;
-configurable string resourceUri = ?;
-
-public function main() {
-    azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: sasKeyName,
-        sasKey: sasKey,
-        resourceUri: resourceUri 
-    };
-    azure_eventhub:Client publisherClient = checkpanic new (config);
-
-    var result = publisherClient->revokePublisher("myeventhub", "device-1");
-    if (result is error) {
-        log:printError(result.message());
-    }
-    if (result is azure_eventhub:RevokePublisher) {
-        log:printInfo(result.toString());
-        log:printInfo("Successful!");
-    }
-}
-```
-
 3. Resume Publisher
 
 This section shows how to use the ballerina connector to resume a revoked publisher so that the publisher can resume 
@@ -844,29 +272,3 @@ sending events to the event hub.
 
 Sample is available at:
 https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples/resume_publisher.bal
-
-```ballerina
-import ballerinax/azure_eventhub;
-import ballerina/log;
-
-configurable string sasKeyName = ?;
-configurable string sasKey = ?;
-configurable string resourceUri = ?;
-
-public function main() {
-    azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: sasKeyName,
-        sasKey: sasKey,
-        resourceUri: resourceUri 
-    };
-    azure_eventhub:Client publisherClient = checkpanic new (config);
-
-    var result = publisherClient->resumePublisher("myeventhub", "device-1");
-    if (result is error) {
-        log:printError(result.message());
-    }
-    if (result is ()) {
-        log:printInfo("successful");
-    }
-}
-```
