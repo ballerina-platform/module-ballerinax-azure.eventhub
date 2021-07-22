@@ -28,6 +28,10 @@ public client class Client {
     private string API_PREFIX = EMPTY_STRING;
     private http:Client clientEndpoint;
 
+    # Initializes the Azure Event Hub connector client endpoint.
+    #
+    # + config - Configurations required to initialize the `Client` endpoint
+    # + return - Error at failure of client initialization
     public isolated function init(ClientEndpointConfiguration config) returns error? {
         self.config = config;
         if (config?.timeout == ()) {
