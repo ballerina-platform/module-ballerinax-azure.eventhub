@@ -1,70 +1,55 @@
 ## Overview
 
-Azure Event Hub Ballerina Connector is used to connect with the Azure Event Hubs via Ballerina language easily 
-to ingest millions of events per second so that you can process and analyze the massive amounts of data produced 
-by your connected devices and applications. Once data is collected into an Event Hub, it can be transformed and stored 
-using any real-time analytics provider or batching/storage adapters.
+The Azure Event Hub Ballerina Connector is used to connect Ballerina to the Azure Event Hub to ingest, buffer, store, 
+and process high-frequency data from any source in real-time to derive important business insights.
 
-This module supports Event hub service operations like sending an event, sending batch events, 
+This module supports Event hub service operations such as sending an event, sending batch events, 
 sending partition events and sending events with partition ID. It also supports Event hub management operations like 
 creating a new event hub, getting an event hub, updating an event hub, listing event hubs, deleting event hubs, 
 creating a new consumer group, getting consumer groups, listing consumer groups, listing partitions, getting partitions, 
 deleting consumer groups. The connector also provides the capability to handle publisher policy operations like getting 
-revoked publishers, revoking a publisher, and resume publishers. This module will only be focusing on sending events to the event hub.
+revoked publishers, revoking a publisher, and resume publishers.
 
-This module supports Azure Event Hub [REST API 2014-01](https://docs.microsoft.com/en-us/rest/api/eventhub/) version.
+This module supports Azure Event Hub REST API [v2014-01](https://docs.microsoft.com/en-us/rest/api/eventhub/).
 
-## Configuring Connector
+## Prerequisites
 
-### Prerequisites
-* Azure Account to Access Azure Portal https://docs.microsoft.com/en-us/learn/modules/create-an-azure-account/
+Before using this connector in your Ballerina application, complete the following:
 
-* A Resource Group https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-create#create-a-resource-group
+* Create Azure Account to Access Azure Portal https://docs.microsoft.com/en-us/learn/modules/create-an-azure-account/
 
-* An Event Hubs Namespace https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-create#create-an-event-hubs-namespace
+* Create Resource Group https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-create#create-a-resource-group
 
-* An Event Hub https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-create#create-an-event-hub 
+* Create Event Hubs Namespace https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-create#create-an-event-hubs-namespace
 
-### Obtaining Tokens
-* Connection String of the Event Hub Namespace
+* Create Event Hub https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-create#create-an-event-hub 
 
-    We need management credentials to communicate with the Event Hubs. These credentials are available in the connection 
-    string of the Event Hub namespace. Obtain the connection string for the Event Hubs namespace by following the 
-    instructions given below.
-    https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-get-connection-string#get-connection-string-from-the-portal
+* Obtain tokens
+
+    Shared Access Signature (SAS) authentication credentials are required to communicate with the Event Hub. These credentials are available in the connection string of the Event Hub namespace.
+
+    1. Obtain the connection string for the Event Hub namespace by following the instructions given [here](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-get-connection-string#get-connection-string-from-the-portal).
     (Eg: "Endpoint=sb://<Namespace_Name>.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=i1f2BXAbmtxhu............f9GMyfnNWvQ3CY=")
 
-* Shared Access Signature (SAS) Authentication Credentials
+    2. Extract the shared access key name, shared access key, and resource URI of the Event Hub namespace from the connection string. 
+        * Shared access key name (Eg: "RootManageSharedAccessKey")
+        * Shared access key (Eg: "i1f2BXAbmtxhu............f9GMyfnNWvQ3CY=")
+        * Resource URI to the Event Hub namespace (Eg: "<Namespace_Name>.servicebus.windows.net")
 
-    You need to extract the Shared Access Key Name, Shared Access Key, Resource URI to the Event Hub Namespace separately 
-    from the connection string.
-    * Shared Access Key Name, (Eg: "RootManageSharedAccessKey")
-    * Shared Access Key, (Eg: "i1f2BXAbmtxhu............f9GMyfnNWvQ3CY=")
-    * Resource URI to the Event Hub Namespace. (Eg: "<Namespace_Name>.servicebus.windows.net")
+* Configure the connector with obtained tokens
 
-* Provide the following configuration information in the `Config.toml` file to use the Azure Event Hub connector.
+## Quickstart
 
-    ```ballerina
-    sasKeyName = "<SHARED_ACCESS_KEY_NAME>"
-    sasKey = "<SHARED_ACCESS_KEY>"
-    resourceUri = "<RESOURCE_URI_TO_EVENTHUB_NAMESPACE>" 
-    ```
-## Quickstart(s)
+To use the Azure Event Hub connector in your Ballerina application, update the .bal file as follows:
 
-### Publish Events to an Azure Event Hub 
-
-This is the simplest scenario to send events to an Azure Event Hub. You need to obtain a connection string of the 
-name space of the event hub you want to send events. 
-
-#### Step 1: Import the Azure Event Hub Ballerina Library
-First, import the ballerinax/azure_eventhub module into the Ballerina project.
+### Step 1: Import the Azure Event Hub ballerina library
+Import the ballerinax/azure_eventhub module into the Ballerina project.
 ```ballerina
     import ballerinax/azure_eventhub;
 ```
 
-#### Step 2: Initialize the Azure Event Hub PublisherClient
-You can now make the connection configuration using the shared access key name, shared access key, and the resource 
-URI to the event hub namespace.
+### Step 2: Initialize the Azure Event Hub client
+Use the extracted shared access key name, shared access key, and the resource uri to initialize the Azure Event Hub client.
 ```ballerina
     configurable string sasKeyName = ?;
     configurable string sasKey = ?;
@@ -75,19 +60,17 @@ URI to the event hub namespace.
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:Client publisherClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = check new (config);
 ```
-Note:
-You must specify the SAS key name, SAS key and the resource URI when configuring the Azure Event Hub Client connector.
 
-#### Step 3: Specify the (Optional) Broker Properties and User Properties
-You can now define the optional broker properties and user properties to be sent with the event using a map.
+### Step 3: Specify the broker properties and user properties
+Define the optional broker properties and user properties to be sent with the event using a map.
 ```ballerina
     map<string> brokerProps = {CorrelationId: "34", CorrelationId2: "83"};
     map<string> userProps = {Alert: "windy", warning: "true"};
 ```
 
-#### Step 4: Send an event to the Azure Event Hub
+### Step 4: Send an event to the Azure Event Hub
 You can now send an event to the Azure event hub by giving the event hub name, and the event hub data with the broker 
 properties and user properties. You can also give a partition key to send events to the same partition with the given 
 partition key name. Here we have sent an event with the string data “eventData” to the event hub named “mytesthub” with 
@@ -95,145 +78,22 @@ the partition key “groupName”.
 ```ballerina
     var sendResult = publisherClient->send("mytesthub", "eventData", userProps, brokerProps, partitionKey = "groupName");
     if (sendResult is error) {
-            log:printError(sendResult.message());
+        log:printError(sendResult.message());
     } else {
-            log:printInfo("Successfully Send Event to Event Hub!");
+        log:printInfo("Successfully Send Event to Event Hub!");
     }
 ```
-Note:
-You can specify the event hub path and the event data as parameters of the send method.
-This operation will return a ballerina error if the operation failed.
 
+## Quick reference
+Code snippets of some frequently used functions: 
 
-### Entity Management in an Azure Event Hub 
-This is the simplest scenario to manage entities related to azure event hubs. You need to obtain a connection string of 
-the name space of the event hub you want to send events. 
-
-#### Step 1: Import the Azure Event Hub Ballerina Library
-First, import the ballerinax/azure_eventhub module into the Ballerina project.
-```ballerina
-    import ballerinax/azure_eventhub;
-```
-
-#### Step 2: Initialize the Azure Event Hub ManagementClient
-You can now make the connection configuration using the shared access key name, shared access key, and the resource URI 
-to the event hub namespace.
-```ballerina
-    configurable string sasKeyName = ?;
-    configurable string sasKey = ?;
-    configurable string resourceUri = ?;
-
-    azure_eventhub:ClientEndpointConfiguration config = {
-        sasKeyName: sasKeyName,
-        sasKey: sasKey,
-        resourceUri: resourceUri 
-    };
-    azure_eventhub:Client managementClient = checkpanic new (config);
-```
-Note:
-You must specify the SAS key name, SAS key and the resource URI when configuring the Azure Event Hub Client connector.
-
-#### Step 3: Create a new event hub
-You need to specify the event hub name as a parameter to create a new event hub. Here we are creating an event hub 
-named “mytesthub”. 
-```ballerina
-    var createResult = managementClient->createEventHub("mytesthub");
-    if (createResult is error) {
-        log:printError(createResult.message());
-    }
-    if (createResult is azure_eventhub:EventHub) {
-        log:printInfo(createResult.toString());
-        log:printInfo("Successfully Created Event Hub!");
-    }
-
-```
-Note:
-You can specify the event hub path as a parameter of the createEventHub method.
-This operation will return a ballerina error if the operation failed.
-
-
-#### Step 4: Get an event hub 
-You need to specify the event hub name as a parameter to get all the metadata associated with the specified event hub. 
-Here we are getting all the metadata associated with the event hub named “mytesthub”.
-```ballerina
-    var getEventHubResult = managementClient->getEventHub("mytesthub");
-    if (getEventHubResult is error) {
-        log:printError(getEventHubResult.message());
-    }
-    if (getEventHubResult is azure_eventhub:EventHub) {
-        log:printInfo(getEventHubResult.toString());
-        log:printInfo("Successfully Get Event Hub!");
-    }
-```
-Note:
-You can specify the event hub path as a parameter of the getEventHub method.
-This operation will return a ballerina error if the operation failed.
-
-#### Step 5: Update an event hub 
-You need to specify the event hub name as a parameter and EventHubDecsriptionToUpdate record with message retention in 
-days property to update the properties of the event hub. Here we are updating the properties associated with the event 
-hub named “mytesthub”.
-```ballerina
-    azure_eventhub:EventHubDescriptionToUpdate eventHubDescriptionToUpdate = {
-        MessageRetentionInDays: 5
-    };
-    var updateResult = managementClient->updateEventHub("mytesthub", eventHubDescriptionToUpdate);
-    if (updateResult is error) {
-        log:printError(updateResult.message());
-    }
-    if (updateResult is azure_eventhub:EventHub) {       
-        log:printInfo(updateResult.toString());
-        log:printInfo("Successfully Updated Event Hub!");
-    }
-```
-Note:
-You can specify the event hub path and event hub description of  record type EventHubDescriptionToUpdate as a parameter 
-of the updateEventHub method.
-This operation will return a ballerina error if the operation failed.
-
-#### Step 6: List event hubs
-You need to specify the event hub name as a parameter to get all the metadata associated with the specified event hubs 
-in the namespace. Here we are getting all the metadata associated with the event hubs in the specified namespace.
-```ballerina
-    var listResult = managementClient->listEventHubs();
-    if (listResult is error) {
-        log:printError(listResult.message());
-    }
-    if (listResult is stream<azure_eventhub:EventHub>) {
-        _ = listResult.forEach(isolated function (azure_eventhub:EventHub eventHub) {
-                log:printInfo(eventHub.toString());
-            });
-        log:printInfo("Successfully Listed Event Hubs!");
-    }
-```
-Note:
-This operation will return a ballerina error if the operation failed.
-
-#### Step 7: Delete a event hub
-You need to specify the event hub name as a parameter to delete an event hub. This is the basic scenario of deleting 
-an event hub named “mytesthub”. 
-```ballerina
-    var deleteResult = managementClient->deleteEventHub("mytesthub");
-    if (deleteResult is error) {
-        log:printError(msg = deleteResult.message());
-    } else {
-        log:printInfo("Successfully Deleted Event Hub!");
-    }
-```
-Note:
-You can specify the event hub path as a parameter of the deleteEventHub method.
-This operation will return a ballerina error if the operation failed.
-
-## Snippets
-Snippets of some operations.
-
-1. Sending an event.
+* Send an event
 
 ```ballerina
    var result = eventHubClient->send("myhub", "eventData");
 ```
 
-2. Sending an event with broker properties and user properties.
+* Send an event with broker properties and user properties.
 
 ```ballerina
    map<string> brokerProps = {"CorrelationId": "32119834", "CorrelationId2": "32119834"};
@@ -242,25 +102,23 @@ Snippets of some operations.
    var result = eventHubClient->send("myhub", "eventData", userProps, brokerProps);
 ```
 
-3. Sending an event with broker properties, user properties & partition key.
+* Send an event with broker properties, user properties & partition key.
 ```ballerina
    map<string> brokerProps = {PartitionKey: "groupName1", CorrelationId: "32119834";
    map<string> userProps = {Alert: "windy", warning: "true"};
 
    var result = eventHubClient->send("myhub", "data", userProps, brokerProps, partitionKey = "groupName");
-}
 ```
 
-4. Sending an event with broker properties, user properties & partition id.
+* Send an event with broker properties, user properties & partition id.
 ```ballerina
    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
    map<string> userProps = {Alert: "windy", warning: "true"};
 
    var result = eventHubClient->send("myhub", "data", userProps, brokerProps, partitionId = 1);
-}
 ```
 
-5. Sending a batch event.
+* Send a batch event.
 ```ballerina
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
@@ -273,10 +131,9 @@ Snippets of some operations.
         ]
     };
     var result = eventHubClient->sendBatch("myhub", batchEvent);
-}
 ```
 
-6. Sending a batch event with partition key.
+* Send a batch event with partition key.
 ```ballerina
     map<string> brokerProps = {PartitionKey: "groupName", CorrelationId: "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
@@ -289,10 +146,9 @@ Snippets of some operations.
         ]
     };
     var result = eventHubClient->sendBatch("myhub", batchEvent, partitionKey = "groupName");
-}
 ```
 
-7. Sending a batch event to partition.
+* Send a batch event to partition.
 ```ballerina
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
@@ -305,10 +161,9 @@ Snippets of some operations.
         ]
     };
     var result = eventHubClient->sendBatch("myhub", batchEvent, partitionId = 1);
-}
 ```
 
-8. Sending a batch event with publisher id
+* Send a batch event with publisher id
 ```ballerina
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
@@ -321,44 +176,36 @@ Snippets of some operations.
         ]
     };
     var result = eventHubClient->sendBatch("myhub", batchEvent, publisherId = "device-1");
-}
 ```
 
-9. Create a new event hub
+* Create a new event hub
 ```ballerina
    var result = eventHubClient->createEventHub("myhub");
-}
 ```
 
-10. Get an event hub
+* Get an event hub
 ```ballerina
     var result = eventHubClient->getEventHub("myhub");
-}
 ```
 
-
-11. Delete a event hub
+* Delete a event hub
 ```ballerina
     var result = eventHubClient->deleteEventHub("myhub");
-}
 ```
 
-12. Create a new consumer group
+* Create a new consumer group
 ```ballerina
     var result = eventHubClient->createConsumerGroup("myhub", "groupName");
-}
 ```
 
-13. Get consumer group
+* Get consumer group
 ```ballerina
     var result = eventHubClient->getConsumerGroup("myhub", "groupName");
-}
 ```
 
-14. Delete a consumer group
+* Delete a consumer group
 ```ballerina
     var result = eventHubClient->deleteConsumerGroup("myhub", "groupName");
-}
 ```
 
-### [You can find more samples here](https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples)
+**[You can find a list of samples here](https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples)**
