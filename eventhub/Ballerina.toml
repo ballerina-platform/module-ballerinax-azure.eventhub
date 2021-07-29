@@ -4,5 +4,5 @@ name = "azure_eventhub"
 version = "0.1.4-SNAPSHOT"
 license= ["Apache-2.0"]
 authors = ["Ballerina"]
-keywords = ["Azure","Eventhub"]
+keywords = ["azure","eventhub","events","data ingestion"]
 repository = "https://github.com/ballerina-platform/module-ballerinax-azure.eventhub"
