@@ -9,7 +9,7 @@ The `ballerinax/azure_eventhub` is a [Ballerina](https://ballerina.io/) connecto
 ### Compatibility
 |                                                     | Version                         |
 |-----------------------------------------------------|---------------------------------|
-| Ballerina Language                                  | Ballerina Swan Lake Beta2       |
+| Ballerina Language                                  | Ballerina Swan Lake Beta3       |
 | Azure Event Hub REST API                            | 2014-01                         |
 
 ## Report issues
