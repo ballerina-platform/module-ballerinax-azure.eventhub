@@ -22,7 +22,7 @@
 # + timeout - Operation timeout
 # + enableRetry - Make it false to disable automatic retry on send operations when transient errors occur
 @display {label: "Connection Config"}
-public type ClientEndpointConfiguration record {|
+public type ConnectionConfig record {|
     @display {label: "SAS Key Name"}
     string sasKeyName;
     @display {label: "SAS Key"}

@@ -39,10 +39,10 @@ import ballerinax/azure_eventhub;
 ```
 
 ### Step 2: Create a new connector instance
-Create an `azure_eventhub:ClientEndpointConfiguration` with the extracted shared access key name, shared access key, 
+Create an `azure_eventhub:ConnectionConfig` with the extracted shared access key name, shared access key, 
 the resource uri and initialize the connector with it.
 ```ballerina
-azure_eventhub:ClientEndpointConfiguration config = {
+azure_eventhub:ConnectionConfig config = {
     sasKeyName: <SAS_KEY_NAME>,
     sasKey: <SAS_KEY>,
     resourceUri: <RESOURCE_URI> 
