@@ -22,7 +22,7 @@ configurable string sasKey = ?;
 configurable string resourceUri = ?;
 
 public function main() {
-    azure_eventhub:ClientEndpointConfiguration config = {
+    azure_eventhub:ConnectionConfig config = {
         sasKeyName: sasKeyName,
         sasKey: sasKey,
         resourceUri: resourceUri 

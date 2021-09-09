@@ -22,7 +22,7 @@ configurable string sasKeyName = os:getEnv("SAS_KEY_NAME");
 configurable string sasKey = os:getEnv("SAS_KEY");
 configurable string resourceUri = os:getEnv("RESOURCE_URI");
 
-ClientEndpointConfiguration config = {
+ConnectionConfig config = {
     sasKeyName: sasKeyName,
     sasKey: sasKey,
     resourceUri: resourceUri 

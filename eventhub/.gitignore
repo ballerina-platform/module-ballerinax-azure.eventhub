@@ -41,7 +41,7 @@ modules
 Config.toml
 
 # resources folder
-/resources
+/resources/*.json
 
 # idea files
 *.idea

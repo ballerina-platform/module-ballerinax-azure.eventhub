@@ -23,10 +23,10 @@ import ballerina/regex;
 # so that you can process and analyze the massive amounts of data produced by your connected devices and applications. 
 #
 # + clientEndpoint - Connector http endpoint
-@display {label: "Azure Event Hub", iconPath: "logo.png"}
+@display {label: "Azure Event Hub", iconPath: "resources/azure_eventhub.svg"}
 public isolated client class Client {
 
-    final readonly & ClientEndpointConfiguration config;
+    final readonly & ConnectionConfig config;
     final string API_PREFIX;
     final http:Client clientEndpoint;
 
@@ -38,14 +38,14 @@ public isolated client class Client {
     #
     # + config - Configuration for the connector
     # + return - `http:Error` in case of failure to initialize or `null` if successfully initialized 
-    public isolated function init(ClientEndpointConfiguration config) returns error? {
+    public isolated function init(ConnectionConfig config, http:ClientConfiguration httpClientConfig = {}) returns error? {
         self.config = config.cloneReadOnly();
         if (config?.timeout == ()) {
             self.API_PREFIX = API_VERSION_ONLY;
         } else {
             self.API_PREFIX = TIME_OUT + config?.timeout.toString() + API_VERSION;
         }
-        self.clientEndpoint = check new (HTTPS + self.config.resourceUri);
+        self.clientEndpoint = check new (HTTPS + self.config.resourceUri, httpClientConfig);
     }
 
     // Management Client Operations

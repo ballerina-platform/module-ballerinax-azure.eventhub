@@ -25,7 +25,7 @@ import ballerina/regex;
 # 
 # + config - Client endpoint configuration
 # + return - Return a http request with authorization header
-isolated function getAuthorizedRequest(ClientEndpointConfiguration config) returns http:Request {
+isolated function getAuthorizedRequest(ConnectionConfig config) returns http:Request {
     http:Request req = new;
     req.addHeader(AUTHORIZATION_HEADER, getSASToken(config));
     if (config?.enableRetry == false) {
@@ -35,7 +35,7 @@ isolated function getAuthorizedRequest(ClientEndpointConfiguration config) retur
     return req;
 }
 
-isolated function getAuthorizedRequestHeaderMap(ClientEndpointConfiguration config) returns map<string> {
+isolated function getAuthorizedRequestHeaderMap(ConnectionConfig config) returns map<string> {
     map<string> headerMap = {
             "Authorization": getSASToken(config)
     };
@@ -53,7 +53,7 @@ isolated function getAuthorizedRequestHeaderMap(ClientEndpointConfiguration conf
 # 
 # + config - Client endpoint configuration
 # + return - Return SAS token
-isolated function getSASToken(ClientEndpointConfiguration config) returns string {
+isolated function getSASToken(ConnectionConfig config) returns string {
     time:Utc time = time:utcNow();
     [int, decimal][epochSeconds, lastSecondFraction] = time;
     int week = 60 * 60 * 24 * 7;
