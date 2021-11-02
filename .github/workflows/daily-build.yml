@@ -35,12 +35,22 @@ jobs:
                 JAVA_OPTS: -DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true
               run: |
                 ./gradlew build
+
             # Build the ballerina project
             - name: Ballerina Build
               uses: ballerina-platform/ballerina-action/@nightly
               with:
                   args:
-                      build -c ./eventhub
+                      pack ./eventhub
+              env:
+                JAVA_HOME: /usr/lib/jvm/default-jvm
+
+            # Test the ballerina project
+            - name: Ballerina Tests
+              uses: ballerina-platform/ballerina-action/@nightly
+              with:
+                  args:
+                      test ./eventhub
               env:
                 JAVA_HOME: /usr/lib/jvm/default-jvm
                 SAS_KEY_NAME: ${{ secrets.SAS_KEY_NAME }}
