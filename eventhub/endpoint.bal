@@ -23,7 +23,7 @@ import ballerina/regex;
 # so that you can process and analyze the massive amounts of data produced by your connected devices and applications. 
 #
 # + clientEndpoint - Connector http endpoint
-@display {label: "Azure Event Hub", iconPath: "resources/azure_eventhub.svg"}
+@display {label: "Azure Event Hub", iconPath: "icon.png"}
 public isolated client class Client {
 
     final readonly & ConnectionConfig config;
