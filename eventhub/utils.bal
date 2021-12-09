@@ -55,7 +55,7 @@ isolated function getAuthorizedRequestHeaderMap(ConnectionConfig config) returns
 # + return - Return SAS token
 isolated function getSASToken(ConnectionConfig config) returns string {
     time:Utc time = time:utcNow();
-    [int, decimal][epochSeconds, lastSecondFraction] = time;
+    [int, decimal][epochSeconds, _] = time;
     int week = 60 * 60 * 24 * 7;
     int expiry = epochSeconds + week;
     string stringToSign = checkpanic url:encode(config.resourceUri, UTF8_URL_ENCODING) + "\n" + 
