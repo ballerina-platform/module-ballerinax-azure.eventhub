@@ -28,11 +28,11 @@ Execute the commands below to build from the source.
 
 - To build the package:
     ```shell
-    bal pack
+    bal build ./eventhub
     ```
 - To test the package: 
     ```shell
-    bal test
+    bal test ./eventhub
     ```
 
 ## Contributing to Ballerina
