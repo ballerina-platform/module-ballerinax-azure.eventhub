@@ -18,15 +18,12 @@ jobs:
         with:
           args:
             pack ./eventhub
-        env: 
-          JAVA_HOME: /usr/lib/jvm/default-jvm
       - name: Ballerina Tests
         uses: ballerina-platform/ballerina-action/@nightly
         with:
           args:
             test --code-coverage ./eventhub
         env: 
-          JAVA_HOME: /usr/lib/jvm/default-jvm
           SAS_KEY_NAME: ${{ secrets.SAS_KEY_NAME }}
           SAS_KEY: ${{ secrets.SAS_KEY }}
           RESOURCE_URI: ${{ secrets.RESOURCE_URI }}
