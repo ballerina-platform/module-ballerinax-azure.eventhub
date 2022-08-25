@@ -14,27 +14,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-# The Client endpoint configuration for Azure Event Hubs.
-#
-# + sasKeyName - Shared access service key name
-# + sasKey - Shared access service key 
-# + resourceUri - Resource URI. This is in the format {eventhubname}.servicebus.windows.net
-# + timeout - Operation timeout
-# + enableRetry - Make it false to disable automatic retry on send operations when transient errors occur
-@display {label: "Connection Config"}
-public type ConnectionConfig record {|
-    @display {label: "SAS Key Name"}
-    string sasKeyName;
-    @display {label: "SAS Key"}
-    string sasKey;
-    @display {label: "Resource URI"}
-    string resourceUri;
-    @display {label: "Timeout"}
-    int timeout?;
-    @display {label: "Enable Retry"}
-    boolean enableRetry?;
-|};
-
 # Represents a single event in a batch of events.
 #
 # + data - Event data
