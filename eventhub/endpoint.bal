@@ -38,13 +38,29 @@ public isolated client class Client {
     #
     # + config - Configuration for the connector
     # + return - `http:Error` in case of failure to initialize or `null` if successfully initialized 
-    public isolated function init(ConnectionConfig config, http:ClientConfiguration httpClientConfig = {}) returns error? {
+    public isolated function init(ConnectionConfig config) returns error? {
         self.config = config.cloneReadOnly();
         if (config?.timeout == ()) {
             self.API_PREFIX = API_VERSION_ONLY;
         } else {
             self.API_PREFIX = TIME_OUT + config?.timeout.toString() + API_VERSION;
         }
+        http:ClientConfiguration httpClientConfig = {
+            httpVersion: config.httpVersion,
+            http1Settings: {...config.http1Settings},
+            http2Settings: config.http2Settings,
+            timeout: config.httpTimeout,
+            forwarded: config.forwarded,
+            poolConfig: config.poolConfig,
+            cache: config.cache,
+            compression: config.compression,
+            circuitBreaker: config.circuitBreaker,
+            retryConfig: config.retryConfig,
+            responseLimits: config.responseLimits,
+            secureSocket: config.secureSocket,
+            proxy: config.proxy,
+            validation: config.validation
+        };
         self.clientEndpoint = check new (HTTPS + self.config.resourceUri, httpClientConfig);
     }
 
