@@ -17,6 +17,7 @@
 import ballerina/http;
 import ballerina/lang.'xml as xmllib;
 import ballerina/regex;
+import ballerinax/'client.config;
 
 # Ballerina Azure Event Hub connector provides the capability to access Azure Event Hubs REST API.
 # Azure Event Hubs is a highly scalable data ingress service that ingests millions of events per second 
@@ -40,27 +41,12 @@ public isolated client class Client {
     # + return - `http:Error` in case of failure to initialize or `null` if successfully initialized 
     public isolated function init(ConnectionConfig config) returns error? {
         self.config = config.cloneReadOnly();
-        if (config?.timeout == ()) {
+        if (config?.operationTimeout == ()) {
             self.API_PREFIX = API_VERSION_ONLY;
         } else {
-            self.API_PREFIX = TIME_OUT + config?.timeout.toString() + API_VERSION;
+            self.API_PREFIX = TIME_OUT + config?.operationTimeout.toString() + API_VERSION;
         }
-        http:ClientConfiguration httpClientConfig = {
-            httpVersion: config.httpVersion,
-            http1Settings: {...config.http1Settings},
-            http2Settings: config.http2Settings,
-            timeout: config.httpTimeout,
-            forwarded: config.forwarded,
-            poolConfig: config.poolConfig,
-            cache: config.cache,
-            compression: config.compression,
-            circuitBreaker: config.circuitBreaker,
-            retryConfig: config.retryConfig,
-            responseLimits: config.responseLimits,
-            secureSocket: config.secureSocket,
-            proxy: config.proxy,
-            validation: config.validation
-        };
+        http:ClientConfiguration httpClientConfig = check config:constructHTTPClientConfig(config);
         self.clientEndpoint = check new (HTTPS + self.config.resourceUri, httpClientConfig);
     }
 
@@ -454,12 +440,12 @@ public isolated client class Client {
             xmlns="http://schemas.microsoft.com/netservices/2010/10/servicebus/connect"/>`;
         req.setXmlPayload(getDescriptionProperties(revokePublisherDescription, revPubDes));
         string requestPath = "";
-        if (self.config?.timeout == ()) {
+        if (self.config?.operationTimeout == ()) {
             requestPath = FORWARD_SLASH + eventHubPath + REVOKED_PUBLISHER_PATH + publisherName + 
                 API_VERSION_ONLY_REVOKE_PUBLISHER;
         } else {
             requestPath = FORWARD_SLASH + eventHubPath + REVOKED_PUBLISHER_PATH + publisherName + 
-                TIME_OUT + self.config?.timeout.toString() + API_VERSION_REVOKE_PUBLISHER;
+                TIME_OUT + self.config?.operationTimeout.toString() + API_VERSION_REVOKE_PUBLISHER;
         }
         http:Response response = <http:Response> check self.clientEndpoint->put(requestPath, req);
         if (response.statusCode == http:STATUS_CREATED) {

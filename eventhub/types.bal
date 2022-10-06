@@ -14,6 +14,29 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import ballerinax/'client.config;
+
+# Azure Event Hubs Client Config.
+@display {label: "Connection Config"}
+public type ConnectionConfig record {|
+    *config:ConnectionConfig;
+    never auth?;
+    # Shared access service key name
+    string sasKeyName;
+    # Shared access service key
+    @display {
+        label: "",
+        kind: "password"
+    }
+    string sasKey;
+    # Resource URI. This is in the format {eventhubname}.servicebus.windows.net
+    string resourceUri;
+    # Operation timeout
+    int operationTimeout?;
+    # Make it false to disable automatic retry on send operations when transient errors occur
+    boolean enableRetry?;
+|};
+
 # Represents a single event in a batch of events.
 #
 # + data - Event data
