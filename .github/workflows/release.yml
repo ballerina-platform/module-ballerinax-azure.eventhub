@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Ballerina Build
-        uses: ballerina-platform/ballerina-action/@master
+        uses: ballerina-platform/ballerina-action/@2201.2.1
         with:
           args:
             pack ./eventhub
@@ -19,7 +19,7 @@ jobs:
           SAS_KEY: ${{ secrets.SAS_KEY }}
           RESOURCE_URI: ${{ secrets.RESOURCE_URI }}
       - name: Ballerina Push
-        uses: ballerina-platform/ballerina-action/@master
+        uses: ballerina-platform/ballerina-action/@2201.2.1
         with:
           args:
             push
