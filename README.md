@@ -3,6 +3,7 @@ Ballerina Azure Event Hubs Connector
 
 [![Build](https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/workflows/CI/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/actions?query=workflow%3ACI)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/ballerina-platform/module-ballerinax-azure.eventhub.svg)](https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/commits/master)
+[![GraalVM Check](https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/actions/workflows/build-with-bal-test-native.yml/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/actions/workflows/build-with-bal-test-native.yml)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 [Azure Event Hubs](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-about) is a fully managed, real-time data ingress service that is highly scalable, secured, open, and reliable. It ingests data (events) from different sources and reliably distributes it between multiple independent systems for processing, storage, and analysis.
