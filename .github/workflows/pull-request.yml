@@ -18,3 +18,14 @@ jobs:
           SAS_KEY_NAME: ${{ secrets.SAS_KEY_NAME }}
           SAS_KEY: ${{ secrets.SAS_KEY }}
           RESOURCE_URI: ${{ secrets.RESOURCE_URI }}
+      - name: Ballerina Test
+        uses: ballerina-platform/ballerina-action/@nightly
+        with:
+            args:
+                test --test-report --code-coverage --coverage-format=xml ./eventhub
+        env:
+          SAS_KEY_NAME: ${{ secrets.SAS_KEY_NAME }}
+          SAS_KEY: ${{ secrets.SAS_KEY }}
+          RESOURCE_URI: ${{ secrets.RESOURCE_URI }}
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
