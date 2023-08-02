@@ -11,7 +11,7 @@ Ballerina Azure Event Hubs Connector
 Azure Event Hubs [Ballerina](https://ballerina.io/) connector is used to connect with the Azure Event Hubs to ingest millions of events per second so that you can process and analyze the massive amounts of data produced by your connected devices and applications.
 
 For more information, go to the module(s).
-- [azure_eventhub](eventhub/Module.md)
+- [azure.eventhub](eventhub/Module.md)
 
 ## Building from the source
 

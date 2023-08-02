@@ -33,22 +33,22 @@ Before using this connector in your Ballerina application, complete the followin
 To use the Azure Event Hub connector in your Ballerina application, update the .bal file as follows:
 
 ### Step 1: Import connector
-Import the `ballerinax/azure_eventhub` module into the Ballerina project.
+Import the `ballerinax/azure.eventhub` module into the Ballerina project.
 ```ballerina
-import ballerinax/azure_eventhub;
+import ballerinax/azure.eventhub;
 ```
 
 ### Step 2: Create a new connector instance
-Create an `azure_eventhub:ConnectionConfig` with the extracted shared access key name, shared access key, 
+Create an `eventhub:ConnectionConfig` with the extracted shared access key name, shared access key, 
 the resource uri and initialize the connector with it.
 ```ballerina
-azure_eventhub:ConnectionConfig config = {
+eventhub:ConnectionConfig config = {
     sasKeyName: <SAS_KEY_NAME>,
     sasKey: <SAS_KEY>,
     resourceUri: <RESOURCE_URI> 
 };
 
-azure_eventhub:Client eventHubClient = check new (config);
+eventhub:Client eventHubClient = check new (config);
 ```
 
 ### Step 3: Invoke connector operation

@@ -2,9 +2,9 @@ Connects to [Microsoft Azure Event Hubs](https://docs.microsoft.com/en-us/rest/a
 
 ## Package overview
 
-The `ballerinax/azure_eventhub` is a [Ballerina](https://ballerina.io/) connector for Microsoft Azure Event Hubs. It is comprised of the following capabilities.
+The `ballerinax/azure.eventhub` is a [Ballerina](https://ballerina.io/) connector for Microsoft Azure Event Hubs. It is comprised of the following capabilities.
 
-* Perform Event Hub service operations, Event Hub management operations, handle publisher policy operations programatically using [Ballerina](https://ballerina.io/). The `ballerinax/azure_eventhub` module provides this capability.
+* Perform Event Hub service operations, Event Hub management operations, handle publisher policy operations programatically using [Ballerina](https://ballerina.io/). The `ballerinax/azure.eventhub` module provides this capability.
 
 ### Compatibility
 |                             | Version                  |
