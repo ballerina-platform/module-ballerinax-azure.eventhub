@@ -7,10 +7,10 @@ The `ballerinax/azure.eventhub` is a [Ballerina](https://ballerina.io/) connecto
 * Perform Event Hub service operations, Event Hub management operations, handle publisher policy operations programatically using [Ballerina](https://ballerina.io/). The `ballerinax/azure.eventhub` module provides this capability.
 
 ### Compatibility
-|                             | Version                  |
-|-----------------------------|--------------------------|
-| Ballerina Language          | Swan Lake 2201.3.0       |
-| Azure Event Hub REST API    | 2014-01                  |
+|                             | Version            |
+|-----------------------------|--------------------|
+| Ballerina Language          | Swan Lake 2201.7.0 |
+| Azure Event Hub REST API    | 2014-01            |
 
 ## Report issues
 To report bugs, request new features, start new discussions, view project boards, etc., go to the [Ballerina Extended Library repository](https://github.com/ballerina-platform/ballerina-extended-library)
