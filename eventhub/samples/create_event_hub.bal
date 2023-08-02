@@ -14,7 +14,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerinax/azure_eventhub;
+import ballerinax/azure.eventhub;
 import ballerina/log;
 
 configurable string sasKeyName = ?;
@@ -22,18 +22,18 @@ configurable string sasKey = ?;
 configurable string resourceUri = ?;
 
 public function main() {
-    azure_eventhub:ConnectionConfig config = {
+    eventhub:ConnectionConfig config = {
         sasKeyName: sasKeyName,
         sasKey: sasKey,
         resourceUri: resourceUri
     };
-    azure_eventhub:Client managementClient = checkpanic new (config);
+    eventhub:Client managementClient = checkpanic new (config);
 
     var result = managementClient->createEventHub("myhub");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is azure_eventhub:EventHub) {
+    if (result is eventhub:EventHub) {
         log:printInfo(result.toString());
         log:printInfo("Successful!");
     }

@@ -14,7 +14,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerinax/azure_eventhub;
+import ballerinax/azure.eventhub;
 import ballerina/log;
 
 configurable string sasKeyName = ?;
@@ -22,18 +22,18 @@ configurable string sasKey = ?;
 configurable string resourceUri = ?;
 
 public function main() {
-    azure_eventhub:ConnectionConfig config = {
+    eventhub:ConnectionConfig config = {
         sasKeyName: sasKeyName,
         sasKey: sasKey,
         resourceUri: resourceUri 
     };
-    azure_eventhub:Client publisherClient = checkpanic new (config);
+    eventhub:Client publisherClient = checkpanic new (config);
 
     var result = publisherClient->revokePublisher("myeventhub", "device-1");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is azure_eventhub:RevokePublisher) {
+    if (result is eventhub:RevokePublisher) {
         log:printInfo(result.toString());
         log:printInfo("Successful!");
     }

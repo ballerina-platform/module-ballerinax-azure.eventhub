@@ -55,8 +55,8 @@ public isolated client class Client {
     # Creates a new Event Hub.
     #
     # + eventHubPath - Event Hub path (Event Hub name)
-    # + eventHubDescription - `azure_eventhub:EventHubDescription` record with properties to set (Optional)
-    # + return - `azure_eventhub:EventHub` record on success, or else an error
+    # + eventHubDescription - `eventhub:EventHubDescription` record with properties to set (Optional)
+    # + return - `eventhub:EventHub` record on success, or else an error
     @display {label: "Create Event Hub"}
     remote isolated function createEventHub(@display {label: "Event Hub Path"} string eventHubPath, 
                                             @display {label: "Event Hub Description"} 
@@ -81,7 +81,7 @@ public isolated client class Client {
     # Gets all metadata associated with the specified Event Hub.
     #
     # + eventHubPath - Event Hub path (Event Hub name)
-    # + return - `azure_eventhub:EventHub` record on success, or else an error
+    # + return - `eventhub:EventHub` record on success, or else an error
     @display {label: "Get Event Hub"}
     remote isolated function getEventHub(@display {label: "Event Hub Path"} string eventHubPath) 
                                          returns @tainted @display {label: "Event Hub"} EventHub|error {
@@ -99,8 +99,8 @@ public isolated client class Client {
     # Updates Event Hub properties.
     #
     # + eventHubPath - Event Hub path (Event Hub name)
-    # + eventHubDescriptionToUpdate - `azure_eventhub:EventHubDescriptionToUpdate` record with properties to update
-    # + return - `azure_eventhub:EventHub` record on success, or else an error
+    # + eventHubDescriptionToUpdate - `eventhub:EventHubDescriptionToUpdate` record with properties to update
+    # + return - `eventhub:EventHub` record on success, or else an error
     @display {label: "Update Event Hub"}
     remote isolated function updateEventHub(@display {label: "Event Hub Path"} string eventHubPath, 
                                             @display {label: "Update Description"} 
@@ -125,7 +125,7 @@ public isolated client class Client {
 
     # Retrieves all metadata associated with all Event Hubs within a specified Service Bus namespace.
     #
-    # + return - Stream of `azure_eventhub:EventHub` records on success, or else an error
+    # + return - Stream of `eventhub:EventHub` records on success, or else an error
     @display {label: "List Event Hubs"}
     remote isolated function listEventHubs() returns @tainted @display {label: "Stream of Event Hubs"} 
                                              stream<EventHub>|error {
@@ -163,7 +163,7 @@ public isolated client class Client {
     #
     # + eventHubPath - Event Hub path (Event Hub name)
     # + consumerGroupName - Consumer group name
-    # + return - Stream of `azure_eventhub:Partition` records on success, or else an error
+    # + return - Stream of `eventhub:Partition` records on success, or else an error
     @display {label: "List Partitions"}
     remote isolated function listPartitions(@display {label: "Event Hub Path"} string eventHubPath, 
                                             @display {label: "Consumer Group Name"} string consumerGroupName) 
@@ -187,7 +187,7 @@ public isolated client class Client {
     # + eventHubPath - Event Hub path (Event Hub name)
     # + consumerGroupName - Consumer group name
     # + partitionId - Partition ID 
-    # + return - `azure_eventhub:Partition` record on success, or else an error
+    # + return - `eventhub:Partition` record on success, or else an error
     @display {label: "Get Partition"}
     remote isolated function getPartition(@display {label: "Event Hub Path"} string eventHubPath, 
                                           @display {label: "Consumer Group Name"} string consumerGroupName, 
@@ -209,8 +209,8 @@ public isolated client class Client {
     #
     # + eventHubPath - Event Hub name
     # + consumerGroupName - Consumer group name
-    # + consumerGroupDescription - `azure_eventhub:ConsumerGroupDescription` record with properties to set (Optional)
-    # + return - `azure_eventhub:ConsumerGroup` record on success, or else an error
+    # + consumerGroupDescription - `eventhub:ConsumerGroupDescription` record with properties to set (Optional)
+    # + return - `eventhub:ConsumerGroup` record on success, or else an error
     @display {label: "Create Consumer Group"}
     remote isolated function createConsumerGroup(@display {label: "Event Hub Path"} string eventHubPath, 
                                                  @display {label: "Consumer Group Name"} string consumerGroupName, 
@@ -238,7 +238,7 @@ public isolated client class Client {
     #
     # + eventHubPath - Event Hub path (Event Hub name)
     # + consumerGroupName - Consumer group name
-    # + return - `azure_eventhub:ConsumerGroup` record on success, or else an error
+    # + return - `eventhub:ConsumerGroup` record on success, or else an error
     @display {label: "Get Consumer Group"}
     remote isolated function getConsumerGroup(@display {label: "Event Hub Path"} string eventHubPath, 
                                               @display {label: "Consumer Group Name"} string consumerGroupName) 
@@ -275,7 +275,7 @@ public isolated client class Client {
     # Retrieves all consumer groups associated with the specified Event Hub. 
     #
     # + eventHubPath - Event Hub path (Event Hub name)
-    # + return - Stream of `azure_eventhub:ConsumerGroup` records on success, or else an error
+    # + return - Stream of `eventhub:ConsumerGroup` records on success, or else an error
     @display {label: "List Consumer Groups"}
     remote isolated function listConsumerGroups(@display {label: "Event Hub Path"} string eventHubPath) 
                                                  returns @tainted @display {label: "Stream of ConsumerGroups"} 
@@ -363,7 +363,7 @@ public isolated client class Client {
     # Sends a batch of events to an Event Hub.
     #
     # + eventHubPath - Event Hub path (Event Hub name)
-    # + batchEvent - `azure_eventhub:BatchEvent` record that represents batch of events
+    # + batchEvent - `eventhub:BatchEvent` record that represents batch of events
     # + partitionId - Partition ID (Optional)
     # + publisherId - Publisher ID (Optional)
     # + partitionKey - Partition key (Optional)
@@ -402,7 +402,7 @@ public isolated client class Client {
     # Retrieves all revoked publishers within the specified Event Hub. 
     #
     # + eventHubPath - Event Hub path (Event Hub name)
-    # + return - Stream of `azure_eventhub:RevokePublisher` records on success, or else an error
+    # + return - Stream of `eventhub:RevokePublisher` records on success, or else an error
     @display {label: "Get Revoked Publishers"}
     remote isolated function getRevokedPublishers(@display {label: "Event Hub Path"} string eventHubPath) 
                                                   returns @tainted @display {label: "Stream of RevokePublishers"} 
@@ -425,7 +425,7 @@ public isolated client class Client {
     #
     # + eventHubPath - Event Hub path (Event Hub name)
     # + publisherName - Publisher name 
-    # + return - `azure_eventhub:RevokedPublisher` record on success, or else an error
+    # + return - `eventhub:RevokedPublisher` record on success, or else an error
     @display {label: "Revoke a Publisher"}
     remote isolated function revokePublisher(@display {label: "Event Hub Path"} string eventHubPath, 
                                              @display {label: "Publisher Name"} string publisherName) 
