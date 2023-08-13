@@ -9,30 +9,43 @@ on:
     types:
       check_connector_for_breaking_changes
 
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
+
+      # Setup Ballerina Environment
+      - name: Set Up Ballerina
+        uses: ballerina-platform/setup-ballerina@v1.1.0
+        with:
+          version: latest
+
+      # Build Ballerina Project
       - name: Ballerina Build
-        uses: ballerina-platform/ballerina-action/@nightly
-        with:
-          args:
-            pack ./eventhub
-      - name: Ballerina Tests
-        uses: ballerina-platform/ballerina-action/@nightly
-        with:
-          args:
-            test --test-report --code-coverage --coverage-format=xml ./eventhub
-        env: 
+        run: bal pack ./ballerina
+        env:
+          JAVA_HOME: /usr/lib/jvm/default-jvm
+
+      # Build Module Examples
+      - name: Ballerina Examples Build
+        run: chmod +x ./examples/build.sh && ./examples/build.sh build
+        env:
+          JAVA_HOME: /usr/lib/jvm/default-jvm
+
+      # Test Ballerina Project
+      - name: Ballerina Test
+        run: bal test ./ballerina --test-report --code-coverage --coverage-format=xml
+        env:
+          JAVA_HOME: /usr/lib/jvm/default-jvm
           SAS_KEY_NAME: ${{ secrets.SAS_KEY_NAME }}
           SAS_KEY: ${{ secrets.SAS_KEY }}
           RESOURCE_URI: ${{ secrets.RESOURCE_URI }}
+
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
+
+      # Send notification when build fails
       - name: Alert notifier on failure
         if: failure() && (github.event.action == 'check_connector_for_breaking_changes')
         run: |
