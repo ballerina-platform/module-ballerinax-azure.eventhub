@@ -25,18 +25,16 @@ public function main() {
     azure_eventhub:ConnectionConfig config = {
         sasKeyName: sasKeyName,
         sasKey: sasKey,
-        resourceUri: resourceUri 
+        resourceUri: resourceUri
     };
-    azure_eventhub:Client publisherClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
-    map<string> brokerProps = {PartitionKey: "groupName1", CorrelationId: "32119834"};
-    map<string> userProps = {Alert: "windy", warning: "true"};
-
-    // partition key used as the parameter is prioritized over the partition key provided in the brokerProperties
-    var result = publisherClient->send("myeventhub", "data", userProps, brokerProps, partitionKey = "groupName");
+    var result = managementClient->getPartition("myeventhub", "consumerGroup1", 1);
     if (result is error) {
         log:printError(result.message());
-    } else {
-        log:printInfo("Successful!");
+    }
+    if (result is azure_eventhub:Partition) {
+        log:printInfo(result.toString());
+        log:printInfo("successful");
     }
 }

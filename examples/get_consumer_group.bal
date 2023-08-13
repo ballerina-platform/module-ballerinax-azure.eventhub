@@ -25,19 +25,16 @@ public function main() {
     azure_eventhub:ConnectionConfig config = {
         sasKeyName: sasKeyName,
         sasKey: sasKey,
-        resourceUri: resourceUri 
+        resourceUri: resourceUri
     };
     azure_eventhub:Client managementClient = checkpanic new (config);
 
-    azure_eventhub:EventHubDescriptionToUpdate eventHubDescriptionToUpdate = {
-        MessageRetentionInDays: 5
-    };
-    var result = managementClient->updateEventHub("myhub", eventHubDescriptionToUpdate);
+    var result = managementClient->getConsumerGroup("myeventhub", "consumerGroup1");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is azure_eventhub:EventHub) {
+    if (result is azure_eventhub:ConsumerGroup) {
         log:printInfo(result.toString());
-        log:printInfo("Successful!");
+        log:printInfo("successful");
     }
 }

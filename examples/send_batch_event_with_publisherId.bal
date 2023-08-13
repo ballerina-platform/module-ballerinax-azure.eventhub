@@ -25,18 +25,24 @@ public function main() {
     azure_eventhub:ConnectionConfig config = {
         sasKeyName: sasKeyName,
         sasKey: sasKey,
-        resourceUri: resourceUri 
+        resourceUri: resourceUri
     };
-    azure_eventhub:Client managementClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
-    var result = managementClient->listEventHubs();
+    map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
+    map<string> userProps = {Alert: "windy", warning: "true"};
+
+    azure_eventhub:BatchEvent batchEvent = {
+        events: [
+            {data: "Message1"},
+            {data: "Message2", brokerProperties: brokerProps},
+            {data: "Message3", brokerProperties: brokerProps, userProperties: userProps}
+        ]
+    };
+    var result = publisherClient->sendBatch("myeventhub", batchEvent, publisherId = "device-1");
     if (result is error) {
         log:printError(result.message());
-    }
-    if (result is stream<azure_eventhub:EventHub>) {
-        _ = result.forEach(isolated function (azure_eventhub:EventHub eventHub) {
-                log:printInfo(eventHub.toString());
-            });
-        log:printInfo("listReceived");
+    } else {
+        log:printInfo("Successful!");
     }
 }

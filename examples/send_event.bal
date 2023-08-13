@@ -25,16 +25,14 @@ public function main() {
     azure_eventhub:ConnectionConfig config = {
         sasKeyName: sasKeyName,
         sasKey: sasKey,
-        resourceUri: resourceUri 
+        resourceUri: resourceUri
     };
-    azure_eventhub:Client managementClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
-    var result = managementClient->getEventHub("myhub");
+    var result = publisherClient->send("myeventhub", "eventData");
     if (result is error) {
-        log:printError(result.message());
-    }
-    if (result is azure_eventhub:EventHub) {
-        log:printInfo(result.toString());
+        log:printError(msg = result.message());
+    } else {
         log:printInfo("Successful!");
     }
 }

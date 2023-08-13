@@ -25,19 +25,18 @@ public function main() {
     azure_eventhub:ConnectionConfig config = {
         sasKeyName: sasKeyName,
         sasKey: sasKey,
-        resourceUri: resourceUri 
+        resourceUri: resourceUri
     };
-    azure_eventhub:Client publisherClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
-    var result = publisherClient->getRevokedPublishers("myeventhub");
+    var result = managementClient->listConsumerGroups("myeventhub");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is stream<azure_eventhub:RevokePublisher>) {
-        log:printInfo("listReceived");
-        _ = result.forEach(isolated function (azure_eventhub:RevokePublisher revokePublisher) {
-                log:printInfo(revokePublisher.toString());
-            });
-        log:printInfo("Successful!");
+    if (result is stream<azure_eventhub:ConsumerGroup>) {
+        _ = result.forEach(isolated function(azure_eventhub:ConsumerGroup consumerGroup) {
+            log:printInfo(consumerGroup.toString());
+        });
+        log:printInfo("successful");
     }
 }

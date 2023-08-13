@@ -25,16 +25,15 @@ public function main() {
     azure_eventhub:ConnectionConfig config = {
         sasKeyName: sasKeyName,
         sasKey: sasKey,
-        resourceUri: resourceUri 
+        resourceUri: resourceUri
     };
-    azure_eventhub:Client publisherClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
-    var result = publisherClient->revokePublisher("myeventhub", "device-1");
+    var result = managementClient->deleteConsumerGroup("myeventhub", "consumerGroup1");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is azure_eventhub:RevokePublisher) {
-        log:printInfo(result.toString());
-        log:printInfo("Successful!");
+    if (result is ()) {
+        log:printInfo("successful");
     }
 }
