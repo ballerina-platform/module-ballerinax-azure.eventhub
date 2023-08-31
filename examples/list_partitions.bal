@@ -35,8 +35,8 @@ public function main() {
     }
     if (result is stream<azure_eventhub:Partition>) {
         _ = result.forEach(isolated function(azure_eventhub:Partition partition) {
-            log:printInfo(partition.toString());
-        });
+                log:printInfo(partition.toString());
+            });
         log:printInfo("successful");
     }
 }

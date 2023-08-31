@@ -35,8 +35,8 @@ public function main() {
     }
     if (result is stream<azure_eventhub:ConsumerGroup>) {
         _ = result.forEach(isolated function(azure_eventhub:ConsumerGroup consumerGroup) {
-            log:printInfo(consumerGroup.toString());
-        });
+                log:printInfo(consumerGroup.toString());
+            });
         log:printInfo("successful");
     }
 }

@@ -69,8 +69,8 @@ public function main() {
     }
     if (listResult is stream<azure_eventhub:EventHub>) {
         _ = listResult.forEach(isolated function(azure_eventhub:EventHub eventHub) {
-            log:printInfo(eventHub.toString());
-        });
+                log:printInfo(eventHub.toString());
+            });
         log:printInfo("Successfully Listed Event Hubs!");
     }
 

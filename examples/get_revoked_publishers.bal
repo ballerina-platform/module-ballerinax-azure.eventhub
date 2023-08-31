@@ -36,8 +36,8 @@ public function main() {
     if (result is stream<azure_eventhub:RevokePublisher>) {
         log:printInfo("listReceived");
         _ = result.forEach(isolated function(azure_eventhub:RevokePublisher revokePublisher) {
-            log:printInfo(revokePublisher.toString());
-        });
+                log:printInfo(revokePublisher.toString());
+            });
         log:printInfo("Successful!");
     }
 }

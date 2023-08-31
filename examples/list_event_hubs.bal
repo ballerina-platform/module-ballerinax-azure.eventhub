@@ -35,8 +35,8 @@ public function main() {
     }
     if (result is stream<azure_eventhub:EventHub>) {
         _ = result.forEach(isolated function(azure_eventhub:EventHub eventHub) {
-            log:printInfo(eventHub.toString());
-        });
+                log:printInfo(eventHub.toString());
+            });
         log:printInfo("listReceived");
     }
 }
