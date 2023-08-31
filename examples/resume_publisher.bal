@@ -25,18 +25,15 @@ public function main() {
     azure_eventhub:ConnectionConfig config = {
         sasKeyName: sasKeyName,
         sasKey: sasKey,
-        resourceUri: resourceUri 
+        resourceUri: resourceUri
     };
-    azure_eventhub:Client managementClient = checkpanic new (config);
+    azure_eventhub:Client publisherClient = checkpanic new (config);
 
-    var result = managementClient->listPartitions("myeventhub", "consumerGroup1");
+    var result = publisherClient->resumePublisher("myeventhub", "device-1");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is stream<azure_eventhub:Partition>) {
-        _ = result.forEach(isolated function (azure_eventhub:Partition partition) {
-                log:printInfo(partition.toString());
-            });
+    if (result is ()) {
         log:printInfo("successful");
     }
 }

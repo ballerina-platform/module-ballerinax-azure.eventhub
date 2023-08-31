@@ -25,7 +25,7 @@ public function main() {
     azure_eventhub:ConnectionConfig config = {
         sasKeyName: sasKeyName,
         sasKey: sasKey,
-        resourceUri: resourceUri 
+        resourceUri: resourceUri
     };
     azure_eventhub:Client managementClient = checkpanic new (config);
 
@@ -47,7 +47,7 @@ public function main() {
     if (getEventHubResult is azure_eventhub:EventHub) {
         log:printInfo(getEventHubResult.toString());
         log:printInfo("Successfully Get Event Hub!");
-    } 
+    }
 
     // --------------------------------- Update Event Hub --------------------------------------------------
     azure_eventhub:EventHubDescriptionToUpdate eventHubDescriptionToUpdate = {
@@ -68,7 +68,7 @@ public function main() {
         log:printError(listResult.message());
     }
     if (listResult is stream<azure_eventhub:EventHub>) {
-        _ = listResult.forEach(isolated function (azure_eventhub:EventHub eventHub) {
+        _ = listResult.forEach(isolated function(azure_eventhub:EventHub eventHub) {
                 log:printInfo(eventHub.toString());
             });
         log:printInfo("Successfully Listed Event Hubs!");
@@ -80,5 +80,5 @@ public function main() {
         log:printError(msg = deleteResult.message());
     } else {
         log:printInfo("Successfully Deleted Event Hub!");
-    }    
+    }
 }

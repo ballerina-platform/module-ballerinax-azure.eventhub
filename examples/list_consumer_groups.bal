@@ -25,14 +25,18 @@ public function main() {
     azure_eventhub:ConnectionConfig config = {
         sasKeyName: sasKeyName,
         sasKey: sasKey,
-        resourceUri: resourceUri 
+        resourceUri: resourceUri
     };
-    azure_eventhub:Client managementClient= checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
-    var result = managementClient->deleteEventHub("myhub");
+    var result = managementClient->listConsumerGroups("myeventhub");
     if (result is error) {
         log:printError(result.message());
-    } else {
-        log:printInfo("Successful!");
+    }
+    if (result is stream<azure_eventhub:ConsumerGroup>) {
+        _ = result.forEach(isolated function(azure_eventhub:ConsumerGroup consumerGroup) {
+                log:printInfo(consumerGroup.toString());
+            });
+        log:printInfo("successful");
     }
 }

@@ -25,7 +25,7 @@ public function main() {
     azure_eventhub:ConnectionConfig config = {
         sasKeyName: sasKeyName,
         sasKey: sasKey,
-        resourceUri: resourceUri 
+        resourceUri: resourceUri
     };
     azure_eventhub:Client managementClient = checkpanic new (config);
 

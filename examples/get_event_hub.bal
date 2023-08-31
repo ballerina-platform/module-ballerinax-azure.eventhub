@@ -25,17 +25,16 @@ public function main() {
     azure_eventhub:ConnectionConfig config = {
         sasKeyName: sasKeyName,
         sasKey: sasKey,
-        resourceUri: resourceUri 
+        resourceUri: resourceUri
     };
-    azure_eventhub:Client publisherClient = checkpanic new (config);
+    azure_eventhub:Client managementClient = checkpanic new (config);
 
-    map<string> brokerProps = {"CorrelationId": "32119834", "CorrelationId2": "32119834"};
-    map<string> userProps = {Alert: "windy", warning: "true"};
-
-    var result = publisherClient->send("myeventhub", "eventData", userProps, brokerProps);
+    var result = managementClient->getEventHub("myhub");
     if (result is error) {
         log:printError(result.message());
-    } else {
+    }
+    if (result is azure_eventhub:EventHub) {
+        log:printInfo(result.toString());
         log:printInfo("Successful!");
     }
 }

@@ -25,7 +25,7 @@ public function main() {
     azure_eventhub:ConnectionConfig config = {
         sasKeyName: sasKeyName,
         sasKey: sasKey,
-        resourceUri: resourceUri 
+        resourceUri: resourceUri
     };
     azure_eventhub:Client managementClient = checkpanic new (config);
     azure_eventhub:Client publisherClient = checkpanic new (config);
@@ -48,7 +48,7 @@ public function main() {
     map<string> brokerProps = {CorrelationId: "32119834", CorrelationId2: "32119834"};
     map<string> userProps = {Alert: "windy", warning: "true"};
 
-    var sendResult = publisherClient->send("mytesthub", "eventData", userProps, brokerProps, 
+    var sendResult = publisherClient->send("mytesthub", "eventData", userProps, brokerProps,
         partitionKey = "groupName");
     if (sendResult is error) {
         log:printError(sendResult.message());
@@ -69,7 +69,7 @@ public function main() {
         log:printError(sendBatchResult.message());
     } else {
         log:printInfo("Successfully Send Batch Event to Event Hub!");
-    } 
+    }
 
     // --------------------------------- Delete Event Hub ----------------------------------------------------
     var deleteResult = managementClient->deleteEventHub("mytesthub");
@@ -77,5 +77,5 @@ public function main() {
         log:printError(msg = deleteResult.message());
     } else {
         log:printInfo("Successfully Deleted Event Hub!");
-    }    
+    }
 }

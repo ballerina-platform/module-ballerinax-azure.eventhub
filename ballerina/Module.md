@@ -70,4 +70,4 @@ azure_eventhub:Client eventHubClient = check new (config);
 
 2. Use `bal run` command to compile and run the Ballerina program.
 
-**[You can find a list of samples here](https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/blob/master/eventhub/samples)**
+**[You can find a list of samples here](https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/tree/master/examples)**

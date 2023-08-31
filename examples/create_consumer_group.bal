@@ -25,15 +25,15 @@ public function main() {
     azure_eventhub:ConnectionConfig config = {
         sasKeyName: sasKeyName,
         sasKey: sasKey,
-        resourceUri: resourceUri 
+        resourceUri: resourceUri
     };
     azure_eventhub:Client managementClient = checkpanic new (config);
 
-    var result = managementClient->getPartition("myeventhub", "consumerGroup1", 1);
+    var result = managementClient->createConsumerGroup("myeventhub", "consumerGroup1");
     if (result is error) {
         log:printError(result.message());
     }
-    if (result is azure_eventhub:Partition) {
+    if (result is azure_eventhub:ConsumerGroup) {
         log:printInfo(result.toString());
         log:printInfo("successful");
     }
