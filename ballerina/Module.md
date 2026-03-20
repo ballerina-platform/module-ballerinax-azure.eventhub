@@ -1,8 +1,16 @@
 ## Overview
 
-The [Ballerina](https://ballerina.io/) connector for Azure Event Hub provides access to the Azure Event Hub via the Ballerina Language. This connector allows you to ingest, buffer, store, and process high-frequency data from any source in real-time to derive important business insights using the Azure Event Hub. It provides the capability to perform Event Hub service operations, Event Hub management operations, handle publisher policy operations.
+The connector for Azure Event Hub provides access to the Azure Event Hub via the Ballerina Language. This connector allows you to ingest, buffer, store, and process high-frequency data from any source in real-time to derive important business insights using the Azure Event Hub. It provides the capability to perform Event Hub service operations, Event Hub management operations, handle publisher policy operations.
 
 This module supports [Azure Event Hub REST API 2014-01 version](https://docs.microsoft.com/en-us/rest/api/eventhub/).
+
+
+### Key Features
+
+- Send events to Azure Event Hub
+- Manage event hub namespaces and consumer groups
+- Support for batch event publishing
+- Integration with event-driven messaging workflows
 
 ## Prerequisites
 
