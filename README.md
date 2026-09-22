@@ -1,54 +1,116 @@
-Ballerina Azure Event Hubs Connector
-===================
+# Ballerina Azure Event Hubs connector
 
-[![Build](https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/workflows/CI/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/actions?query=workflow%3ACI)
-[![codecov](https://codecov.io/gh/ballerina-platform/module-ballerinax-azure.eventhub/branch/master/graph/badge.svg)](https://codecov.io/gh/ballerina-platform/module-ballerinax-azure.eventhub)
+[![Build](https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/actions/workflows/ci.yml/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/actions/workflows/ci.yml)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/ballerina-platform/module-ballerinax-azure.eventhub.svg)](https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/commits/master)
-[![GraalVM Check](https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/actions/workflows/build-with-bal-test-native.yml/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-azure.eventhub/actions/workflows/build-with-bal-test-native.yml)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![GitHub Issues](https://img.shields.io/github/issues/ballerina-platform/ballerina-library/module/azure.eventhub.svg?label=Open%20Issues)](https://github.com/ballerina-platform/ballerina-library/labels/module%azure.eventhub)
 
-[Azure Event Hubs](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-about) is a fully managed, real-time data ingress service that is highly scalable, secured, open, and reliable. It ingests data (events) from different sources and reliably distributes it between multiple independent systems for processing, storage, and analysis.
+## Overview
 
-Azure Event Hubs [Ballerina](https://ballerina.io/) connector is used to connect with the Azure Event Hubs to ingest millions of events per second so that you can process and analyze the massive amounts of data produced by your connected devices and applications.
+[//]: # (TODO: Add overview mentioning the purpose of the module, supported REST API versions, and other high-level details.)
 
-For more information, go to the module(s).
-- [azure_eventhub](eventhub/Module.md)
+## Setup guide
 
-## Building from the source
+[//]: # (TODO: Add detailed steps to obtain credentials and configure the module.)
+
+## Quickstart
+
+[//]: # (TODO: Add a quickstart guide to demonstrate a basic functionality of the module, including sample code snippets.)
+
+## Examples
+
+The `Azure Event Hubs` connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/module-ballerinax-azure.eventhub/tree/main/examples/), covering the following use cases:
+
+[//]: # (TODO: Add examples)
+
+## Build from the source
 
 ### Setting up the prerequisites
 
-1. Download and install Java SE Development Kit (JDK) version 11. You can install either [OpenJDK](https://adoptopenjdk.net/) or [Oracle](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html).
+1. Download and install Java SE Development Kit (JDK) version 21. You can download it from either of the following sources:
 
-    > **Note:** Set the JAVA_HOME environment variable to the path name of the directory into which you installed JDK.
+    * [Oracle JDK](https://www.oracle.com/java/technologies/downloads/)
+    * [OpenJDK](https://adoptium.net/)
 
-2. Download and install [Ballerina Swan Lake](https://ballerina.io/). 
+   > **Note:** After installation, remember to set the `JAVA_HOME` environment variable to the directory where JDK was installed.
 
-### Building the source
+2. Download and install [Ballerina Swan Lake](https://ballerina.io/).
+
+3. Download and install [Docker](https://www.docker.com/get-started).
+
+   > **Note**: Ensure that the Docker daemon is running before executing any tests.
+
+4. Export Github Personal access token with read package permissions as follows,
+
+    ```bash
+    export packageUser=<Username>
+    export packagePAT=<Personal access token>
+    ```
+
+### Build options
 
 Execute the commands below to build from the source.
 
-- To build the package:
-    ```shell
-    bal build ./eventhub
+1. To build the package:
+
+   ```bash
+   ./gradlew clean build
+   ```
+
+2. To run the tests:
+
+   ```bash
+   ./gradlew clean test
+   ```
+
+3. To build the without the tests:
+
+   ```bash
+   ./gradlew clean build -x test
+   ```
+
+4. To run tests against different environments:
+
+   ```bash
+   ./gradlew clean test -Pgroups=<Comma separated groups/test cases>
+   ```
+
+5. To debug the package with a remote debugger:
+
+   ```bash
+   ./gradlew clean build -Pdebug=<port>
+   ```
+
+6. To debug with the Ballerina language:
+
+   ```bash
+   ./gradlew clean build -PbalJavaDebug=<port>
+   ```
+
+7. Publish the generated artifacts to the local Ballerina Central repository:
+
+    ```bash
+    ./gradlew clean build -PpublishToLocalCentral=true
     ```
-- To test the package: 
-    ```shell
-    bal test ./ballerina
-    ```
 
-## Contributing to Ballerina
+8. Publish the generated artifacts to the Ballerina Central repository:
 
-As an open source project, Ballerina welcomes contributions from the community. 
+   ```bash
+   ./gradlew clean build -PpublishToCentral=true
+   ```
 
-For more information, go to the [contribution guidelines](https://github.com/ballerina-platform/ballerina-lang/blob/master/eventhub/CONTRIBUTING.md).
+## Contribute to Ballerina
+
+As an open-source project, Ballerina welcomes contributions from the community.
+
+For more information, go to the [contribution guidelines](https://github.com/ballerina-platform/ballerina-lang/blob/master/CONTRIBUTING.md).
 
 ## Code of conduct
 
-All contributors are encouraged to read the [Ballerina Code of Conduct](https://ballerina.io/code-of-conduct).
+All the contributors are encouraged to read the [Ballerina Code of Conduct](https://ballerina.io/code-of-conduct).
 
 ## Useful links
 
-* Discuss code changes of the Ballerina project in [ballerina-dev@googlegroups.com](mailto:ballerina-dev@googlegroups.com).
+* For more information go to the [`azure.eventhub` package](https://central.ballerina.io/ballerinax/azure.eventhub/latest).
+* For example demonstrations of the usage, go to [Ballerina By Examples](https://ballerina.io/learn/by-example/).
 * Chat live with us via our [Discord server](https://discord.gg/ballerinalang).
 * Post all technical questions on Stack Overflow with the [#ballerina](https://stackoverflow.com/questions/tagged/ballerina) tag.
