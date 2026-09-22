@@ -1,46 +1,22 @@
-name: CI
+name: Build
 
 on:
   push:
     branches:
-      - master
+      - main
       - 2201.[0-9]+.x
   repository_dispatch:
-    types:
-      check_connector_for_breaking_changes
+    types: check_connector_for_breaking_changes
+  workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      # Setup Ballerina Environment
-      - name: Set Up Ballerina
-        uses: ballerina-platform/setup-ballerina@v1.1.0
-        with:
-          version: latest
-
-      # Build Ballerina Project
-      - name: Ballerina Build
-        run: bal pack ./ballerina
-        env:
-          JAVA_HOME: /usr/lib/jvm/default-jvm
-
-      # Build Module Examples
-      - name: Ballerina Examples Build
-        run: chmod +x ./examples/build.sh && ./examples/build.sh build
-        env:
-          JAVA_HOME: /usr/lib/jvm/default-jvm
-
-      # Test Ballerina Project
-      - name: Ballerina Test
-        run: bal test ./ballerina --test-report --code-coverage --coverage-format=xml
-        env:
-          JAVA_HOME: /usr/lib/jvm/default-jvm
-          SAS_KEY_NAME: ${{ secrets.SAS_KEY_NAME }}
-          SAS_KEY: ${{ secrets.SAS_KEY }}
-          RESOURCE_URI: ${{ secrets.RESOURCE_URI }}
-
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
+  call_workflow:
+    name: Run Connector Build Workflow
+    if: ${{ github.repository_owner == 'ballerina-platform' }}
+    uses: ballerina-platform/ballerina-library/.github/workflows/build-connector-template.yml@main
+    secrets:
+      BALLERINA_BOT_TOKEN: ${{ secrets.BALLERINA_BOT_TOKEN }}
+      BALLERINA_BOT_USERNAME: ${{ secrets.BALLERINA_BOT_USERNAME }}
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    with:
+      repo-name: module-ballerinax-azure.eventhub
