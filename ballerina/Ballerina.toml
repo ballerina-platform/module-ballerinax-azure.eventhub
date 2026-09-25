@@ -5,8 +5,8 @@ name = "azure.eventhub"
 version = "4.0.0"
 license = ["Apache-2.0"]
 authors = ["Ballerina"]
-keywords = []
-# icon = "icon.png" # TODO: update icon.png
+keywords = ["IT Operations/Data Ingestion", "Cost/Paid", "Vendor/Microsoft", "Area/Cloud & Infrastructure", "Type/Connector", "Name/Azure Event Hubs"]
+icon = "icon.png"
 repository = "https://github.com/ballerina-platform/module-ballerinax-azure.eventhub"
 
 [build-options]
