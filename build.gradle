@@ -57,8 +57,14 @@ allprojects {
 
 def moduleVersion = project.version.replace("-SNAPSHOT", "")
 
-task build {
-    dependsOn(':azure.eventhub-ballerina:build')
+if (tasks.names.contains('build')) {
+    tasks.named('build') {
+        dependsOn(':azure.eventhub-ballerina:build')
+    }
+} else {
+    tasks.register('build') {
+        dependsOn(':azure.eventhub-ballerina:build')
+    }
 }
 
 release {
